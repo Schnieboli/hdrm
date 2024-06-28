@@ -24,7 +24,6 @@ B2 <- function(X, N){
 
 B3 <- function(X, N){
   S <- 0
-  #browser()
   for (k in 1:(N-2)) {
     for (l in (k+1):(N-1)) {
       for (r in (l+1):N) {
