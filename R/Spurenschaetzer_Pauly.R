@@ -6,8 +6,6 @@ B0 <- function(X, N){
   return(S/N)
 }
 
-
-
 B2 <- function(X, N){
   S <- 0
   for (k in 1:N) {
@@ -17,8 +15,6 @@ B2 <- function(X, N){
   }
   return(S / (N*(N-1)))
 }
-
-
 
 B3 <- function(X, N){
   S <- 0
