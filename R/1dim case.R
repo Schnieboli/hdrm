@@ -31,7 +31,7 @@ hdrm1.data.frame <- function(data, hypothesis, alpha){
   return(hdrm1_internal(X = t(X), hypothesis = hypothesis, alpha = alpha))
 }
 
-
+#' @keywords internal
 hdrm1_internal <- function(X, hypothesis, alpha){
 
   ## Schätzer definieren
