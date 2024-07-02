@@ -1,7 +1,7 @@
 #' Test for one dimensional repeated measures
 #'
 #' @description
-#' S3 generic methods for perfoming a one sample test for high dimensional repeated measures
+#' S3 generic methods for performing a one sample test for high dimensional repeated measures
 #' @param data either a matrix or a data.frame with N subjects in rows and d factor levels in columns
 #' @param hypothesis either one of c("equal","flat") or a matrix of dimensions c(d,d)
 #' @param alpha alpha level used for calculating the critical value
@@ -13,20 +13,20 @@
 #' @return \item{critical.value}{the critical value depending on alpha}
 #' @return \item{p.value}{the $p$-value of the test statistic}
 #' @return \item{dim}{a vector of length 2, giving the dimensions c(d,N) of the data}
-#' @keywords export
+#' @export
 hdrm1 <- function(data, hypothesis = c("equal","flat"), alpha = 0.05){
   UseMethod("hdrm1")
 }
 
 #' @method hdrm1 default
-#' @keywords export
+#' @export
 hdrm1.default <- function(data,...){
   stop("Your data needs to be either a matrix or a data.frame")
 }
 
-#' @method hdrm1 data.frame
-#' @keywords export
-hdrm1.data.frame <- function(data, hypothesis, alpha){
+#' @method hdrm1 matrix
+#' @export
+hdrm1.matrix <- function(data, hypothesis, alpha){
   X <- as.matrix(data)
   return(hdrm1_internal(X = t(X), hypothesis = hypothesis, alpha = alpha))
 }
@@ -94,7 +94,8 @@ hdrm1_internal <- function(X, hypothesis, alpha){
 
 # generische print-Funktion -----------------------------------------------
 
-#' @keywords export
+#' @method print hdrm1
+#' @export
 print.hdrm1 <- function(X,...){
   cat("\n")
   cat("       One Dimensional Repeated Measure

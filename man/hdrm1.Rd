@@ -31,6 +31,5 @@ hdrm1(data, hypothesis = c("equal", "flat"), alpha = 0.05)
 \item{dim}{a vector of length 2, giving the dimensions c(d,N) of the data}
 }
 \description{
-S3 generic methods for perfoming a one sample test for high dimensional repeated measures
+S3 generic methods for performing a one sample test for high dimensional repeated measures
 }
-\keyword{export}
