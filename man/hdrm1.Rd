@@ -4,7 +4,12 @@
 \alias{hdrm1}
 \title{Test for one dimensional repeated measures}
 \usage{
-hdrm1(data, hypothesis = c("equal", "flat"), alpha = 0.05)
+hdrm1(
+  data,
+  hypothesis = c("equal", "flat"),
+  alpha = 0.05,
+  na.action = "complete.obs"
+)
 }
 \arguments{
 \item{data}{either a matrix or a data.frame with N subjects in rows and d factor levels in columns}
@@ -12,6 +17,8 @@ hdrm1(data, hypothesis = c("equal", "flat"), alpha = 0.05)
 \item{hypothesis}{either one of c("equal","flat") or a matrix of dimensions c(d,d)}
 
 \item{alpha}{alpha level used for calculating the critical value}
+
+\item{na.action}{determines how to deal with individuals with missing values. only \code{copmplete.obs} is supported right now.}
 }
 \value{
 \item{data}{the initial input data}
@@ -29,6 +36,10 @@ hdrm1(data, hypothesis = c("equal", "flat"), alpha = 0.05)
 \item{p.value}{the $p$-value of the test statistic}
 
 \item{dim}{a vector of length 2, giving the dimensions c(d,N) of the data}
+
+\item{na.action}{na.action}
+
+\item{removed.cases}{number of cases removed for having missing values}
 }
 \description{
 S3 generic methods for performing a one sample test for high dimensional repeated measures

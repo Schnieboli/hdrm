@@ -5,6 +5,7 @@
 #' @param data either a matrix or a data.frame with N subjects in rows and d factor levels in columns
 #' @param hypothesis either one of c("equal","flat") or a matrix of dimensions c(d,d)
 #' @param alpha alpha level used for calculating the critical value
+#' @param na.action determines how to deal with individuals with missing values. only `copmplete.obs` is supported right now.
 #' @return \item{data}{the initial input data}
 #' @return \item{f}{the degrees of freedom f of the Distribution of the test statistic}
 #' @return \item{statistic}{the value of the test statistic}
@@ -13,8 +14,10 @@
 #' @return \item{critical.value}{the critical value depending on alpha}
 #' @return \item{p.value}{the $p$-value of the test statistic}
 #' @return \item{dim}{a vector of length 2, giving the dimensions c(d,N) of the data}
+#' @return \item{na.action}{na.action}
+#' @return \item{removed.cases}{number of cases removed for having missing values}
 #' @export
-hdrm1 <- function(data, hypothesis = c("equal","flat"), alpha = 0.05){
+hdrm1 <- function(data, hypothesis = c("equal","flat"), alpha = 0.05, na.action = "complete.obs"){
   UseMethod("hdrm1")
 }
 
@@ -26,19 +29,25 @@ hdrm1.default <- function(data,...){
 
 #' @method hdrm1 matrix
 #' @export
-hdrm1.matrix <- function(data, hypothesis, alpha){
+hdrm1.matrix <- function(data, hypothesis, alpha, na.action = "complete.obs"){
   X <- as.matrix(data)
-  return(hdrm1_internal(X = t(X), hypothesis = hypothesis, alpha = alpha))
+  return(hdrm1_internal(X = t(X), hypothesis = hypothesis, alpha = alpha, na.action = na.action))
 }
 
 #' @keywords internal
-hdrm1_internal <- function(X, hypothesis, alpha){
+hdrm1_internal <- function(X, hypothesis, alpha, na.action){
+
+  ## Fehlende Werte
+  if(na.action == "complete.obs"){
+    N_with_NA <- dim(X)[1]
+    X <- X[complete.cases(X),]
+  }
+
 
   ## Schätzer definieren
   N <- dim(X)[1]
   d <- dim(X)[2]
   stopifnot(is.matrix(X), is.numeric(X), N >= 3)
-
 
 
   ### Hypothesenmatrizen
@@ -77,14 +86,16 @@ hdrm1_internal <- function(X, hypothesis, alpha){
   if(is.matrix(hypothesis)) H <- "custom"
   else H <- paste0(hypothesis[1], " time profile")
 
-  L <- list(data = X,
+  L <- list(data = X, # hier vielleicht X ohne NAs?
             f = f,
             statisitc = W,
             tau = 1/f,
             hypothesis = H,
             p.value = p.value,
             critical.value = critical.value,
-            dim = c(d = d, N = N)
+            dim = c(d = d, N = N),
+            na.action = na.action,
+            removed.cases = N_with_NA - N
   )
   class(L) <- c("hdrm1","list")
   return(L)
@@ -102,5 +113,6 @@ print.hdrm1 <- function(X,...){
       \nW =", X$statisitc, " f =", X$f, " p.value =", X$p.value,
       "\nNull-Hypothesis:", X$hypothesis,
       "\nConvergence parameter \u03c4 =", X$tau,
-      "\n")
+      "\nAnalysis of", X$dim[2], "individuals", paste0("(", X$removed.cases," individuals removed)"))
+  cat("\n")
 }
