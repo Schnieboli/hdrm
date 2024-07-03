@@ -82,6 +82,11 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action){
   # tol = .Machine$double.eps für maximale Accuracy -> sonst kommt ab einer bestimmten Extremität immer der gleiche Wert raus
   p.value <- optimise(pWert_Kf, interval = c(0,1), param = f, statistic = W, tol = .Machine$double.eps)$minimum
 
+  ### von Paavo -> bin mir nicht sicher, ob das richtig ist, deswegen lass ich mal das alte...
+  ## p-Wert
+  #p.value = 1 - dchisq(W * sqrt(2 * f) + f, df = f)
+
+
   ### Ausgabe
   if(is.matrix(hypothesis)) H <- "custom"
   else H <- paste0(hypothesis[1], " time profile")
