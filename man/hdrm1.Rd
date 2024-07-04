@@ -6,6 +6,7 @@
 \usage{
 hdrm1(
   data,
+  formula,
   hypothesis = c("equal", "flat"),
   alpha = 0.05,
   na.action = "complete.obs"

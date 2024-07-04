@@ -1,5 +1,5 @@
 #' trace estimator B_0
-#' 
+#'
 #' @param X data matrix with individuals in rows and levels in cols multiplied with the hypothesis matrix
 #' @param N number of individuals
 #' @return returns the trace estimator for T*V
@@ -14,7 +14,7 @@ B0 <- function(X, N){
 }
 
 #' trace estimator B_2
-#' 
+#'
 #' @param X data matrix with individuals in rows and levels in cols multiplied with the hypothesis matrix
 #' @param N number of individuals
 #' @return returns the trace estimator for (T*V)^2
@@ -30,7 +30,7 @@ B2 <- function(X, N){
 }
 
 #' trace estimator B_3
-#' 
+#'
 #' @param X data matrix with individuals in rows and levels in cols multiplied with the hypothesis matrix
 #' @param N number of individuals
 #' @return returns the trace estimator for (T*V)^3

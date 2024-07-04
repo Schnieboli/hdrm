@@ -17,7 +17,7 @@
 #' @return \item{na.action}{na.action}
 #' @return \item{removed.cases}{number of cases removed for having missing values}
 #' @export
-hdrm1 <- function(data, hypothesis = c("equal","flat"), alpha = 0.05, na.action = "complete.obs"){
+hdrm1 <- function(data, formula, hypothesis = c("equal","flat"), alpha = 0.05, na.action = "complete.obs"){
   UseMethod("hdrm1")
 }
 
@@ -29,10 +29,57 @@ hdrm1.default <- function(data,...){
 
 #' @method hdrm1 matrix
 #' @export
-hdrm1.matrix <- function(data, hypothesis, alpha, na.action = "complete.obs"){
-  X <- as.matrix(data)
-  return(hdrm1_internal(X = t(X), hypothesis = hypothesis, alpha = alpha, na.action = na.action))
+hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "complete.obs"){
+  return(hdrm1_internal(X = t(data), hypothesis = hypothesis, alpha = alpha, na.action = na.action))
 }
+
+
+#' @method hdrm1 data.frame
+#' @export
+hdrm1.data.frame <- function(formula, data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "complete.obs"){
+
+  #### Fall: nur ein data.frame gegeben, kein formelobjekt
+  if(missing(formula) || (is.data.frame(formula) & missing(data))){
+
+    ## falls nur ein df als formula eingegeben wird, dann checkt die funktion, dass es sich um data handeln soll
+    if(!missing(formula) && (is.data.frame(formula) & missing(data))) data <- formula
+
+    if(all(c("subject","value","factor") %in% names(data))){
+      value <- data$value
+      stopifnot(is.numeric(value)) # value muss numeric sein
+      subject <- droplevels(as.factor(data$subject))
+      factor <- droplevels(as.factor(data$factor))
+    } else stop("data must either be a data.frame with the columns 'value', 'subject' and 'factor' or the columns have to be specified by formula")
+  }
+
+  #### Fall: formula und data gegeben
+  ### Formelobjekt der Form value ~ subject + dimension
+  if(is.formula(formula) & is.data.frame(data)){
+    # genau 2 unabhängige variablen
+    if(length(attr(terms(formula), "term.labels")) != 2) stop("formula must be of the form 'value ~ subject + factor'")
+
+    # aus Formel extrahieren
+    value <- data[[rlang::f_lhs(formula)]]
+    subject <- droplevels(as.factor(data[[attr(terms(formula), "term.labels")[1]]]))
+    factor <- droplevels(as.factor(data[[attr(terms(formula), "term.labels")[2]]]))
+
+  }
+
+  ## N und d definieren
+  N <- nlevels(subject)
+  d <- nlevels(factor)
+
+  ## Kontrolle, ob alle Individuen gleich viele Dimensionen haben
+  if(!all(table(factor) == table(factor)[1])) stop("All subjects need to have the same number of dimensions")
+
+  ### Matrix bauen
+  Mat <- matrix(NA, N, d)
+  for (i in 1:N) {
+    Mat[i,] <- value[subject == i][order(factor[subject == i])]
+  }
+  return(hdrm1_internal(Mat, hypothesis = hypothesis, alpha = alpha, na.action = na.action))
+}
+
 
 #' @keywords internal
 hdrm1_internal <- function(X, hypothesis, alpha, na.action){
@@ -96,6 +143,7 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action){
             statisitc = W,
             tau = 1/f,
             hypothesis = H,
+            hypothesis.matrix = TM,
             p.value = p.value,
             critical.value = critical.value,
             dim = c(d = d, N = N),
@@ -112,12 +160,21 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action){
 
 #' @method print hdrm1
 #' @export
-print.hdrm1 <- function(X,...){
+print.hdrm1 <- function(x,...){
   cat("\n")
   cat("       One Dimensional Repeated Measure
-      \nW =", X$statisitc, " f =", X$f, " p.value =", X$p.value,
-      "\nNull-Hypothesis:", X$hypothesis,
-      "\nConvergence parameter \u03c4 =", X$tau,
-      "\nAnalysis of", X$dim[2], "individuals", paste0("(", X$removed.cases," individuals removed)"))
+      \nW =", x$statisitc, " f =", x$f, " p.value =", x$p.value,
+      "\nNull-Hypothesis:", x$hypothesis,
+      "\nConvergence parameter \u03c4 =", x$tau,
+      "\nAnalysis of", x$dim[2], "individuals", paste0("(removed: ", x$removed.cases, ")"))
   cat("\n")
 }
+
+#' @method summary hdrm1
+#' @export
+summary.hdrm1 <- function(X,...){
+  print(X,...)
+}
+
+
+
