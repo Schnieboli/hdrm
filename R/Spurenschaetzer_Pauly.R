@@ -6,12 +6,10 @@
 #' @keywords internal
 
 B0 <- function(X, N){
-  S <- 0
-  for (i in 1:N) {
-    S <- S + sum(X[i, ]^2)
-  }
-  return(S/N)
+  return(sum(rowSums(X^2))/N)
 }
+
+
 
 #' trace estimator B_2
 #'
@@ -20,13 +18,14 @@ B0 <- function(X, N){
 #' @return returns the trace estimator for (T*V)^2
 #' @keywords internal
 B2 <- function(X, N){
-  S <- 0
-  for (k in 1:N) {
-    for(l in 1:N){
-      if(k != l) S <- S + (sum(X[k, ] * X[l, ])^2)
-    }
+  S <- (rowSums(X^2))^2
+  M <- sum(X[1,]^2)^2
+  for (i in 2:N) {
+    Y <-  X * X[c(i:N, 1:(i-1)),]
+    S <- S + (rowSums(Y))^2
+    M <- M + sum(X[i,]^2)^2
   }
-  return(S / (N*(N-1)))
+  return((sum(S) - M)/(N*(N-1)))
 }
 
 #' trace estimator B_3
