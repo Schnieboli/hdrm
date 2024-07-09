@@ -4,13 +4,7 @@
 \alias{hdrm1}
 \title{Test for one dimensional repeated measures}
 \usage{
-hdrm1(
-  data,
-  formula,
-  hypothesis = c("equal", "flat"),
-  alpha = 0.05,
-  na.action = "complete.obs"
-)
+hdrm1(data, formula, ...)
 }
 \arguments{
 \item{data}{either a matrix or a data.frame with N subjects in rows and d factor levels in columns}

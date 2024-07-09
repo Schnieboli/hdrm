@@ -17,7 +17,7 @@
 #' @return \item{na.action}{na.action}
 #' @return \item{removed.cases}{number of cases removed for having missing values}
 #' @export
-hdrm1 <- function(data, formula, hypothesis = c("equal","flat"), alpha = 0.05, na.action = "complete.obs"){
+hdrm1 <- function(data, formula,...){
   UseMethod("hdrm1")
 }
 
@@ -29,14 +29,15 @@ hdrm1.default <- function(data,...){
 
 #' @method hdrm1 matrix
 #' @export
-hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "complete.obs"){
-  return(hdrm1_internal(X = t(data), hypothesis = hypothesis, alpha = alpha, na.action = na.action))
+hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "na.omit"){ # na.action muss raus -> klappt nicht so, wie ich mir das vorgestellt habe und ist ja auch egal, weil ja eh nur na.omit funktionieren soll
+  ## Mat wird so eingegeben, dass Individuen in Spalten und Dimension in Zeilen ist -> für na.action besser
+  return(hdrm1_internal(X = data, hypothesis = hypothesis, alpha = alpha, na.action = na.action))
 }
 
 
 #' @method hdrm1 data.frame
 #' @export
-hdrm1.data.frame <- function(formula, data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "complete.obs"){
+hdrm1.data.frame <- function(formula, data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "na.omit"){
 
   #### Fall: nur ein data.frame gegeben, kein formelobjekt
   if(missing(formula) || (is.data.frame(formula) & missing(data))){
@@ -54,7 +55,7 @@ hdrm1.data.frame <- function(formula, data, hypothesis = c("flat","equal"), alph
 
   #### Fall: formula und data gegeben
   ### Formelobjekt der Form value ~ subject + dimension
-  if(is.formula(formula) & is.data.frame(data)){
+  if(!missing(formula) & (rlang::is_formula(formula) & is.data.frame(data))){
     # genau 2 unabhängige variablen
     if(length(attr(terms(formula), "term.labels")) != 2) stop("formula must be of the form 'value ~ subject + factor'")
 
@@ -77,18 +78,19 @@ hdrm1.data.frame <- function(formula, data, hypothesis = c("flat","equal"), alph
   for (i in 1:N) {
     Mat[i,] <- value[subject == i][order(factor[subject == i])]
   }
-  return(hdrm1_internal(Mat, hypothesis = hypothesis, alpha = alpha, na.action = na.action))
+  ## Mat wird so eingegeben, dass Individuen in Spalten und Dimension in Zeilen ist -> für na.action besser
+  return(hdrm1_internal(t(Mat), hypothesis = hypothesis, alpha = alpha, na.action = na.action))
 }
 
 
 #' @keywords internal
-hdrm1_internal <- function(X, hypothesis, alpha, na.action){
+hdrm1_internal <- function(X, hypothesis, alpha, na.action = na.action){
 
+  # Matrix X kommt eingegeben als: dim(X) = c(d,N)
   ## Fehlende Werte
-  if(na.action == "complete.obs"){
-    N_with_NA <- dim(X)[1]
-    X <- X[complete.cases(X),]
-  }
+  stopifnot(na.action %in% c("na.omit","na.exclude","na.fail"))
+  N_with_NA <- dim(X)[2]
+  X <- t(na.omit(X)) # -> hier muss dann iwie mit attr gearbeitet werden -> auf diese weise kann man dann auch sehen, welche Individuen
 
 
   ## Schätzer definieren
@@ -110,9 +112,9 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action){
 
 
   ### Schätzer berechnen
-  spurNormal <- B0(X = XT, N = N)
-  spurQuadrat <- B2(X = XT, N = N)
-  spurHoch3 <- B3(X = XT, N = N)
+  spurNormal <- B0(X = XT, N = N)/N
+  spurQuadrat <- B2(X = XT, N = N)/(N*(N-1))
+  spurHoch3 <- B3(X = XT, N = N)/choose(N,3)
 
   ### Teststatistik W
   W <- (Qn - spurNormal) / sqrt(2*spurQuadrat)
@@ -163,10 +165,10 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action){
 print.hdrm1 <- function(x,...){
   cat("\n")
   cat("       One Dimensional Repeated Measure
-      \nW =", x$statisitc, " f =", x$f, " p.value =", x$p.value,
+        \nAnalysis of", x$dim[2], "individuals", paste0("(", x$removed.cases, " removed)"), "and", paste0(x$dim[1]), "dimensions:",
+      "\nW =", x$statisitc, " f =", x$f, " p.value =", x$p.value,
       "\nNull-Hypothesis:", x$hypothesis,
-      "\nConvergence parameter \u03c4 =", x$tau,
-      "\nAnalysis of", x$dim[2], "individuals", paste0("(removed: ", x$removed.cases, ")"))
+      "\nConvergence parameter \u03c4 =", x$tau)
   cat("\n")
 }
 

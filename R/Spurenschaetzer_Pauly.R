@@ -6,7 +6,7 @@
 #' @keywords internal
 
 B0 <- function(X, N){
-  return(sum(rowSums(X^2))/N)
+  return(sum(rowSums(X^2)))
 }
 
 
@@ -25,7 +25,7 @@ B2 <- function(X, N){
     S <- S + (rowSums(Y))^2
     M <- M + sum(X[i,]^2)^2
   }
-  return((sum(S) - M)/(N*(N-1)))
+  return(sum(S) - M)
 }
 
 #' trace estimator B_3
@@ -43,5 +43,5 @@ B3 <- function(X, N){
       }
     }
   }
-  return(S/choose(N,3))
+  return(S)
 }
