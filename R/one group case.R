@@ -164,7 +164,7 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = na.action){
 #' @export
 print.hdrm1 <- function(x,...){
   cat("\n")
-  cat("       One Dimensional Repeated Measure
+  cat("          One Group Repeated Measure
         \nAnalysis of", x$dim[2], "individuals", paste0("(", x$removed.cases, " removed)"), "and", paste0(x$dim[1]), "dimensions:",
       "\nW =", x$statisitc, " f =", x$f, " p.value =", x$p.value,
       "\nNull-Hypothesis:", x$hypothesis,
