@@ -4,7 +4,7 @@
 #' S3 generic methods for performing a one sample test for high dimensional repeated measures
 #' @param data either a matrix or a data.frame with N subjects in rows and d factor levels in columns
 #' @param hypothesis either one of c("equal","flat") or a matrix of dimensions c(d,d)
-#' @param alpha alpha level used for calculating the critical value
+#' @param alpha alpha level usedu for calculating the critical value
 #' @param na.action determines how to deal with individuals with missing values. only `copmplete.obs` is supported right now.
 #' @return \item{data}{the initial input data}
 #' @return \item{f}{the degrees of freedom f of the Distribution of the test statistic}
@@ -38,7 +38,7 @@ hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), alpha = 0.05, na.
 #' @method hdrm1 data.frame
 #' @export
 hdrm1.data.frame <- function(formula, data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "na.omit"){
-
+  #browser()
   #### Fall: nur ein data.frame gegeben, kein formelobjekt
   if(missing(formula) || (is.data.frame(formula) & missing(data))){
 

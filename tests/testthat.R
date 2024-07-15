@@ -10,9 +10,3 @@ library(testthat)
 library(hdrm)
 
 test_check("hdrm")
-
-
-
-# eindimensional Matrix ---------------------------------------------------
-
-

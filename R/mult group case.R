@@ -6,39 +6,113 @@ hdrm_test <- function(data, formula,...){
 
 #' @method hdrm_test default
 #' @export
-hdrm_test.default <- function(data, formula, hypothesis, TW, TS, alpha, B, subsample){
+hdrm_test.default <- function(data, formula, hypothesis, alpha, B, subsample){
   stop("Your data must be either a list, a data frame or a matrix")
 }
 
 
 #' @method hdrm_test list
 #' @export
-hdrm_test.list <- function(data, hypothesis, TW, TS, alpha = 0.05, B = "500*N", subsample = FALSE){
-  ...
+hdrm_test.list <- function(data, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = FALSE){
+  #browser()
+  # Was muss sein?
+  # in jedem Eintrag eine numerische Matrix
+  stopifnot(all(sapply(data, is.matrix)), all(sapply(data, is.numeric)))
+  # midestens 2 Einträge
+  stopifnot(length(data) >= 2)
+  # in jeder Matrix gleich viele Zeilen
+  stopifnot(length(unique(sapply(data, function(X)dim(X)[1]))) == 1)
+  # in jeder Matrix mind. 6 Spalten
+  stopifnot(all(sapply(data, function(X) dim(X)[2]) >= 6))
+
+  ### Matrix bauen
+  # group erstellen
+  if(is.null(names(data))){
+    group <- factor(1:length(data))
+  }else{
+    group <- as.factor(names(data))
+  }
+
+  # Matrix bauen
+  X <- L[[1]]
+  for (i in 2:length(data)) { # so ist das halt sehr Laufzeitunfreundlich (da immer neuer Speicher für X gesucht werden muss), deswegen mal schauen, ob man das so lassen kann...
+  X <- cbind(X, data[[i]])
+  }
+
+  ## Aufruf der internen Funktion
+  hdrm_test_internal(data = X, group = rep(group, each = dim(data[[1]])[2]), hypothesis = hypothesis, alpha = 0.05, B = "500*N",)
 }
 
 #' @method hdrm_test matrix
 #' @export
-hdrm_test.matrix <- function(data, group, hypothesis, TW, TS, alpha = 0.05, B = "500*N", subsample = FALSE){
-  ...
+hdrm_test.matrix <- function(data, group, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = FALSE){
+  hdrm_test_internal(data = data, group = group, hypothesis = hypothesis, alpha = alpha, B = B)
 }
 
 #' @method hdrm_test data.frame
 #' @export
-hdrm_test.data.frame <- function(data, formula, hypothesis, TW, TS, alpha = 0.05, B = "100*N", subsample = FALSE){
-  ...
+hdrm_test.data.frame <- function(data, formula, hypothesis = c("whole","sub","interaction"), TW, TS, alpha = 0.05, B = "100*N", subsample = FALSE){
+
+  if(missing(formula)){
+    # überprüfen, ob alle spalten gegeben sind
+    stopifnot(all(c("value","whole","sub","subject") %in% names(data)))
+    # Vektoren extrahieren
+    value <- data$value
+    whole <- as.factor(data$whole)
+    sub <- as.factor(data$sub)
+    subject <- as.factor(data$subject)
+  }else{ # formel soll gegeben sein als value ~ subject + whole + sub
+    term.labels <- attr(formula, "term.labels")
+    stopifnot(length(term.labels) == 3)
+    value <- data[[rlang::f_lhs(formula)]]
+    subject <- as.factor(data[[term.labels[1]]])
+    whole <- as.factor(data[[term.labels[2]]])
+    sub <- as.factor(data[term.labels[3]])
+  }
+
+  ## Dimensionen
+  N <- nlevels(subject)
+  a <- nlevels(whole)
+  d <- nlevels(sub)
+
+  ### Bedingungen überprüfen
+  # alle Individuen haben gleich viele dimensionen
+  stopifnot(length(unique(table(df$sub))) == 1) # von Jessica geholfen
+  # in jeder Gruppe mind 6 individuen
+  # -> wird eig in der internen Funktion auch noch mal abgefragt...
+  # mind 2 Gruppen
+  stopifnot(a >= 2)
+
+
+  ## Matrix bauen
+  data <- sort_by(data, whole)
+  X <- matrix(NA, d, 0)
+  M <- matrix(NA, d, N)
+
+  for(j in 1:a){
+    for (i in 1:N) {
+      M[,i] <- value[subject == i & whole == j][order(sub[subject == i & whole == j])]
+    }
+    X <- cbind(X,M)
+  }
+
+  group <- numeric(0)
+  i = 1
+  while(i < dim(data)[1]){
+    group <- c(group, data$whole[i])
+    i <- i + d
+  }
+
+  ## Funktionsaufruf
+  return(hdrm_test_internal(data = X, group = group, hypothesis = hypothesis, alpha = alpha, B = B))
 }
-
-
 
 #### Was soll eingegeben werden??
 ## X = matrix mit dimensionen c(d,N) -> Individuen in Spalten, Dimension in Zeilen
 ## group = vector der Länge N mit der Gruppenzuweisung
-## hypothesis = character %in% c("time","group","interaction") oder Matrix mit Dimension c(d,d)
+## hypothesis = character %in% c("time","group","interaction") oder liste mit Einträgen TW und TS mit dim(TW) = c(a,a) und dim(TS) = c(d,d)
 #' @export
-hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","interaction"), TW, TS, alpha = 0.05, B = "500*N", subsample = subsample){
-
-  #browser()
+hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = subsample){
 
   # N,d,a bestimmen
   N_with_NA <- dim(data)[2]
