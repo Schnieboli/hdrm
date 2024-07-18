@@ -143,14 +143,14 @@ hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","intera
     TM <- kronecker(TW, TS)
   }
 
-  if(is.character(hypothesis)){ # hypothesis gegeben und TW,TS missing
+  if(is.character(hypothesis)){
     if(hypothesis[1] == "whole"){
-      TW <- diag(a) - matrix(1,a,a)/a
+      TW <- diag(a) - matrix(1/a,a,a)
       TS <- matrix(1,d,d)/d
     }
     if(hypothesis[1] == "sub"){
       TW <- matrix(1,a,a)/a
-      TS <- diag(d) - matrix(1,d,d)/d
+      TS <- diag(d) - matrix(1/d,d,d)
     }
     if(hypothesis[1] == "interaction"){
       TW <- diag(a) - matrix(1,a,a)/a
@@ -159,30 +159,31 @@ hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","intera
     TM <- kronecker(TW, TS) # TM = T
   }
 
+  #browser()
 
   ### Spurenschätzer -> hier weiß ich nicht, ob alles richtig ist...
 
   # X vorbereiten
   X <- TS %*% data
 
-  #
   spur1 <- spur3 <- spur4 <- 0
   spur2 <- matrix(0, a, a)
   # spur1
+  #browser()
   for (i in 1:a) {
-    spur1 <- spur1 + A1(X = X[, group == i], n = n[i])
+    spur1 <- spur1 + A1(X = t(X[, group == i]), n = n[i])
   }
 
   # spur2
   for (i in 1:(a-1)) {
     for(r in (i+1):a){
-      spur2[i,r] <- A2(X = X[, group == i], Y = X[, group == r])
+      spur2[i,r] <- A2(X = t(X[, group == i]), Y = t(X[, group == r]))
     }
   }
 
   # spur3
   for (i in 1:a) {
-    spur3 <- spur3 + A3(X = X[, group == i])
+    spur3 <- spur3 + A3(X = t(X[, group == i]))
   }
 
 
@@ -192,7 +193,7 @@ hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","intera
   ## jetzt erstmal im alten stil -> das heißt: X in Liste umwandeln
   X_list <- vector(mode = "list")
   for(i in 1:a){
-    X_list <- c(X_list, list(X[, group == i]))
+    X_list <- c(X_list, list(t(X[, group == i])))
   }
   spur4 <- C5stern_alt(X = X_list, w = eval(parse(text = B)), N = N, a = a, n = n)
 

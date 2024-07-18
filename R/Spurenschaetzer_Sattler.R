@@ -4,7 +4,7 @@
 
 
 #' @keywords internal
-A1 <- function(X, n){
+A1 <- function(X, n){# braucht Individuen in Zeilen und dimension in Spalten
   Result <- 0
   n <- dim(X)[1]
   for (k in 1:(n - 1))
@@ -29,7 +29,7 @@ A1_star <- function(B){
 # A2 ----------------------------------------------------------------------
 
 #' @keywords internal
-A2 <- function(X, Y){
+A2 <- function(X, Y){# braucht Individuen in Zeilen und dimension in Spalten
   nX <- dim(X)[1] # Anzahl Individuen in Gruppe
   nY <- dim(Y)[1]
   PX <- diag(1, nX, nX) - matrix(data = 1 / nX, # Zentrierungsmatrix für Gruppe X
@@ -42,7 +42,7 @@ A2 <- function(X, Y){
   EBSchaetzer = matrix(data = 1, nrow = 1, ncol = nX) %*%
     (MXY * MXY) %*% matrix(data = 1, nrow = nY, ncol = 1) / ((nX - 1) * (nY - 1))
   # (Edgar Brunner Schätzer)
-  return(EBSchaetzer)
+  return(as.vector(EBSchaetzer))
 }
 
 
@@ -105,7 +105,7 @@ A2 <- function(X, Y){
 # }
 
 #' @keywords internal
-A3 <- function(X){
+A3 <- function(X){ # braucht Individuen in Zeilen und dimension in Spalten
   nX = dim(X)[1]
   Part1 = 0
   Part2 = 0
