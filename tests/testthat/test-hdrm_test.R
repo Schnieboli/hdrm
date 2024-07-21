@@ -53,3 +53,21 @@ test_that("equal p.value",{
   expect_equal(c(Erg_list$p.value, Erg_data.frame$p.value), c(Erg_matrix$p.value, Erg_matrix$p.value),
                tolerance = 1e-7)
 })
+
+
+Erg_list <- hdrm_test(data = L, hypothesis = "whole")
+Erg_matrix <- hdrm_test(M, group = rep(1:a, each = N), hypothesis = "whole")
+Erg_data.frame <- hdrm_test(df, hypothesis = "whole")
+
+test_that("equal W",{
+  expect_equal(c(Erg_list$statisitc, Erg_data.frame$statisitc), c(Erg_matrix$statisitc, Erg_matrix$statisitc))
+})
+
+
+Erg_list <- hdrm_test(data = L, hypothesis = "interaction")
+Erg_matrix <- hdrm_test(M, group = rep(1:a, each = N), hypothesis = "interaction")
+Erg_data.frame <- hdrm_test(df, hypothesis = "interaction")
+
+test_that("equal W",{
+  expect_equal(c(Erg_list$statisitc, Erg_data.frame$statisitc), c(Erg_matrix$statisitc, Erg_matrix$statisitc))
+})

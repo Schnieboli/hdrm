@@ -4,38 +4,44 @@
 \alias{hdrm1}
 \title{Test for one dimensional repeated measures}
 \usage{
-hdrm1(data, formula, ...)
+hdrm1(data, ...)
+
+hdrm1.matrix(data, hypothesis, alpha = 0.05)
+
+hdrm1.data.frame(data, formula = value ~ subject + factor, hypothesis, alpha = 0.05)
 }
 \arguments{
-\item{data}{either a matrix or a data.frame with N subjects in rows and d factor levels in columns}
+\item{data}{either a matrix with subjects in columns and factor levels in rows or a data.frame of longtable format}
 
-\item{hypothesis}{either one of c("equal","flat") or a matrix of dimensions c(d,d)}
+\item{formula}{a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form 'value ~ subject + factor'}
+
+\item{hypothesis}{One of 'equal' or 'flat' for H0: equal/flat time profile. Can also be a matrix of dimensions \eqn{d\times d}}
 
 \item{alpha}{alpha level used for calculating the critical value}
-
-\item{na.action}{determines how to deal with individuals with missing values. only \code{copmplete.obs} is supported right now.}
 }
 \value{
-\item{data}{the initial input data}
+Returns an object from class "hdrm1"
 
-\item{f}{the degrees of freedom f of the Distribution of the test statistic}
+\item{data}{the initial input data. If a data.frame was given it will have been transformed to a matrix.}
 
-\item{statistic}{the value of the test statistic}
+\item{f}{the degrees of freedom \eqn{f} of the distribution of the test statistic}
 
-\item{tau}{the convergence parameter tau}
+\item{statistic}{the test statistic \eqn{W}}
 
-\item{hypothesi}{the type of hypothesis}
+\item{tau}{the convergence parameter \eqn{\tau}}
 
-\item{critical.value}{the critical value depending on alpha}
+\item{H0}{the Nullhypothesis tested. Will be 'custom' if 'hypothesis' was given as a matrix.}
 
-\item{p.value}{the $p$-value of the test statistic}
+\item{H}{the hypothesis-matrix used.}
 
-\item{dim}{a vector of length 2, giving the dimensions c(d,N) of the data}
+\item{p.value}{the p-value of the test statistic}
 
-\item{na.action}{na.action}
+\item{critical.value}{the critical value depending on \eqn{\alpha}}
 
-\item{removed.cases}{number of cases removed for having missing values}
+\item{dim}{a vector of length 2, giving the dimensions \eqn{d \times N} of the data}
+
+\item{removed.cases}{number of subjects removed for having missing values.}
 }
 \description{
-S3 generic methods for performing a one sample test for high dimensional repeated measures
+S3 generic methods for performing a one sample test for one group repeated measure data
 }
