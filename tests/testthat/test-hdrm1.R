@@ -4,13 +4,13 @@ devtools::load_all()
 # Dieses Skript erzeugt eine Liste, eine Matrix und einen Data Frame, die das identische Ergebnis ausgeben sollten.
 # Anschließend wird getestet, ob die gleichen Ergebnisse rauskommen
 
-N <- 20
-d <- 30
+N <- 60
+d <- 80
 
 
 ### Matrixobjekt erstellen
 set.seed(1)
-M <- matrix(rnorm(N*d, mean = 1000), d, N)
+M <- matrix(rnorm(N*d), d, N)
 
 
 # data.frame erstellen
