@@ -1,10 +1,3 @@
-## usethis namespace: start
-#' @importFrom Rcpp sourceCpp
-#' @useDynLib hdrm, .registration = TRUE
-## usethis namespace: end
-NULL
-
-
 #' Test for one dimensional repeated measures
 #'
 #' @description
@@ -141,7 +134,7 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
   if(is.matrix(hypothesis)) H <- "custom"
   else H <- paste0(hypothesis[1], " time profile")
 
-  L <- list(data = X, # hier vielleicht X ohne NAs?
+  L <- list(data = t(X), # das ist X ohne NAs!!! ich weiß nicht, warum es transponiert sein muss, aber so ist es richtig
             f = f,
             statisitc = W,
             tau = 1/f,
