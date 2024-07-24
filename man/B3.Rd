@@ -4,12 +4,10 @@
 \alias{B3}
 \title{trace estimator B_3}
 \usage{
-B3(X, N)
+B3(X)
 }
 \arguments{
 \item{X}{data matrix with individuals in rows and levels in cols multiplied with the hypothesis matrix}
-
-\item{N}{number of individuals}
 }
 \value{
 returns the trace estimator for (T*V)^3

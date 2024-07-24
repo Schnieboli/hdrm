@@ -4,12 +4,10 @@
 \alias{B0}
 \title{trace estimator B_0}
 \usage{
-B0(X, N)
+B0(X)
 }
 \arguments{
 \item{X}{data matrix with individuals in rows and levels in cols multiplied with the hypothesis matrix}
-
-\item{N}{number of individuals}
 }
 \value{
 returns the trace estimator for T*V

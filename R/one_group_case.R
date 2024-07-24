@@ -1,11 +1,19 @@
+## usethis namespace: start
+#' @importFrom Rcpp sourceCpp
+#' @useDynLib hdrm, .registration = TRUE
+## usethis namespace: end
+NULL
+
+
 #' Test for one dimensional repeated measures
 #'
 #' @description
 #' S3 generic methods for performing a one sample test for one group repeated measure data
 #' @param data either a matrix with subjects in columns and factor levels in rows or a data.frame of longtable format
-#' @param formula a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form 'value ~ subject + factor'
+#' @param formula a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form value ~ subject + factor
 #' @param hypothesis One of 'equal' or 'flat' for H0: equal/flat time profile. Can also be a matrix of dimensions \eqn{d\times d}
 #' @param alpha alpha level used for calculating the critical value
+#' @param ... further arguments. Currently ignored.
 # hier wurde die dokumentation für na.omit entfernt -> da eh nur na.omit funktioniert, muss das eigentlich nicht dokumentiert werden...
 #' @returns Returns an object from class "hdrm1"
 #' @return \item{data}{the initial input data. If a data.frame was given it will have been transformed to a matrix.}
@@ -18,26 +26,27 @@
 #' @return \item{critical.value}{the critical value depending on \eqn{\alpha}}
 #' @return \item{dim}{a vector of length 2, giving the dimensions \eqn{d \times N} of the data}
 #' @return \item{removed.cases}{number of subjects removed for having missing values.}
-#' @usage hdrm1(data, ...)
-#' @usage hdrm1.matrix(data, hypothesis, alpha = 0.05)
-#' @usage hdrm1.data.frame(data, formula = value ~ subject + factor, hypothesis, alpha = 0.05)
+#' @aliases hdrm1.matrix
+#' @aliases hdrm1.data.frame
+#' @usage hdrm1.matrix(data, hypothesis, alpha = 0.05,...)
+#' @usage hdrm1.data.frame(data, formula, hypothesis, alpha = 0.05,...)
 #' @export
-hdrm1 <- function(data, formula, hypothesis, alpha){
+hdrm1 <- function(data, formula, hypothesis = c("flat", "equal"), alpha = 0.05,...){
   UseMethod("hdrm1")
 }
 
 #' @method hdrm1 default
 #' @export
-hdrm1.default <- function(data,...){
+hdrm1.default <- function(data, formula, hypothesis = c("flat","equal"), alpha=0.05,...){
   stop("Your data needs to be either a matrix or a data.frame")
 }
 
 
 #' @method hdrm1 matrix
 #' @export
-hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), alpha = 0.05, na.action = "na.omit"){ # na.action muss raus -> klappt nicht so, wie ich mir das vorgestellt habe und ist ja auch egal, weil ja eh nur na.omit funktionieren soll
+hdrm1.matrix <- function(data, formula, hypothesis = c("flat","equal"), alpha = 0.05,...){ # na.action muss raus -> klappt nicht so, wie ich mir das vorgestellt habe und ist ja auch egal, weil ja eh nur na.omit funktionieren soll
   ## Mat wird so eingegeben, dass Individuen in Spalten und Dimension in Zeilen ist -> für na.action besser
-  return(hdrm1_internal(X = data, hypothesis = hypothesis, alpha = alpha, na.action = na.action))
+  return(hdrm1_internal(X = data, hypothesis = hypothesis, alpha = alpha))
 }
 
 
@@ -45,10 +54,10 @@ hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), alpha = 0.05, na.
 
 #' @method hdrm1 data.frame
 #' @export
-hdrm1.data.frame <- function(data, formula, hypothesis = c("flat", "equal"), alpha = 0.05, na.action = "na.omit"){
+hdrm1.data.frame <- function(data, formula, hypothesis = c("flat", "equal"), alpha = 0.05,...){
 
   # df enthält nur die relevanten Spalten
-  df <- model.frame(formula = formula, data = data)
+  df <- stats::model.frame(formula = formula, data = data)
   # df soll genau 3 Spalten haben
   stopifnot(ncol(df) == 3)
   names(df) <- c("value", "subject", "factor")
@@ -69,20 +78,20 @@ hdrm1.data.frame <- function(data, formula, hypothesis = c("flat", "equal"), alp
   }
 
   ## Funktionsaufruf
-  hdrm1_internal(X = M, hypothesis = hypothesis, alpha = alpha, na.action = na.action)
+  hdrm1_internal(X = M, hypothesis = hypothesis, alpha = alpha)
 }
 
 
 
-
+#' interne Funktion für die Berechnung
 #' @keywords internal
-hdrm1_internal <- function(X, hypothesis, alpha, na.action = na.action){
+hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
 
   # Matrix X kommt eingegeben als: dim(X) = c(d,N)
   ## Fehlende Werte
   stopifnot(na.action %in% c("na.omit"))
   N_with_NA <- dim(X)[2]
-  X <- t(na.omit(X)) # -> hier muss dann iwie mit attr gearbeitet werden -> auf diese weise kann man dann auch sehen, welche Individuen
+  X <- t(stats::na.omit(X)) # -> hier muss dann iwie mit attr gearbeitet werden -> auf diese weise kann man dann auch sehen, welche Individuen
 
 
   ## Schätzer definieren
@@ -104,9 +113,9 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = na.action){
 
 
   ### Schätzer berechnen
-  spurNormal <- B0(X = XT, N = N)/N
-  spurQuadrat <- B2(X = XT, N = N)/(N*(N-1))
-  spurHoch3 <- B3(X = XT, N = N)/choose(N,3)
+  spurNormal <- B0(XT)/N
+  spurQuadrat <- B2_cpp(t(XT))/(N*(N-1))
+  spurHoch3 <- B3_cpp(t(XT))/choose(N,3)
 
   ### Teststatistik W
   W <- (Qn - spurNormal) / sqrt(2*spurQuadrat)
@@ -115,14 +124,14 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = na.action){
   f <- spurQuadrat^3 / spurHoch3^2
 
   ### Kritischer Wert und p-Werte
-  critical.value <- (qchisq(1- alpha, df = f) - f) / sqrt(2*f)
+  critical.value <- (stats::qchisq(1- alpha, df = f) - f) / sqrt(2*f)
 
   # pWert_Kf gibt die für ein alpha und param = f den Abstand des Quantils zur Teststatistik aus
-  pWert_Kf <- function(p, param, statistic) abs( ((qchisq(1-p, param) - param)/sqrt(2*param)) - statistic )
+  pWert_Kf <- function(p, param, statistic) abs( ((stats::qchisq(1-p, param) - param)/sqrt(2*param)) - statistic )
   # hier wird auf[0, 1] das minimum der funktion pWert_Kf gesucht
   # tol = .Machine$double.eps für maximale Accuracy -> sonst kommt ab einer bestimmten Extremität immer der gleiche Wert raus
-  p.value <- optimise(pWert_Kf, interval = c(0,1), param = f, statistic = W, tol = .Machine$double.eps)$minimum
-
+  p.value <- stats::optimise(pWert_Kf, interval = c(0,1), param = f, statistic = W, tol = .Machine$double.eps)$minimum
+#
   ### von Paavo -> bin mir nicht sicher, ob das richtig ist, deswegen lass ich mal das alte...
   ## p-Wert
   #p.value = 1 - dchisq(W * sqrt(2 * f) + f, df = f)
@@ -166,8 +175,8 @@ print.hdrm1 <- function(x,...){
 
 #' @method summary hdrm1
 #' @export
-summary.hdrm1 <- function(X,...){
-  print(X,...)
+summary.hdrm1 <- function(object,...){
+  print(object,...)
 }
 
 
