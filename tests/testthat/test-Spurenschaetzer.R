@@ -26,7 +26,6 @@ B2_intuitiv <- function(X){
 B3_intuitiv <- function(X){
   N <- ncol(X)
   S <- 0
-  #browser()
   for (k in 1:(N-2)) {
     for (l in (k+1):(N-1)) {
       for (r in (l+1):N) {
@@ -36,8 +35,8 @@ B3_intuitiv <- function(X){
   }
   return(sum(S))
 }
-#
-#
+
+
 # # Tests -------------------------------------------------------------------
 #
 set.seed(1)
