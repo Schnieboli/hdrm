@@ -9,3 +9,7 @@ B2_cpp <- function(mat) {
     .Call(`_hdrm_B2_cpp`, mat)
 }
 
+A3_cpp <- function(mat, Part6) {
+    .Call(`_hdrm_A3_cpp`, mat, Part6)
+}
+

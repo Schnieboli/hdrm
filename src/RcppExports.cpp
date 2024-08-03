@@ -32,10 +32,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// A3_cpp
+double A3_cpp(const NumericMatrix& mat, double Part6);
+RcppExport SEXP _hdrm_A3_cpp(SEXP matSEXP, SEXP Part6SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< double >::type Part6(Part6SEXP);
+    rcpp_result_gen = Rcpp::wrap(A3_cpp(mat, Part6));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_hdrm_B3_cpp", (DL_FUNC) &_hdrm_B3_cpp, 1},
     {"_hdrm_B2_cpp", (DL_FUNC) &_hdrm_B2_cpp, 1},
+    {"_hdrm_A3_cpp", (DL_FUNC) &_hdrm_A3_cpp, 2},
     {NULL, NULL, 0}
 };
 
