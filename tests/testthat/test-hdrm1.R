@@ -1,5 +1,4 @@
 library(testthat)
-devtools::load_all()
 
 # Dieses Skript erzeugt eine Liste, eine Matrix und einen Data Frame, die das identische Ergebnis ausgeben sollten.
 # Anschließend wird getestet, ob die gleichen Ergebnisse rauskommen
@@ -48,8 +47,8 @@ test_that("equal W",{
 
 # wird halt optimiert, desegen kann es sein, dass das hier mal failed
 test_that("equal p.value",{
-  expect_equal(Erg_data.frame$p.value, Erg_matrix$p.value
-
+  expect_equal(Erg_data.frame$p.value, Erg_matrix$p.value)
+})
 
 
 Erg_matrix <- hdrm1(M, hypothesis = "equal")
