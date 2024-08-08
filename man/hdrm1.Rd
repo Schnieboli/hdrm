@@ -4,25 +4,28 @@
 \alias{hdrm1}
 \alias{hdrm1.matrix}
 \alias{hdrm1.data.frame}
+\alias{hdrm1.list}
 \title{Test for one dimensional repeated measures}
 \usage{
 hdrm1.matrix(data, hypothesis, alpha = 0.05,...)
 
 hdrm1.data.frame(data, formula, hypothesis, alpha = 0.05,...)
+
+hdrm1.list(data, hypothesis, alpha, ...)
 }
 \arguments{
 \item{data}{either a matrix with subjects in columns and factor levels in rows or a data.frame of longtable format}
 
-\item{formula}{a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form value ~ subject + factor}
+\item{formula}{a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form \code{value ~ subject + factor}}
 
 \item{hypothesis}{One of 'equal' or 'flat' for H0: equal/flat time profile. Can also be a matrix of dimensions \eqn{d\times d}}
 
 \item{alpha}{alpha level used for calculating the critical value}
 
-\item{...}{further arguments. Currently ignored.}
+\item{...}{further arguments are currently ignored.}
 }
 \value{
-Returns an object from class "hdrm1"
+Returns a list with class "hdrm1" with the components
 
 \item{data}{the initial input data. If a data.frame was given it will have been transformed to a matrix.}
 
@@ -32,7 +35,7 @@ Returns an object from class "hdrm1"
 
 \item{tau}{the convergence parameter \eqn{\tau}}
 
-\item{H0}{the Nullhypothesis tested. Will be 'custom' if 'hypothesis' was given as a matrix.}
+\item{H0}{the Nullhypothesis tested. Will be 'custom' if \code{hypothesis} was given as a matrix.}
 
 \item{H}{the hypothesis-matrix used.}
 
@@ -46,4 +49,17 @@ Returns an object from class "hdrm1"
 }
 \description{
 S3 generic methods for performing a one sample test for one group repeated measure data
+}
+\details{
+If \code{data} is a matrix or a list of multiple matrices with the same amount of rows then it is assumed that individuals are represented by columns and factor levels by rows.
+
+If \code{data} is a data.frame, \code{formula} must be a formula object of the form \code{value ~ subject + factor} that specifies the corresponding columns of the \code{data.frame}.
+Each subject and factor level must be represented by a unique ID.
+
+`hypothesis`` can either be given as one of "flat" or "equal" for testing whether the time profile is flat: \eqn{H_0: \mu_1 = \ldots = \mu_d} or equal: \eqn{H_0: \mu = 0}. Alternatively 'hypothesis' can also be a custom contrast matrix \eqn{T \in \mathbb{R}^{d\times d}}
+
+Subjects with missing values will be disregarded.
+}
+\references{
+Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of high-dimensional one group repeated measures designs. Statistics, 49(6), 1243–1261. https://doi.org/10.1080/02331888.2015.1050022
 }
