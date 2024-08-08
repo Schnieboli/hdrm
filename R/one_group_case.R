@@ -3,17 +3,26 @@
 #' @description
 #' S3 generic methods for performing a one sample test for one group repeated measure data
 #' @param data either a matrix with subjects in columns and factor levels in rows or a data.frame of longtable format
-#' @param formula a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form value ~ subject + factor
+#' @param formula a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form `value ~ subject + factor`
 #' @param hypothesis One of 'equal' or 'flat' for H0: equal/flat time profile. Can also be a matrix of dimensions \eqn{d\times d}
 #' @param alpha alpha level used for calculating the critical value
-#' @param ... further arguments. Currently ignored.
-# hier wurde die dokumentation für na.omit entfernt -> da eh nur na.omit funktioniert, muss das eigentlich nicht dokumentiert werden...
-#' @returns Returns an object from class "hdrm1"
+#' @param ... further arguments are currently ignored.
+#' @details
+#' If `data` is a matrix or a list of multiple matrices with the same amount of rows then it is assumed that individuals are represented by columns and factor levels by rows.
+#'
+#' If `data` is a data.frame, `formula` must be a formula object of the form `value ~ subject + factor` that specifies the corresponding columns of the `data.frame`.
+#' Each subject and factor level must be represented by a unique ID.
+#'
+#' `hypothesis`` can either be given as one of "flat" or "equal" for testing whether the time profile is flat: \eqn{H_0: \mu_1 = \ldots = \mu_d} or equal: \eqn{H_0: \mu = 0}. Alternatively 'hypothesis' can also be a custom contrast matrix \eqn{T \in \mathbb{R}^{d\times d}}
+#'
+#' Subjects with missing values will be disregarded.
+#'
+#' @returns Returns a list with class "hdrm1" with the components
 #' @return \item{data}{the initial input data. If a data.frame was given it will have been transformed to a matrix.}
 #' @return \item{f}{the degrees of freedom \eqn{f} of the distribution of the test statistic}
 #' @return \item{statistic}{the test statistic \eqn{W}}
 #' @return \item{tau}{the convergence parameter \eqn{\tau}}
-#' @return \item{H0}{the Nullhypothesis tested. Will be 'custom' if 'hypothesis' was given as a matrix.}
+#' @return \item{H0}{the Nullhypothesis tested. Will be 'custom' if `hypothesis` was given as a matrix.}
 #' @return \item{H}{the hypothesis-matrix used.}
 #' @return \item{p.value}{the p-value of the test statistic}
 #' @return \item{critical.value}{the critical value depending on \eqn{\alpha}}
@@ -21,8 +30,11 @@
 #' @return \item{removed.cases}{number of subjects removed for having missing values.}
 #' @aliases hdrm1.matrix
 #' @aliases hdrm1.data.frame
+#' @aliases hdrm1.list
 #' @usage hdrm1.matrix(data, hypothesis, alpha = 0.05,...)
 #' @usage hdrm1.data.frame(data, formula, hypothesis, alpha = 0.05,...)
+#' @usage hdrm1.list(data, hypothesis, alpha, ...)
+#' @references Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of high-dimensional one group repeated measures designs. Statistics, 49(6), 1243–1261. https://doi.org/10.1080/02331888.2015.1050022
 #' @export
 hdrm1 <- function(data, formula, hypothesis = c("flat", "equal"), alpha = 0.05,...){
   UseMethod("hdrm1")
@@ -38,8 +50,23 @@ hdrm1.default <- function(data, formula, hypothesis = c("flat","equal"), alpha=0
 #' @method hdrm1 matrix
 #' @export
 hdrm1.matrix <- function(data, formula, hypothesis = c("flat","equal"), alpha = 0.05,...){ # na.action muss raus -> klappt nicht so, wie ich mir das vorgestellt habe und ist ja auch egal, weil ja eh nur na.omit funktionieren soll
-  ## Mat wird so eingegeben, dass Individuen in Spalten und Dimension in Zeilen ist -> für na.action besser
+
   return(hdrm1_internal(X = data, hypothesis = hypothesis, alpha = alpha))
+}
+
+#' @method hdrm1 list
+#' @export
+hdrm1.list <- function(data, formula, hypothesis = c("flat","equal"), alpha = 0.05,...){
+  dims <- sapply(data, dim)
+  stopifnot(dim(t(dims)) == c(1,2)) # checken, ob alle matrizen die gleiche dimension haben
+  stopifnot(all(sapply(data, is.matrix)) | all(sapply(data, is.data.frame)))
+
+  mat <- matrix(0, dims[1,2],0)
+  for (i in 1:length) {
+    mat <- cbind(mat, data[[i]])
+  }
+
+  return(hdrm1_internal(X = mat, hypothesis = hypothesis, alpha = alpha))
 }
 
 
@@ -84,7 +111,7 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
   ## Fehlende Werte
   stopifnot(na.action %in% c("na.omit"))
   N_with_NA <- dim(X)[2]
-  X <- t(stats::na.omit(X)) # -> hier muss dann iwie mit attr gearbeitet werden -> auf diese weise kann man dann auch sehen, welche Individuen
+  X <- t(stats::na.omit(X)) # -> hier muss dann iwie mit attr gearbeitet werden -> auf diese weise kann man dann auch sehen, welche Individuen entfernt wurden
 
 
   ## Schätzer definieren
@@ -94,9 +121,12 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
 
 
   ### Hypothesenmatrizen
+  TM <- NA
   if(is.matrix(hypothesis) & all(dim(hypothesis) == c(d,d))) TM <- hypothesis
   if(hypothesis[1] == "equal") TM <- diag(d)
   if(hypothesis[1] == "flat") TM <- diag(d) -  matrix(1/d, d, d)
+  # wenn keiner der oberen fälle zutrifft oder ein NA in TM ist, dann breche ab
+  if(any(is.na(TM))) stop("Please specify valid hypothesis.")
 
 
   ### Teststatistik Q
@@ -107,13 +137,13 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
 
   ### Schätzer berechnen
   spurNormal <- B0(XT)/N
-  spurQuadrat <- B2_cpp(t(XT))/(N*(N-1))
-  spurHoch3 <- B3_cpp(t(XT))/choose(N,3)
+  spurQuadrat <- B2_cpp(XT)/(N*(N-1))
+  spurHoch3 <- B3_cpp(XT)/choose(N,3)
 
   ### Teststatistik W
   W <- (Qn - spurNormal) / sqrt(2*spurQuadrat)
 
-  ### Verteilungsparameter f schätzer
+  ### Verteilungsparameter f schätzen
   f <- spurQuadrat^3 / spurHoch3^2
 
   ### Kritischer Wert und p-Werte
@@ -134,7 +164,7 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
   if(is.matrix(hypothesis)) H <- "custom"
   else H <- paste0(hypothesis[1], " time profile")
 
-  L <- list(data = t(X), # das ist X ohne NAs!!! ich weiß nicht, warum es transponiert sein muss, aber so ist es richtig
+  L <- list(data = t(X), # X ohne NAs -> muss transponiert sein, da X am Anfang transponiert wurde
             f = f,
             statisitc = W,
             tau = 1/f,

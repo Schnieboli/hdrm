@@ -2,6 +2,7 @@
 
 S3method(hdrm1,data.frame)
 S3method(hdrm1,default)
+S3method(hdrm1,list)
 S3method(hdrm1,matrix)
 S3method(hdrm_test,data.frame)
 S3method(hdrm_test,default)
