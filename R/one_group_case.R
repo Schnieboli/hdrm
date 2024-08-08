@@ -34,6 +34,8 @@
 #' @usage hdrm1.matrix(data, hypothesis, alpha = 0.05,...)
 #' @usage hdrm1.data.frame(data, formula, hypothesis, alpha = 0.05,...)
 #' @usage hdrm1.list(data, hypothesis, alpha, ...)
+#' @example examples_one_group_case.R
+#'
 #' @references Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of high-dimensional one group repeated measures designs. Statistics, 49(6), 1243–1261. https://doi.org/10.1080/02331888.2015.1050022
 #' @export
 hdrm1 <- function(data, formula, hypothesis = c("flat", "equal"), alpha = 0.05,...){
