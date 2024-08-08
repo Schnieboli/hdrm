@@ -1,17 +1,30 @@
+---
+output: github_document
+bibliography: biblio.bib 
+csl: 2d-materials.csl
+---
 
+
+```{r, results = 'hide', warning = FALSE, error = FALSE, message = FALSE, echo=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
 # hdrm
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-R package for performing tests on high dimensional repeated measure data
-for one group \[1\] or multiple groups \[2\].
+R package for performing tests on high dimensional repeated measure data for one group @Pauly2015-jo or multiple groups @Sattler2018-az.
 
 ## Installation
 
 The current version can be installed with:
 
-``` r
+``` {r installation, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
 ## install devtools package
 if (!requireNamespace("devtools", quietly = TRUE)) {
   install.packages("devtools")
@@ -22,10 +35,9 @@ devtools::install_github("Schnieboli/hdrm", dependencies = TRUE)
 
 ## One group case
 
-A one group test can be performed by using the function hdrm1. Generic
-functions exist for the classes matrix, list and data.frame.
+A one group test can be performed by using the function hdrm1. Generic functions exist for the classes matrix, list and data.frame.
 
-``` r
+```{r example hdrm1, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
 library(hdrm)
 ## hdrm1 with matrix
 N <- 60
@@ -45,15 +57,14 @@ formula <- value ~ subject + dimension
 
 # test EEG for equal time profile
 hdrm1(data = EEG, formula = formula, hypothesis = "equal")
+
+
 ```
 
+
 ## Multiple group case
-
-A test for multiple groups can be performed by the function hdrm_test.
-Here also exist generics for objects of class matrix, list and
-data.frame.
-
-``` r
+A test for multiple groups can be performed by the function hdrm_test. Here also exist generics for objects of class matrix, list and data.frame.
+```{r example hdrm_test, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
 library(hdrm)
 ## hdrm1 with matrix
 N <- 60
@@ -74,27 +85,5 @@ formula <- value ~ subject + dimension
 
 # test EEG for equal time profile
 hdrm1(data = EEG, formula = formula, hypothesis = "equal")
-```
 
-<div id="refs" class="references csl-bib-body">
 
-<div id="ref-Pauly2015-jo" class="csl-entry">
-
-<span class="csl-left-margin">\[1\]
-</span><span class="csl-right-inline">Pauly M, Ellenberger D and Brunner
-E 2015 Analysis of high-dimensional one group repeated measures designs
-*Statistics (Ber.)* **49** 1243–61</span>
-
-</div>
-
-<div id="ref-Sattler2018-az" class="csl-entry">
-
-<span class="csl-left-margin">\[2\]
-</span><span class="csl-right-inline">Sattler P and Pauly M 2018
-Inference for high-dimensional split-plot-designs: A unified approach
-for small to large numbers of factor levels *Electron. J. Stat.* **12**
-2743–805</span>
-
-</div>
-
-</div>
