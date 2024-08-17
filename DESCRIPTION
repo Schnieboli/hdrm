@@ -16,7 +16,9 @@ Depends:
 LazyData: true
 Imports:
     Rcpp,
+    RcppArmadillo,
     rlang,
     stats
 LinkingTo: 
-    Rcpp
+    Rcpp,
+    RcppArmadillo

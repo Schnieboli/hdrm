@@ -1,68 +1,35 @@
 #include <Rcpp.h>
 using namespace Rcpp;
-//
-// // [[Rcpp::export]]
-// double A1_cpp(const NumericMatrix& mat){
-//   int nrows = mat.nrow();
-//   int ncols = mat.ncol();
-//
-//   double out = 0.0;
-//   double diff = 0.0;
-//   double val1 = 0.0;
-//   double val2 = 0.0;
-//
-//
-//   for(int i = 0; i < nrows - 1; ++i){
-//     for(int j = i + 1; j < nrows; ++j){
-//
-//       for(int k = 0; k < ncols; ++k){
-//
-//         val1 = mat(i,k);
-//         val2 = mat(j,k);
-//         diff = val1 - val2;
-//
-//         out += diff*diff;
-//       }
-//
-//     }
-//   }
-// return out;
-// }
-//
-//
-// // [[Rcpp::export]]
-// double A2_cpp(const NumericMatrix& mat_i, const NumericMatrix& mat_r){
-//   int n1 = mat_i.nrow();
-//   int n2 = mat_r.nrow();
-//   int d = mat_i.ncol();
-//
-//
-//   double temp = 0.0;
-//   double out = 0.0;
-//   double p1;
-//   double p2;
-//
-//   for(int i = 0; i < n1; ++i){
-//     for(int j = 0; j < n2; ++j){
-//       temp = 0;
-//       for(int k = 0; k < d; ++k){
-//         p1 = mat_i(i,k);
-//         p2 = mat_r(j,k);
-//         temp += p1 * p2;
-//
-//       }
-//       out += pow(temp, 2);
-//     }
-//   }
-// return out;
-// }
+
+
+// A1 --------------------------------------------------------------------
 
 // [[Rcpp::export]]
-double A3_cpp(const NumericMatrix& mat, double Part6){ // gleiches Ergebnis wie A3_R -> etwa 12x schneller
+double A1_cpp(const NumericMatrix& mat){
+  int nrows = mat.nrow();
+  int ncols = mat.ncol();
+
+  double out = 0.0;
+  double diff = 0.0;
+
+
+  for(int i = 0; i < ncols - 1; ++i){
+    for(int j = i + 1; j < ncols; ++j){
+      for(int k = 0; k < nrows; ++k){
+        diff = mat(k,i) - mat(k,j);
+        out += diff*diff;
+      }
+    }
+  }
+return out;
+}
+
+// A3 ---------------------------------------------------------------------
+// [[Rcpp::export]]
+double A3_cpp(const NumericMatrix& mat, double Part6){ // Part6 = sum(rowMeans(mat)^2) in R
 
   int n = mat.ncol(), d = mat.nrow();
   double out;
-
   double Part1 = 0.0, Part2 = 0.0, Part3 = 0.0, Part4 = 0.0, Part5 = 0.0, Part7 = 0.0;
   double a12 = 0.0, a22 = 0.0, a13 = 0.0, a23 = 0.0;
 
@@ -99,16 +66,9 @@ double A3_cpp(const NumericMatrix& mat, double Part6){ // gleiches Ergebnis wie 
   Part2 *= (2*n - 5);
   Part6 *= pow(n,2);
 
-  out = (Part1 - Part2 - Part3 - Part4 - Part5 + (Part6 * (Part6 - Part7))) / (n * (n-1) * (n-2)* (n-3));
+  out = (Part1 - Part2 - Part3 - Part4 - Part5 + (Part6 * (Part6 - Part7)));
+  out /= n * (n-1) * (n-2)* (n-3);
 
   return(out);
-
 }
-
-
-
-
-
-
-
 
