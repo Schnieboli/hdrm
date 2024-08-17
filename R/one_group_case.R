@@ -1,4 +1,4 @@
-#' Test for one dimensional repeated measures
+#' Test for one group high dimensional repeated measures
 #'
 #' @description
 #' S3 generic methods for performing a one sample test for one group repeated measure data
