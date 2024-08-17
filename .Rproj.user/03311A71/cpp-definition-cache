@@ -1,10 +1,37 @@
 [
     {
-        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Pauly.cpp",
-        "file_last_write": 1722882097.0,
+        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/A2_Sattler.cpp",
+        "file_last_write": 1723653802.0,
         "definitions": [
             {
-                "usr": "c:@F@B3_cpp#&1$@N@Rcpp@S@Matrix>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#",
+                "usr": "c:@F@A2_cpp#&I#S0_#S0_#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "A2_cpp(int &, int &, int &, int &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/A2_Sattler.cpp",
+                "line": 8,
+                "column": 11,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@C5star_cpp#&I#S0_#1I#S0_#S0_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "C5star_cpp(int &, int &, const int, int &, int &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/A2_Sattler.cpp",
+                "line": 18,
+                "column": 8,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Pauly.cpp",
+        "file_last_write": 1723133466.0,
+        "definitions": [
+            {
+                "usr": "c:@F@B3_cpp#&1I#",
                 "kind": 6,
                 "parent_name": "",
                 "name": "B3_cpp(const Rcpp::NumericMatrix &)",
@@ -14,22 +41,12 @@
                 "hidden": false
             },
             {
-                "usr": "c:@F@B3_cpp_ptr#&1$@N@Rcpp@S@Matrix>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#",
-                "kind": 6,
-                "parent_name": "",
-                "name": "B3_cpp_ptr(const Rcpp::NumericMatrix &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Pauly.cpp",
-                "line": 41,
-                "column": 8,
-                "hidden": false
-            },
-            {
-                "usr": "c:@F@B2_cpp#&1$@N@Rcpp@S@Matrix>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#",
+                "usr": "c:@F@B2_cpp#&1I#",
                 "kind": 6,
                 "parent_name": "",
                 "name": "B2_cpp(const Rcpp::NumericMatrix &)",
                 "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Pauly.cpp",
-                "line": 84,
+                "line": 41,
                 "column": 8,
                 "hidden": false
             }
@@ -38,15 +55,25 @@
     },
     {
         "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Sattler.cpp",
-        "file_last_write": 1722879107.0,
+        "file_last_write": 1723653357.0,
         "definitions": [
             {
-                "usr": "c:@F@A3_cpp#&1$@N@Rcpp@S@Matrix>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#d#",
+                "usr": "c:@F@A1_cpp#&1I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "A1_cpp(const Rcpp::NumericMatrix &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Sattler.cpp",
+                "line": 8,
+                "column": 8,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@A3_cpp#&1I#d#",
                 "kind": 6,
                 "parent_name": "",
                 "name": "A3_cpp(const Rcpp::NumericMatrix &, double)",
                 "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Sattler.cpp",
-                "line": 61,
+                "line": 43,
                 "column": 8,
                 "hidden": false
             }
