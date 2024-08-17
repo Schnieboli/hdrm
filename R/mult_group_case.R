@@ -1,131 +1,20 @@
-#' dings
-#'
-#' @export
-hdrm_test <- function(data, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = FALSE,...){
-  UseMethod("hdrm_test")
-}
-
-#' @method hdrm_test default
-#' @export
-hdrm_test.default <- function(data, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = FALSE, ...){
-  stop("Your data must be either a list, a data frame or a matrix")
-}
-
-
-#' @method hdrm_test list
-#' @export
-hdrm_test.list <- function(data, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = FALSE){
-  #browser()
-  # Was muss sein?
-  # in jedem Eintrag eine numerische Matrix
-  stopifnot(all(sapply(data, is.matrix)), all(sapply(data, is.numeric)))
-  # midestens 2 Einträge
-  stopifnot(length(data) >= 2)
-  # in jeder Matrix gleich viele Zeilen
-  stopifnot(length(unique(sapply(data, function(X)dim(X)[1]))) == 1)
-  # in jeder Matrix mind. 6 Spalten
-  stopifnot(all(sapply(data, function(X) dim(X)[2]) >= 6))
-
-  ### Matrix bauen
-  # group erstellen
-  if(is.null(names(data))){
-    group <- factor(1:length(data))
-  }else{
-    group <- as.factor(names(data))
-  }
-
-  # Matrix bauen
-  X <- data[[1]]
-  for (i in 2:length(data)) { # so ist das halt sehr Laufzeitunfreundlich (da immer neuer Speicher für X gesucht werden muss), deswegen mal schauen, ob man das so lassen kann...
-  X <- cbind(X, data[[i]])
-  }
-
-  ## Aufruf der internen Funktion
-  hdrm_test_internal(data = X, group = rep(group, each = dim(data[[1]])[2]), hypothesis = hypothesis, alpha = 0.05, B = "500*N",)
-}
-
-#' @method hdrm_test matrix
-#' @export
-hdrm_test.matrix <- function(data, group, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = FALSE){
-  hdrm_test_internal(data = data, group = group, hypothesis = hypothesis, alpha = alpha, B = B)
-}
-
-#' @method hdrm_test data.frame
-#' @export
-hdrm_test.data.frame <- function(data, formula, hypothesis = c("whole","sub","interaction"), TW, TS, alpha = 0.05, B = "100*N", subsample = FALSE){
-  #browser()
-  if(missing(formula)){
-    # überprüfen, ob alle spalten gegeben sind
-    stopifnot(all(c("value","whole","sub","subject") %in% names(data)))
-    # Vektoren extrahieren
-    df <- data.frame(value = data$value,
-                     subject = as.factor(data$subject),
-                     whole = as.factor(data$whole),
-                     sub = as.factor(data$sub)
-                     )
-  }else{ # formel soll gegeben sein als value ~ subject + whole + sub
-    # df enthält nur die relevanten Spalten
-    df <- stats::model.frame(formula = formula, data = data)
-  }
-  stopifnot(length(names(df)) == 4)
-
-  ## Dimensionen
-  N <- nlevels(df[,2])
-  a <- nlevels(df[,3])
-  d <- nlevels(df[,4])
-
-  ### Bedingungen überprüfen
-  # alle Individuen haben gleich viele dimensionen
-  stopifnot(length(unique(table(df$sub))) == 1) # von Jessica geholfen
-  # in jeder Gruppe mind 6 individuen
-  # -> wird eig in der internen Funktion auch noch mal abgefragt...
-  # mind 2 Gruppen
-  stopifnot(a >= 2)
-
-#browser()
-  # Matrix bauenn
-  X <- matrix(NA, d, 0)
-  M <- matrix(NA, d, N)
-  L <- split(df, df[,3])
-  group <- numeric(0)
-
-
-  for(j in 1:a){
-    temp = droplevels(L[[j]])
-    M <- matrix(0, d, nlevels(temp[,2]))
-    group <- c(group, rep(j, nlevels(temp[,2])))
-    k = 1
-    for (i in levels(temp[,2])) {
-      M[,k] <- temp[,1][temp[,2] == i]
-      k <- k + 1
-    }
-    X <- cbind(X,M)
-  }
-
-
-  ## Funktionsaufruf
-  return(hdrm_test_internal(data = X, group = group, hypothesis = hypothesis, alpha = alpha, B = B))
-}
-
 #### Was soll eingegeben werden??
 ## X = matrix mit dimensionen c(d,N) -> Individuen in Zeilen, Dimensionen in Spalten
 ## group = vector der Länge N mit der Gruppenzuweisung
 ## hypothesis = character %in% c("time","group","interaction") oder liste mit Einträgen TW und TS mit dim(TW) = c(a,a) und dim(TS) = c(d,d)
-#' alibi dokumentation
 #' @export
 hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", subsample = subsample){
 
-  #browser()
   # N,d,a bestimmen
   N_with_NA <- dim(data)[2]
   group <- group[stats::complete.cases(t(data))] # hier mit factor arbeiten
 
-  data <- t(stats::na.omit(t(data)))
+  data <- t(stats::na.omit(t(data))) # data ist nicht transponiert!!!
   N <- dim(data)[2]
   d <- dim(data)[1]
   a <- length(table(group))
   n <- as.integer(table(group))
-
+  stopifnot(length(group) == N)
   ### Stopkriterien
   # mind 2 Gruppen
   # mind 6 Individuen
@@ -161,72 +50,65 @@ hdrm_test_internal <- function(data, group, hypothesis = c("whole","sub","intera
     TM <- kronecker(TW, TS) # TM = T
   }
 
-  ### Spurenschätzer -> hier weiß ich nicht, ob alles richtig ist...
+  # X_TS vorbereiten
+  X_TS <- TS %*% data
 
-  # X vorbereiten
-  X <- TS %*% data
+  A1 <- A3 <- numeric(a)
+  A2 <- matrix(0, a, a)
+  C5 <- numeric(1)
 
-  spur1 <- spur3 <- spur4 <- 0
-  spur2 <- matrix(0, a, a)
-  # spur1
-  #browser()
+  # spur1 und spur3
   for (i in 1:a) {
-    spur1 <- spur1 + A1(X = X[, group == i])
+    A1[i] <- A1_cpp(mat = X_TS[, group == i])/(2*choose(n[i],2))
+    A3[i] <- A3_cpp(mat = X_TS[, group == i], Part6 = sum(rowMeans(X_TS[, group == i])^2))
   }
 
   # spur2
   for (i in 1:(a-1)) {
     for(r in (i+1):a){
-      spur2[i,r] <- A2(X = X[, group == i], Y = X[, group == r])
+      A2[i,r] <- A2(X = X_TS[, group == i], Y = X_TS[, group == r])
     }
   }
 
-  # spur3
+  C5 <- C5star(X = data, group = group, TM = TM, B = eval(expr = parse(text = B)))
+
+  # E(Q_N)
+  EW <- sum((N/n) * diag(TW) * A1)
+
+  # A4
+  temp1 <- temp2 <- 0
   for (i in 1:a) {
-    spur3 <- spur3 + A3(X = X[, group == i])
+    temp1 <- temp1 + ((N/n[i])^2 * TW[i,i]^2 * A3[i])
   }
-
-
-  ########## Hier stimm iwas mit der Funktion C5star nicht -> muss verändert werden -> beide Versionen klappen nicht :(
-  # spur4
-  #spur4 <- C5stern(X = X, w = eval(parse(text = B)), a = a, n = n)
-  ## jetzt erstmal im alten stil -> das heißt: X in Liste umwandeln
-  X_list <- vector(mode = "list")
-  for(i in 1:a){
-    X_list <- c(X_list, list(t(X[, group == i])))
-  }
-  spur4 <- C5stern_alt(X = X_list, w = eval(parse(text = B)), N = N, a = a, n = n)
-
-  # Erwartungswert
-  EW <- sum((N/n) * diag(TW)) * spur1 # falls spur1 nicht vektorisiert
-
-  # Varianz
-  hilf <- 0
   for (i in 1:(a-1)) {
     for(r in (i+1):a){
-      hilf = hilf + ( (N^2 / (n[i]*n[r])) * TW[i,r]^2 * spur2[i,r])
+      temp2 = temp2 + ( (N^2 / (n[i]*n[r])) * TW[i,r]^2 * A2[i,r])
     }
   }
-  Var <- (sum((N/n)^2 * TW^2) * spur3 + 2*hilf) # das ist eigentlich nicht Var, sondern A4!!!
-  rm(hilf)
+  A4 <- temp1 + 2*temp2
+  rm(temp1, temp2)
+
+  # Var(Q_N)
+  Var <- 2*A4
+
 
   ### Teststatistik
-  X_quer <- NULL
+  X_bar <- NULL
   for (i in 1:a) {
-    X_quer <- c(X_quer, colMeans(data[, group == i]))
+    X_bar <- c(X_bar, rowMeans(data[, group == i])) # hier rowMeans, da data nicht transponiert ist und wir den mean über die Zeit haben wollen (-> wenn sich heraus stellt, dass wir mean über das individuum haben wollen, dann colMeans)
   }
-  Q <- N * sum(T %*% X_quer^2)
-  W <- as.numeric((Q - EW) / sqrt(2*Var))
+  QN <- N * sum(X_bar *(TM %*% X_bar))
+  W <- as.numeric((QN - EW) / sqrt(Var))
 
   # Test
-  f <- as.numeric(Var^3 / spur4^2)
+  f <- as.numeric(A4^3 / C5^2)
   crit.value <- (stats::qchisq(1-alpha, df = f) - f) / sqrt(2*f)
   pWert_Kf <- function(p, param, statistic) abs( ((stats::qchisq(1-p, param) - param)/sqrt(2*param)) - statistic)
   # hier wird auf[0, 1] das minimum der funktion pWert_Kf gesucht
   # tol = .Machine$double.eps für maximale Accuracy -> sonst kommt ab einer bestimmten Extremität immer der gleiche Wert raus
   p.value <- stats::optimise(pWert_Kf, interval = c(0,1), param = f, statistic = W, tol = .Machine$double.eps)$minimum
 
-  #browser()
+
 
   ## Ausgabe
   L <- list(data = data,
@@ -257,9 +139,9 @@ print.hdrm <- function(x,...){
   cat("\n")
   cat("          Multi Group Repeated Measure
         \nAnalysis of", x$dim$N, "individuals", paste0("(", x$removed.cases, " removed)"), "in", x$groups$a, "groups", "and", paste0(x$dim$d), "dimensions:",
-      "\nW =", x$statisitc, " f =", x$f, " p.value =", x$p.value,
+      "\nW =", x$statisitc, " f =", round(x$f,4), " p.value =", round(x$p.value, 4),
       "\nNull-Hypothesis:", ifelse(is.list(x$hypothesis), "custom", paste0("No effect in ",x$hypothesis,"plot-factor")),
-      "\nConvergence parameter \u03c4 =", x$tau)
+      "\nConvergence parameter \u03c4 =", round(x$tau,4))
   cat("\n")
 }
 #' @method summary hdrm

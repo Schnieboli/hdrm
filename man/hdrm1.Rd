@@ -5,7 +5,7 @@
 \alias{hdrm1.matrix}
 \alias{hdrm1.data.frame}
 \alias{hdrm1.list}
-\title{Test for one dimensional repeated measures}
+\title{Test for one group high dimensional repeated measures}
 \usage{
 hdrm1.matrix(data, hypothesis, alpha = 0.05,...)
 
