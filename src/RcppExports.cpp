@@ -11,32 +11,17 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// A2_cpp
-arma::mat A2_cpp(arma::mat& mat_i, arma::mat& mat_r, arma::mat& P_i, arma::mat& P_r);
-RcppExport SEXP _hdrm_A2_cpp(SEXP mat_iSEXP, SEXP mat_rSEXP, SEXP P_iSEXP, SEXP P_rSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type mat_i(mat_iSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type mat_r(mat_rSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type P_i(P_iSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type P_r(P_rSEXP);
-    rcpp_result_gen = Rcpp::wrap(A2_cpp(mat_i, mat_r, P_i, P_r));
-    return rcpp_result_gen;
-END_RCPP
-}
-// C5star_cpp
-double C5star_cpp(arma::mat& X, arma::vec& group, const int B, arma::mat& TM, arma::uvec n);
-RcppExport SEXP _hdrm_C5star_cpp(SEXP XSEXP, SEXP groupSEXP, SEXP BSEXP, SEXP TMSEXP, SEXP nSEXP) {
+// C5star_cpp_neu
+double C5star_cpp_neu(arma::mat& X, arma::vec& group, const int B, arma::uvec& n);
+RcppExport SEXP _hdrm_C5star_cpp_neu(SEXP XSEXP, SEXP groupSEXP, SEXP BSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type group(groupSEXP);
     Rcpp::traits::input_parameter< const int >::type B(BSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type TM(TMSEXP);
-    Rcpp::traits::input_parameter< arma::uvec >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(C5star_cpp(X, group, B, TM, n));
+    Rcpp::traits::input_parameter< arma::uvec& >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(C5star_cpp_neu(X, group, B, n));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -87,8 +72,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hdrm_A2_cpp", (DL_FUNC) &_hdrm_A2_cpp, 4},
-    {"_hdrm_C5star_cpp", (DL_FUNC) &_hdrm_C5star_cpp, 5},
+    {"_hdrm_C5star_cpp_neu", (DL_FUNC) &_hdrm_C5star_cpp_neu, 4},
     {"_hdrm_B3_cpp", (DL_FUNC) &_hdrm_B3_cpp, 1},
     {"_hdrm_B2_cpp", (DL_FUNC) &_hdrm_B2_cpp, 1},
     {"_hdrm_A1_cpp", (DL_FUNC) &_hdrm_A1_cpp, 1},

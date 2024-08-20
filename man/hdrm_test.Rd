@@ -61,6 +61,8 @@ Note, that specifying an interaction effect in  \code{formula} will give an erro
 
 \code{hypothesis} can either be given as "whole" (default), "sub" or "interaction". "whole" and "sub" stand for \eqn{H_0}: no differences in wholeplot/subplot-factor, while "interaction" means \eqn{H_0}: no interaction between subplot- and wholeplot-factor.
 Alternatively \code{hypothesis} can be a named list with components \code{TW} for the wholeplot-part and \code{TS} for the subplot-part of \eqn{T = T_W \otimes T_S}.
+
+Note, that \code{p.value} and \code{critical.value} may depend heavily on the choice of \code{B}, as both depend on the degrees of freedom \code{f}, which are estimated by C5.
 }
 \references{
 Paavo Sattler, Markus Pauly. "Inference for high-dimensional split-plot-designs: A unified approach for small to large numbers of factor levels." Electronic Journal of Statistics, 12(2) 2743-2805 2018. https://doi.org/10.1214/18-EJS1465

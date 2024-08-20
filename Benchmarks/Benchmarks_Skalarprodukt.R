@@ -10,9 +10,9 @@ for (j in 1:length(N)) {
   v1 <- rnorm(n)
   v1_t = t(v1)
   v2 <- rnorm(n)
-  x <- microbenchmark(crossprod = crossprod(v1,v2),
-                      sum = sum(v1*v2),
-                      "%*%" = v1_t %*% v2,
+  x <- microbenchmark(crossprod = {x <- numeric(1); x <- x + as.numeric(crossprod(v1,v2))},
+                      sum = {x <- numeric(1); x <- x + sum(v1*v2)},
+                      #"%*%" = {x <- numeric(1); x <- x + v1_t %*% v2},
                       unit = "relative",
                       times = 1000
   )

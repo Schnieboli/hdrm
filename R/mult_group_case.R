@@ -1,5 +1,5 @@
 #### Was soll eingegeben werden??
-## X = matrix mit dimensionen c(d,N) -> Individuen in Zeilen, Dimensionen in Spalten
+## X = matrix mit dimensionen c(d,N) -> Individuen in Spalten, Dimensionen in Zeilen
 ## group = vector der Länge N mit der Gruppenzuweisung
 ## hypothesis = character %in% c("time","group","interaction") oder liste mit Einträgen TW und TS mit dim(TW) = c(a,a) und dim(TS) = c(d,d)
 #' @export

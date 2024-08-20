@@ -55,7 +55,7 @@
     },
     {
         "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Sattler.cpp",
-        "file_last_write": 1723653357.0,
+        "file_last_write": 1723891330.0,
         "definitions": [
             {
                 "usr": "c:@F@A1_cpp#&1I#",
@@ -73,7 +73,7 @@
                 "parent_name": "",
                 "name": "A3_cpp(const Rcpp::NumericMatrix &, double)",
                 "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Sattler.cpp",
-                "line": 43,
+                "line": 29,
                 "column": 8,
                 "hidden": false
             }
