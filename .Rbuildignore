@@ -7,3 +7,4 @@
 ^README\.Rmd$
 ^biblio\.bib$
 ^2d-materials\.csl$
+^Benchmarks/Benchmarks_Sattler\.R$
