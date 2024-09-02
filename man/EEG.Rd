@@ -7,13 +7,13 @@
 \format{
 An object of class \code{data.frame} with 6400 rows and 7 columns.
 }
-\source{
-somelink.com
-}
 \usage{
 EEG
 }
 \description{
 EEG data from...
+}
+\references{
+Höller, Y., Bathke, A. C., Uhl, A., Strobl, N., Lang, A., Bergmann, J., Nardone, R., Rossini, F., Zauner, H., Kirschner, M., Jahanbekam, A., Trinka, E., & Staffen, W. (2017). Combining SPECT and quantitative EEG analysis for the automated differential diagnosis of disorders with amnestic symptoms. Front. Aging Neurosci., 9, 290. \href{https://doi.org//10.3389/fnagi.2017.00290}{https://doi.org//10.3389/fnagi.2017.00290}
 }
 \keyword{datasets}
