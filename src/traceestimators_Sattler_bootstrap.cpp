@@ -43,9 +43,9 @@ double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
     v3 = Y.col(indY(0));
     v4 = Y.col(indY(1));
     for(int j = 0; j < d; ++j){
-      temp += pow((v1(j) - v2(j)) * (v3(j) - v4(j)), 2);
+      temp += (v1(j) - v2(j)) * (v3(j) - v4(j));
     }
-    out += temp;
+    out += pow(temp, 2);
   }
   return(out/(4*B));
 }
@@ -69,9 +69,9 @@ double A3star_cpp(const arma::mat& X, int& B){
     v3 = X.col(ind(2));
     v4 = X.col(ind(3));
     for(int j = 0; j < d; ++j){
-      temp += pow((v1(j) - v2(j)) * (v3(j) - v4(j)), 2);
+      temp += (v1(j) - v2(j)) * (v3(j) - v4(j));
     }
-    out += temp;
+    out += pow(temp, 2);
   }
   return(out/(4*B));
 }
