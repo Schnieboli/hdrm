@@ -45,12 +45,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // A3_cpp
-double A3_cpp(const NumericMatrix& mat, double Part6);
+double A3_cpp(NumericMatrix& mat, double Part6);
 RcppExport SEXP _hdrm_A3_cpp(SEXP matSEXP, SEXP Part6SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const NumericMatrix& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< double >::type Part6(Part6SEXP);
     rcpp_result_gen = Rcpp::wrap(A3_cpp(mat, Part6));
     return rcpp_result_gen;
@@ -94,14 +94,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // C5star_cpp_internal
-double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int B, arma::uvec& n);
+double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n);
 RcppExport SEXP _hdrm_C5star_cpp_internal(SEXP XSEXP, SEXP groupSEXP, SEXP BSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type group(groupSEXP);
-    Rcpp::traits::input_parameter< const int >::type B(BSEXP);
+    Rcpp::traits::input_parameter< const int& >::type B(BSEXP);
     Rcpp::traits::input_parameter< arma::uvec& >::type n(nSEXP);
     rcpp_result_gen = Rcpp::wrap(C5star_cpp_internal(X, group, B, n));
     return rcpp_result_gen;

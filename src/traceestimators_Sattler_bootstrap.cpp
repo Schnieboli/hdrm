@@ -12,7 +12,7 @@ double A1star_cpp(const arma::mat& X, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    ind = arma::conv_to<arma::uvec>::from(arma::randperm(n).head(2));
+    ind = arma::randperm(n).head(2);
     v1 = X.col(ind(0));
     v2 = X.col(ind(1));
     for(int j = 0; j < d; ++j){
@@ -36,8 +36,8 @@ double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    indX = arma::conv_to<arma::uvec>::from(arma::randperm(nX).head(2));
-    indY = arma::conv_to<arma::uvec>::from(arma::randperm(nY).head(2));
+    indX = arma::randperm(nX).head(2);
+    indY = arma::randperm(nY).head(2);
     v1 = X.col(indX(0));
     v2 = X.col(indX(1));
     v3 = Y.col(indY(0));
@@ -56,14 +56,14 @@ double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
 double A3star_cpp(const arma::mat& X, int& B){
   int n = X.n_cols;
   int d = X.n_rows;
-  arma::vec v1(d), v2(d), v3(d), v4(d);
+  arma::colvec v1(d), v2(d), v3(d), v4(d);
   arma::uvec ind(2);
   double out = 0.0;
   double temp = 0.0;
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    ind = arma::conv_to<arma::uvec>::from(arma::randperm(n).head(4));
+    ind = arma::randperm(n).head(4);
     v1 = X.col(ind(0));
     v2 = X.col(ind(1));
     v3 = X.col(ind(2));
@@ -77,26 +77,28 @@ double A3star_cpp(const arma::mat& X, int& B){
 }
 
 // [[Rcpp::export]]
-double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int B, arma::uvec& n){ // Matrix X ist schon mit TM multipliziert und schon mit sqrt(N/n) multipliziert
+double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n){ // Matrix X ist schon mit TM multipliziert und schon mit sqrt(N/n) multipliziert
   // außerdem muss X nach Gruppen sortiert sein!!!
   int a = unique(group).index_max() + 1;
   int d = X.n_rows/a;
   double cout = 0.0;
   arma::vec Z12(d*a), Z34(d*a), Z56(d*a);
   arma::mat sigma(d*a, 6*a);
-  arma::vec indizes(6);
+  arma::uvec indizes(6);
   int ind = 0;
 
   for(int b = 0; b < B; ++b){
-    arma::vec Z12(d*a), Z34(d*a), Z56(d*a);
+    Z12.zeros();
+    Z34.zeros();
+    Z56.zeros();
     int shift = 0;
     for(int i = 0; i < a; ++i){
-      indizes = shift + arma::conv_to<arma::vec>::from(arma::randperm(n(i)).head(6)); // einfach so lassen!!!
-      shift += n(i); // damit immer die richtige Gruppe ausgewählt wird...
+      indizes = arma::randperm(n(i)).head(6); // einfach so lassen!!!
       for(int j = 0; j < 6; ++j){
-        ind = indizes(j);
+        ind = shift + indizes(j);
         sigma.col(6*i + j) = X.col(ind);
       }
+      shift += n(i); // damit immer die richtige Gruppe ausgewählt wird...
       Z12 += sigma.col(0 + 6*i) - sigma.col(1 + 6*i);
       Z34 += sigma.col(2 + 6*i) - sigma.col(3 + 6*i);
       Z56 += sigma.col(4 + 6*i) - sigma.col(5 + 6*i);
@@ -105,4 +107,3 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int B, arma::uv
   }
   return cout/(8*B);
 }
-

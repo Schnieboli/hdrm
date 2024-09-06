@@ -26,7 +26,7 @@ return out;
 
 // A3 ---------------------------------------------------------------------
 // [[Rcpp::export]]
-double A3_cpp(const NumericMatrix& mat, double Part6){ // Part6 = sum(rowMeans(mat)^2) in R
+double A3_cpp(NumericMatrix& mat, double Part6){ // Part6 = sum(rowMeans(mat)^2) in R
 
   int n = mat.ncol(), d = mat.nrow();
   double out;
