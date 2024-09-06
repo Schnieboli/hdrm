@@ -26,7 +26,6 @@
 #' @returns \item{statistic}{the test statistic \eqn{W} depending on \eqn{\alpha}.}
 #' @returns \item{tau}{the convergence parameter \eqn{\tau}}
 #' @returns \item{p.value}{the \eqn{p}-value of the test statistic}
-#' @returns \item{critical.valie}{the critical value based on \eqn{\alpha}}
 #' @returns \item{dim}{a named list with components d and N of the input data}
 #' @returns \item{groups}{a named list with components a and table giving the number and distribution of groups}
 #' @returns \item{removed.cases}{number of incomplete subjects removed.}
@@ -34,107 +33,141 @@
 #' @references Paavo Sattler, Markus Pauly. "Inference for high-dimensional split-plot-designs: A unified approach for small to large numbers of factor levels." Electronic Journal of Statistics, 12(2) 2743-2805 2018. https://doi.org/10.1214/18-EJS1465
 #'
 #' @export
-hdrm_test <- function(data, group, formula, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N",...){
+hdrm_test <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
   UseMethod("hdrm_test")
 }
 
 #' @method hdrm_test default
 #' @export
-hdrm_test.default <- function(data, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", ...){
+hdrm_test.default <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
   stop("Your data must be either a list, a data frame or a matrix")
 }
 
 
-#' @method hdrm_test list
-#' @export
-hdrm_test.list <- function(data, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N",...){
-  #browser()
-  # Was muss sein?
-  # in jedem Eintrag eine numerische Matrix
-  stopifnot(all(sapply(data, is.matrix)), all(sapply(data, is.numeric)))
-  # midestens 2 Einträge
-  stopifnot(length(data) >= 2)
-  # in jeder Matrix gleich viele Zeilen
-  stopifnot(length(unique(sapply(data, function(X)dim(X)[1]))) == 1)
-  # in jeder Matrix mind. 6 Spalten
-  stopifnot(all(sapply(data, function(X) dim(X)[2]) >= 6))
-
-  ### Matrix bauen
-  # group erstellen
-  if(is.null(names(data))){
-    group <- factor(1:length(data))
-  }else{
-    group <- as.factor(names(data))
-  }
-
-  # Matrix bauen
-  X <- data[[1]]
-  for (i in 2:length(data)) { # so ist das halt sehr Laufzeitunfreundlich (da immer neuer Speicher für X gesucht werden muss), deswegen mal schauen, ob man das so lassen kann...
-    X <- cbind(X, data[[i]])
-  }
-
-  ## Aufruf der internen Funktion
-  hdrm_test_internal(data = X, group = rep(group, each = dim(data[[1]])[2]), hypothesis = hypothesis, alpha = 0.05, B = "500*N",)
-}
-
 #' @method hdrm_test matrix
 #' @export
-hdrm_test.matrix <- function(data, group, hypothesis = c("whole","sub","interaction"), alpha = 0.05, B = "500*N", ...){
-  hdrm_test_internal(data = data, group = group, hypothesis = hypothesis, alpha = alpha, B = B)
+hdrm_test.matrix <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
+
+  # df erstellen für output
+  N <- ncol(data)
+  d <- nrow(data)
+  df <- data.frame(value = as.vector(data))
+  df$subject <- as.factor(rep(1:N, each = d))
+  df$whole <- as.factor(rep(group, each = d))
+  df$sub <- as.factor(rep(1:d, N))
+
+  ## Voraussetzungen überprüfen
+  if(any(table(group) < 6)) stop("all group sizes must be >= 6")
+  if(length(table(group)) < 2) stop("at least two groups needed")
+  if(length(group) != N) stop("length of group must be equal to ncol(data")
+  if(d < 2) stop("at least two dimensions are needed")
+  if(!is.character(hypothesis) | is.list(hypothesis)) stop("hypothesis must be a character or a list")
+
+  if(!(as.logical(bootstrap) %in% c(TRUE, FALSE))) stop("bootstrap must be logical")
+
+  # B extrahieren
+  if(!(is.numeric(B) | is.character(B))) stop("B must either be numeric or a character")
+  reps <- eval(parse(text = B))[1]
+  reps <- ceiling(reps)
+  stopifnot(is.numeric(reps), reps > 0)
+
+  out <- list(data = df)
+  if(!bootstrap[1]) out <- c(out, hdrm_test_internal(data = data[, order(group)], group = sort(as.integer(group)), hypothesis = hypothesis, B = reps))
+  if(bootstrap[1]) out <- c(out, hdrm_test_internal_bootstrap(data = data, group = as.integer(group), hypothesis = hypothesis, B = reps))
+  out$groups$table <- table(df$whole)/(nlevels(df$sub))
+  out$subsamples = reps
+  class(out) <- "hdrm"
+  return(out)
 }
+
 
 #' @method hdrm_test data.frame
 #' @export
-hdrm_test.data.frame <- function(data, formula, hypothesis = c("whole","sub","interaction"), TW, TS, alpha = 0.05, B = "100*N", ...){
-  #browser()
-  if(missing(formula)){
-    # überprüfen, ob alle spalten gegeben sind
-    stopifnot(all(c("value","whole","sub","subject") %in% names(data)))
-    # Vektoren extrahieren
-    df <- data.frame(value = data$value,
-                     subject = as.factor(data$subject),
-                     whole = as.factor(data$whole),
-                     sub = as.factor(data$sub)
-    )
-  }else{ # formel soll gegeben sein als value ~ subject + whole + sub
-    # df enthält nur die relevanten Spalten
-    df <- stats::model.frame(formula = formula, data = data)
-  }
-  stopifnot(length(names(df)) == 4)
+hdrm_test.data.frame <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
+
+
+  df <- data.frame(value = data[[value]],
+                   subject = data[[subject]],
+                   whole = data[[group]],
+                   sub = data[[factor]]
+                   )
+
+
+  if(length(names(df)) != 4) stop("could not find at least one column")
+  stopifnot(is.numeric(df$value))
+
+  df$subject <- droplevels(as.factor(df$subject))
+  df$whole <- droplevels(as.factor(df$whole))
+  df$sub <- droplevels(as.factor(df$sub))
+  df <- df[order(df$subject, df$sub), ]
 
   ## Dimensionen
-  N <- nlevels(df[,2])
-  a <- nlevels(df[,3])
-  d <- nlevels(df[,4])
-
-  ### Bedingungen überprüfen
+  N <- nlevels(df$subject)
+  a <- nlevels(df$whole)
+  if(a < 2) stop("at least two groups needed")
+  d <- nlevels(df$sub)
+  if(d < 2) stop("at least 2 dimensions are needed")
+  n <- as.integer(table(df$group))/d
+  if(any(n < 6)) stop("all group sizes must be >= 6")
+  if(!is.character(hypothesis) | is.list(hypothesis)) stop("hypothesis must be a character or a list")
   # alle Individuen haben gleich viele dimensionen
-  stopifnot(length(unique(table(df$sub))) == 1) # von Jessica geholfen
-  # in jeder Gruppe mind 6 individuen
-  # -> wird eig in der internen Funktion auch noch mal abgefragt...
-  # mind 2 Gruppen
-  stopifnot(a >= 2)
+  if(length(unique(table(df$subject))) != 1) stop("All subjects must have the same number of dimensions")
+  # ??
+  if(length(unique(table(df$sub))) != 1) stop("Unequal distribution of dimensions to subjects")
+  if(!(as.logical(bootstrap) %in% c(TRUE, FALSE))) stop("bootstrap must be logical")
 
-  # Matrix bauenn
+
+  # B extrahieren
+  if(!(is.numeric(B) | is.character(B))) stop("B must either be numeric or a character")
+  reps <- eval(parse(text = B))[1]
+  reps <- ceiling(reps)
+  stopifnot(is.numeric(reps), reps > 0)
+
+  # Matrix erstellen
   X <- matrix(NA, d, 0)
   M <- matrix(NA, d, N)
-  L <- split(df, df[,3])
+  L <- split(df, df$whole)
   group <- numeric(0)
-
 
   for(j in 1:a){
     temp = droplevels(L[[j]])
-    M <- matrix(0, d, nlevels(temp[,2]))
-    group <- c(group, rep(j, nlevels(temp[,2])))
+    M <- matrix(0, d, nlevels(temp$subject))
+    group <- c(group, rep(j, nlevels(temp$subject)))
     k = 1
-    for (i in levels(temp[,2])) {
-      M[,k] <- temp[,1][temp[,2] == i]
+    for (i in levels(temp$subject)) {
+      M[,k] <- temp$value[temp$subject == i]
       k <- k + 1
     }
     X <- cbind(X,M)
   }
 
+  ### Output
+  out <- list(data = df)
+  if(!bootstrap[1]) out <- c(out, hdrm_test_internal(data = X[, order(group)], group = sort(as.integer(group)), hypothesis = hypothesis, B = reps))
+  if(bootstrap[1]) out <- c(out, hdrm_test_internal_bootstrap(data = X[, order(group)], group = sort(as.integer(group)), hypothesis = hypothesis, B = reps))
+  out$groups$table <- table((df$whole))/d
+  out$subsamples = reps
+  class(out) <- "hdrm"
+  return(out)
+}
 
-  ## Funktionsaufruf
-  return(hdrm_test_internal(data = X, group = group, hypothesis = hypothesis, alpha = alpha, B = B))
+
+
+# Print generics ----------------------------------------------------------
+
+#' @method print hdrm
+#' @export
+print.hdrm <- function(x,...){
+  cat("\n")
+  cat("          Multi Group Repeated Measure
+        \nAnalysis of", x$dim$N, "individuals in", x$groups$a, "groups", "and", paste0(x$dim$d), "dimensions:",
+      "\nW =", x$statisitc, " f =", round(x$f,4), " p.value =", round(x$p.value, 4),
+      "\nNull-Hypothesis:", ifelse(is.list(x$hypothesis), "custom", paste0("No effect in ",x$hypothesis,"plot-factor")),
+      "\nConvergence parameter \u03c4 =", round(x$tau,4))
+  cat("\n")
+}
+#' @method summary hdrm
+#' @export
+summary.hdrm <- function(object,...){
+  print(object,...)
 }
