@@ -1,22 +1,5 @@
 [
     {
-        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/A2_Sattler.cpp",
-        "file_last_write": 1725003128.0,
-        "definitions": [
-            {
-                "usr": "c:@F@C5star_cpp_internal#&$@N@arma@S@Mat>#d#&$@N@arma@S@Col>#d#1I#&$@N@arma@S@Col>#i#",
-                "kind": 6,
-                "parent_name": "",
-                "name": "C5star_cpp_internal(arma::mat &, arma::vec &, const int, arma::uvec &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/A2_Sattler.cpp",
-                "line": 65,
-                "column": 8,
-                "hidden": false
-            }
-        ],
-        "hidden": false
-    },
-    {
         "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Pauly.cpp",
         "file_last_write": 1723133466.0,
         "definitions": [
@@ -64,6 +47,53 @@
                 "name": "A3_cpp(const Rcpp::NumericMatrix &, double)",
                 "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/trace_estimators_Sattler.cpp",
                 "line": 29,
+                "column": 8,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/traceestimators_Sattler_bootstrap.cpp",
+        "file_last_write": 1725350656.0,
+        "definitions": [
+            {
+                "usr": "c:@F@A1star_cpp#&1$@N@arma@S@Mat>#d#&I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "A1star_cpp(const arma::mat &, int &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/traceestimators_Sattler_bootstrap.cpp",
+                "line": 5,
+                "column": 8,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@A2star_cpp#&1$@N@arma@S@Mat>#d#&S1_#&I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "A2star_cpp(const arma::mat &, arma::mat &, int &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/traceestimators_Sattler_bootstrap.cpp",
+                "line": 28,
+                "column": 8,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@A3star_cpp#&1$@N@arma@S@Mat>#d#&I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "A3star_cpp(const arma::mat &, int &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/traceestimators_Sattler_bootstrap.cpp",
+                "line": 56,
+                "column": 8,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@C5star_cpp_internal#&$@N@arma@S@Mat>#d#&$@N@arma@S@Col>#d#1I#&$@N@arma@S@Col>#i#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "C5star_cpp_internal(arma::mat &, arma::vec &, const int, arma::uvec &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/traceestimators_Sattler_bootstrap.cpp",
+                "line": 80,
                 "column": 8,
                 "hidden": false
             }
