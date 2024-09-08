@@ -5,3 +5,4 @@ biblio.bib
 .Rprofile
 .RData
 Benchmarks/
+.RDataTmp
