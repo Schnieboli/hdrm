@@ -65,5 +65,5 @@ double B2_cpp(const NumericMatrix& mat) {
       }
     }
   }
-  return total_sum;
+  return total_sum / (N*(N-1));
 }

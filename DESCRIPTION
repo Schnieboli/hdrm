@@ -18,7 +18,10 @@ Imports:
     Rcpp,
     RcppArmadillo,
     rlang,
-    stats
+    stats,
+    Rdpack
 LinkingTo: 
     Rcpp,
     RcppArmadillo
+RdMacros:
+    Rdpack

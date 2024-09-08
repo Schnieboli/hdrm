@@ -30,20 +30,19 @@
 #' @return \item{removed.cases}{number of subjects removed for having missing values.}
 #' @aliases hdrm1.matrix
 #' @aliases hdrm1.data.frame
-#' @aliases hdrm1.list
 #' @usage hdrm1.matrix(data, hypothesis,...)
 #' @usage hdrm1.data.frame(data, hypothesis, value, subject, factor...)
 #' @example examples_one_group_case.R
 #'
 #' @references Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of high-dimensional one group repeated measures designs. Statistics, 49(6), 1243–1261. \url{https://doi.org/10.1080/02331888.2015.1050022}
 #' @export
-hdrm1 <- function(data, formula, hypothesis = c("flat", "equal"), alpha = 0.05,...){
+hdrm1 <- function(data, hypothesis = c("flat", "equal"),  value, subject, factor,...){
   UseMethod("hdrm1")
 }
 
 #' @method hdrm1 default
 #' @export
-hdrm1.default <- function(data, hypothesis = c("flat","equal"), value, subject, factor,...){
+hdrm1.default <- function(data, hypothesis = c("flat","equal"),...){
   stop("Your data needs to be either a matrix or a data.frame")
 }
 
@@ -58,6 +57,7 @@ hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), value, subject, f
   df <- data.frame(value = as.vector(data))
   df$subject <- rep(1:N, each = d)
   df$factor <- rep(1:d, N)
+  df <- df[order(df$subject),]
 
   out <- data.frame(data = df)
   out <- c(out, hdrm1_internal(X = data, hypothesis = hypothesis))
@@ -72,15 +72,16 @@ hdrm1.matrix <- function(data, hypothesis = c("flat","equal"), value, subject, f
 hdrm1.data.frame <- function(data, hypothesis = c("flat", "equal"), value, subject, factor,...){
 
   # df enthält nur die relevanten Spalten
-  df <- data.frame(value = data[[quote(value)]], # auf diese weise können value, subject, factor sowohl die namen als auch die nummer der spalte sein
-                   subject = data[[quote(subject)]],
-                   factor = data[[quote(factor)]])
+  df <- data.frame(value = data[[value]], # auf diese weise können value, subject, factor sowohl die namen als auch die nummer der spalte sein
+                   subject = data[[subject]],
+                   factor = data[[factor]])
   # falls eine der spalten nicht gefunden werden kann ist diese NULL und df kürzer als 3:
   if(ncol(df) != 3) stop("could not find at least one of the columns")
 
   # nicht benutzte Faktorlevel löschen
   df$subject <- droplevels(as.factor(df$subject))
   df$factor <- droplevels(as.factor(df$factor))
+  stopifnot(is.numeric(df$value))
 
   # Überprüfen, ob alle dimensionen gleich sind
   if(length(unique(table(df$subject))) != 1) stop("All subjects must have the same number of dimensions")

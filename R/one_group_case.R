@@ -6,35 +6,40 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
   # Matrix X kommt eingegeben als: dim(X) = c(d,N)
   ## Fehlende Werte
   stopifnot(na.action %in% c("na.omit"))
-  N_with_NA <- dim(X)[2]
-  X <- t(stats::na.omit(X)) # -> hier muss dann iwie mit attr gearbeitet werden -> auf diese weise kann man dann auch sehen, welche Individuen entfernt wurden
+  N_with_NA <- ncol(X)
+  # na.omit entfernt alle Zeilen mit fehlenden Werten, aber wir wollen alle Spalten entfernen
+  # -> doppelt transponieren
+  X <- t(stats::na.omit(t(X)))
 
 
   ## Schätzer definieren
-  N <- dim(X)[1]
-  d <- dim(X)[2]
+  N <- ncol(X)
+  d <- nrow(X)
   stopifnot(is.matrix(X), is.numeric(X), N >= 3)
 
 
   ### Hypothesenmatrizen
   TM <- NA
   if(is.matrix(hypothesis) & all(dim(hypothesis) == c(d,d))) TM <- hypothesis
-  if(hypothesis[1] == "equal") TM <- diag(d)
-  if(hypothesis[1] == "flat") TM <- diag(d) -  matrix(1/d, d, d)
+  if(is.character(hypothesis)){
+    if(hypothesis[1] == "equal") TM <- diag(d)
+    if(hypothesis[1] == "flat") TM <- diag(d) -  matrix(1/d, d, d)
+  }
+
   # wenn keiner der oberen fälle zutrifft oder ein NA in TM ist, dann breche ab
   if(any(is.na(TM))) stop("Please specify valid hypothesis.")
 
 
   ### Teststatistik Q
-  XT <- X %*% TM
-  Xquer <- colMeans(XT)
+  XT <- TM %*% X
+  Xquer <- rowMeans(XT)
   Qn = N * sum(Xquer * Xquer)
 
 
   ### Schätzer berechnen
-  spurNormal <- B0(XT)/N
-  spurQuadrat <- B2_cpp(XT)/(N*(N-1))
-  spurHoch3 <- B3_cpp(XT)/choose(N,3)
+  spurNormal <- B0(XT)
+  spurQuadrat <- B2_cpp(XT)
+  spurHoch3 <- B3_cpp(XT)/choose(N,3) # das muss so, weil ich nicht weiss, wie man in cpp bionom ausrechnet
 
   ### Teststatistik W
   W <- (Qn - spurNormal) / sqrt(2*spurQuadrat)
@@ -50,7 +55,7 @@ hdrm1_internal <- function(X, hypothesis, alpha, na.action = "na.omit"){
   if(is.matrix(hypothesis)) H <- "custom"
   else H <- paste0(hypothesis[1], " time profile")
 
-  L <- list(data = t(X), # X ohne NAs -> muss transponiert sein, da X am Anfang transponiert wurde
+  L <- list(data = X, # X ohne NAs -> muss transponiert sein, da X am Anfang transponiert wurde
             f = f,
             statisitc = W,
             tau = 1/f,

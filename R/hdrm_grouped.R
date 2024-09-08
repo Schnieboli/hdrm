@@ -63,6 +63,7 @@ hdrm_grouped_internal_bootstrap <- function(data, group, hypothesis = c("whole",
     }
   }
   A4 <- temp1 + 2*temp2
+  rm(temp1, temp2)
 
   # Var(Q_N)
   Var <- 2*A4
@@ -165,6 +166,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","int
     }
   }
   A4 <- temp1 + 2*temp2
+  rm(temp1, temp2)
 
   # Var(Q_N)
   Var <- 2*A4

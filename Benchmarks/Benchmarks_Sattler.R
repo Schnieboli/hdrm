@@ -164,7 +164,7 @@ microbenchmark(R = A2(M41,M42),
 
 # C5 ----------------------------------------------------------------------
 
-##### Versuch Simulation -> es fehlt noch eine FUnktion, die nur den Median jeweils ausgibt...
+##### Versuch Simulation -> es fehlt noch eine Funktion, die nur den Median jeweils ausgibt...
 
 # library(microbenchmark)
 # N <- c(144, 288, 576, 1152)
@@ -258,4 +258,4 @@ microbenchmark(R = C5star(mat, group = group5, TM = diag(a5*d), B = B),
 microbenchmark(R = C5star(mat, group = group6, TM = diag(a6*d), B = B),
                cpp = C5star_cpp(mat, group = group6, B = B, TM = diag(a6*d)),
                unit = "relative",
-               times = 10)
+               times = 5)

@@ -4,7 +4,6 @@
 \alias{hdrm1}
 \alias{hdrm1.matrix}
 \alias{hdrm1.data.frame}
-\alias{hdrm1.list}
 \title{Test for one group high dimensional repeated measures}
 \usage{
 hdrm1.matrix(data, hypothesis,...)
@@ -14,13 +13,13 @@ hdrm1.data.frame(data, hypothesis, value, subject, factor...)
 \arguments{
 \item{data}{either a matrix with subjects in columns and factor levels in rows or a data.frame of longtable format}
 
-\item{formula}{a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form \code{value ~ subject + factor}}
-
 \item{hypothesis}{One of 'equal' or 'flat' for H0: equal/flat time profile. Can also be a matrix of dimensions \eqn{d\times d}}
 
-\item{alpha}{alpha level used for calculating the critical value}
-
 \item{...}{further arguments are currently ignored.}
+
+\item{formula}{a formula object that specifies the corresponding cols if data is a data.frame. Must be of the form \code{value ~ subject + factor}}
+
+\item{alpha}{alpha level used for calculating the critical value}
 }
 \value{
 Returns a list with class "hdrm1" with the components

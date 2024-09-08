@@ -79,7 +79,8 @@ A3 <- function(X){
 # C5star ------------------------------------------------------
 
 #' @keywords internal
-C5star <- function(X, group, TM, B){ # X mit Individuen in Spalten und Dimensionen in Zeilen
+C5star_alt <- function(X, group, TM, B){ # X mit Individuen in Spalten und Dimensionen in Zeilen
+  # browser()
   stopifnot(length(group) == ncol(X))
   a <- length(table(group))
   d <- nrow(X)
@@ -111,35 +112,41 @@ C5star <- function(X, group, TM, B){ # X mit Individuen in Spalten und Dimension
 }
 
 
-C5star_list <- function(X, group, TM, B){ # X mit Individuen in Spalten und Dimensionen in Zeilen
-  #browser()
+
+#' @keywords internal
+C5star <- function(X, group, TW, TS, B){ # X mit Individuen in Spalten und Dimensionen in Zeilen
+
   stopifnot(length(group) == ncol(X))
+  # X sortieren nach Gruppe
+  X <- X[, order(group)]
+  group <- sort(group)
+
   a <- length(table(group))
   d <- nrow(X)
   N <- ncol(X)
   n <- as.integer(table(group))
   stopifnot(all(n >= 6))
-  for (i  in 1:a) {
-    X[, group == i] <- X[, group == i] * sqrt(N/n[i]) # Vorfaktor jetzt schon dranmultiplizieren
-  }
 
-  X_list <- vector(mode = "list", length = a)
-  for(i in 1:a){
-    X_list[[i]] <- TM[, (1:d) + d*(i-1)] %*% X[, group == i]
+
+  ind <- cumsum(c(1, n)) # zum indexen der Gruppen, ausnutzen, dass X sortiert ist!
+
+  Y <- matrix(0, a*d, N)
+  for(i in 1:a){ # Teil von X der i-ten Gruppe mit dem entsprechenden Teil der Hypothesenmatrix und den Vorfaktoren multiplizieren
+    Y[, ind[i]:(ind[i+1]-1)] <- kronecker(TW[, i], TS%*%(X[, ind[i]:(ind[i+1]-1)] * sqrt(N/n[i])))
   }
 
 
   Rout <- numeric(1)
   for (b in 1:B) {
-    # Vektoren Initialisieren
+    # Vektoren Initialisieren/zurücksetzen
     Z12 <- numeric(d*a)
     Z34 <- numeric(d*a)
     Z56 <- numeric(d*a)
     # Zufallsindividuen auswählen
-    sigma = matrix(0, a*d, 6*a)
+    sigma = matrix(0.0, a*d, 6*a)
     for(i in 1:a){
-      # Indizes zeihen
-      sigma[,(i-1)*6 + (1:6)] <- X_list[[i]][, sample.int(n[i], 6)]
+      # Indizes ziehen
+      sigma[,(i-1)*6 + (1:6)] <- Y[ , sample(ind[i]:(ind[i+1]-1), 6)]
       ## Z_ij erstellen
       Z12 <- Z12 + (sigma[, 1 + 6*(i-1)] - sigma[, 2 + 6*(i-1)])
       Z34 <- Z34 + (sigma[, 3 + 6*(i-1)] - sigma[, 4 + 6*(i-1)])
@@ -148,4 +155,38 @@ C5star_list <- function(X, group, TM, B){ # X mit Individuen in Spalten und Dime
     Rout <- Rout + (sum(Z12 * Z34) * sum(Z34 * Z56) * sum(Z56 * Z12))
   }
   return(Rout/(8*B))
+}
+
+
+
+
+
+
+
+
+#' @keywords internal
+C5star_cpp <- function(X, group, TW, TS, B){ # ist zu groß; ich glaube es liegt daran, dass die interne Funktion nicht die Gruppen beachtet (obwohl sie das mMn sollte). Denn wenn ich bei der R-Funktion die Gruppenzuweisung weglasse, dann kommen Ergebnisse in ähnlicher Größenordnung :(
+  # browser()
+  stopifnot(length(group) == ncol(X))
+  # X sortieren nach Gruppe
+  X <- X[, order(group)]
+  group <- sort(group)
+
+  a <- length(table(group))
+  d <- nrow(X)
+  N <- ncol(X)
+  n <- as.integer(table(group))
+  stopifnot(all(n >= 6))
+
+  ind <- cumsum(c(1, n)) # zum indexen der Gruppen, ausnutzen, dass X sortiert ist!
+
+
+
+  Y <- matrix(0, a*d, N)
+  for(i in 1:a){ # Teil von X der i-ten Gruppe mit dem entsprechenden Teil der Hypothesenmatrix und den Vorfaktoren multiplizieren
+    Y[, ind[i]:(ind[i+1]-1)] <- kronecker(TW[, i], TS%*%(X[, ind[i]:(ind[i+1]-1)] * sqrt(N/n[i])))
+  }
+
+
+  return(C5star_cpp_internal(X = Y, group = group, B = B, n = n))
 }

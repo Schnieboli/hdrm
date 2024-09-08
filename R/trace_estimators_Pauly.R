@@ -5,7 +5,7 @@
 #' @keywords internal
 
 B0 <- function(X){
-  return(sum(X^2)) # wenn ich herausfinde, warum das hier geht, dann kann ich auch herasufinden, warum sich B2 umschreiben lässt...
+  return(sum(X^2) / ncol(X)) # wenn ich herausfinde, warum das hier geht, dann kann ich auch herasufinden, warum sich B2 umschreiben lässt...
 }
 
 
