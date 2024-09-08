@@ -40,6 +40,8 @@ a named list of class "hdrm_grouped" with the components
 \item{groups}{a named list with components a and table giving the number and distribution of groups.}
 
 \item{removed.cases}{number of subjects that werde removed for missing values.}
+
+\insertNoCite{Sattler2018}{hdrm}
 }
 \description{
 This is the widetable version. For longtable version see \link{hdrm_grouped.data.frame}.
@@ -51,4 +53,7 @@ If \code{data} is a matrix it is assumed, that individuals are represented by co
 Alternatively \code{hypothesis} can be a named list with components \code{TW} for the wholeplot-part and \code{TS} for the subplot-part of \eqn{T = T_W \otimes T_S}.
 
 Note, that the \code{p.value} may depend heavily on the choice of \code{B}, as both depend on the degrees of freedom \code{f}, which are estimated by C5.
+}
+\references{
+\insertAllCited
 }

@@ -17,7 +17,7 @@
 #' Alternatively `hypothesis` can be a named list with components `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{T = T_W \otimes T_S}.
 #'
 #' Note that even for `bootstrap = FALSE` the bootstrap version for the trace estimator C5 is used.
-#' Therefore the `p.value` and the parameter `f` are seed dependent and may vary a lot for small B's.
+#' Therefore the `p.value` and the parameter `f` are seed dependent and may vary a lot for small choices of B.
 #' For \eqn{p}-values near \eqn{alpha} it is advised to run the test again with `B = "5000*N"` at least.
 #'
 #' @return a named list of class "hdrm_test" with the components
@@ -30,7 +30,11 @@
 #' @returns \item{groups}{a named list with components a and table giving the number and distribution of groups}
 #' @returns \item{removed.cases}{number of incomplete subjects removed.}
 #'
-#' @references Paavo Sattler, Markus Pauly. "Inference for high-dimensional split-plot-designs: A unified approach for small to large numbers of factor levels." Electronic Journal of Statistics, 12(2) 2743-2805 2018. https://doi.org/10.1214/18-EJS1465
+#' \insertNoCite{Sattler2018}{hdrm}
+#' @references \insertAllCited
+#'
+#' @examples
+#' # see help pages for the respective generics
 #'
 #' @export
 hdrm_grouped <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
@@ -72,7 +76,10 @@ hdrm_grouped.default <- function(data, hypothesis = c("whole","sub","interaction
 #' @returns \item{dim}{a named list with components d and N of data}
 #' @returns \item{groups}{a named list with components a and table giving the number and distribution of groups.}
 #' @returns \item{removed.cases}{number of subjects that werde removed for missing values.}
-
+#'
+#' \insertNoCite{Sattler2018}{hdrm}
+#' @references \insertAllCited
+#'
 #' @method hdrm_grouped matrix
 #' @export
 hdrm_grouped.matrix <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
@@ -138,7 +145,10 @@ hdrm_grouped.matrix <- function(data, hypothesis = c("whole","sub","interaction"
 #' @returns \item{dim}{a named list with components d and N of the input data}
 #' @returns \item{groups}{a named list with components a and table giving the number and distribution of groups}
 #' @returns \item{removed.cases}{number of incomplete subjects removed.}
-
+#'
+#' \insertNoCite{Sattler2018}{hdrm}
+#' @references \insertAllCited
+#'
 #' @method hdrm_grouped data.frame
 #' @export
 hdrm_grouped.data.frame <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){

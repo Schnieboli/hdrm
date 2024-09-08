@@ -53,6 +53,8 @@ a named list of class "hdrm_test" with the components
 \item{groups}{a named list with components a and table giving the number and distribution of groups}
 
 \item{removed.cases}{number of incomplete subjects removed.}
+
+\insertNoCite{Sattler2018}{hdrm}
 }
 \description{
 See \link{hdrm_grouped.matrix} and \link{hdrm_grouped.data.frame} for data in  wide- and longtable versions, respectively.
@@ -62,9 +64,13 @@ See \link{hdrm_grouped.matrix} and \link{hdrm_grouped.data.frame} for data in  w
 Alternatively \code{hypothesis} can be a named list with components \code{TW} for the wholeplot-part and \code{TS} for the subplot-part of \eqn{T = T_W \otimes T_S}.
 
 Note that even for \code{bootstrap = FALSE} the bootstrap version for the trace estimator C5 is used.
-Therefore the \code{p.value} and the parameter \code{f} are seed dependent and may vary a lot for small B's.
+Therefore the \code{p.value} and the parameter \code{f} are seed dependent and may vary a lot for small choices of B.
 For \eqn{p}-values near \eqn{alpha} it is advised to run the test again with \code{B = "5000*N"} at least.
 }
+\examples{
+# see help pages for the respective generics
+
+}
 \references{
-Paavo Sattler, Markus Pauly. "Inference for high-dimensional split-plot-designs: A unified approach for small to large numbers of factor levels." Electronic Journal of Statistics, 12(2) 2743-2805 2018. https://doi.org/10.1214/18-EJS1465
+\insertAllCited
 }
