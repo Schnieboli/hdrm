@@ -1,0 +1,44 @@
+data(EEG)
+?EEG
+# columns of interest are:
+# group = group
+# value = value
+# subject = subject
+# factor = dimension
+
+## Testing whether there is an effect in the diagnostic groups
+hdrm_grouped_data.frame(data = EEG,
+                        hypothesis = "whole",
+                        group = "group",
+                        value = "value",
+                        subject = "subject",
+                        factor = "dimension",
+                        bootstrap = FALSE,
+                        B = "100*N")
+
+## columns can also be specified by their respective numbers
+names(EEG)
+# "group"  "value"  "sex"  "subject"  "variable"  "region"  "dimension"
+hdrm_grouped_data.frame(data = EEG,
+                        hypothesis = "whole",
+                        group = 1,
+                        value = 2,
+                        subject = 4,
+                        factor = 7,
+                        bootstrap = FALSE,
+                        B = "100*N")
+
+## hypothesis can also be a named list with components TW and TS
+## Here: TW and TS are chosen to give the same result as hypothesis = "sub"
+hypothesis_list <- list(TW = matrix(1/4, 4, 4),
+                        TS = diag(40) - matrix(1/40, 40, 40)
+                        )
+hdrm_grouped_data.frame(data = EEG,
+                        hypothesis = hypothesis_list,
+                        group = 1,
+                        value = 2,
+                        subject = 4,
+                        factor = 7,
+                        bootstrap = FALSE,
+                        B = "100*N")
+rm(hypothesis_list)

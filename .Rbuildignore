@@ -3,8 +3,7 @@
 ^hdrm\.Rproj$
 ^data-raw$
 ^LICENSE\.md$
-^Benchmarks/Benchmarks_Pauly\.R$
 ^README\.Rmd$
 ^biblio\.bib$
 ^2d-materials\.csl$
-^Benchmarks/Benchmarks_Sattler\.R$
+^Benchmarks$

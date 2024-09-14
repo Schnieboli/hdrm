@@ -8,7 +8,7 @@
 An object of class \code{matrix} (inherits from \code{array}) with 235 rows and 12 columns.
 }
 \usage{
-data(sunspots_matrix)
+sunspots_matrix
 }
 \description{
 Monthly mean relative sunspot numbers from 1749 to 1983 \insertCite{sunspots_dataset}{hdrm}. Collected at Swiss Federal Observatory, Zurich until 1960, then Tokyo Astronomical Observatory.

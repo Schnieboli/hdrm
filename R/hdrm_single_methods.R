@@ -1,0 +1,168 @@
+#' Test for one group high dimensional repeated measures
+#'
+#' @description This function implements the methods outlined in
+#'   \insertCite{Pauly2015;textual}{hdrm} for data in a widetable format. For
+#'   data in a longtable format see [hdrm_single_data.frame].
+#'
+#' @param data a matrix with subjects represented by columns and factor levels
+#'   represented by rows.
+#' @param hypothesis either a character "flat", "equal" or a quadratic numeric matrix.
+#' @param ... further arguments are currently ignored.
+#' @details
+#' If `data` contains missing values, affected subjects will be dropped with a
+#' warning.
+#'
+#' The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
+#' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as
+#' a `character` or a `list`. Legal characters are "flat" (default) and "equal", where
+#' "flat" and "equal" stand for \eqn{H_0}: flat/equal time profile. Other
+#' characters will result in an error.
+#'
+#' Alternatively, `hypothesis` can be the quadratic hypothesis matrix \eqn{T} with
+#' the number of rows equal to the number of rows of `data`. \eqn{T} must be
+#' idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
+#' match those criteria will result in an error.
+#'
+#'
+#' @returns Returns a list with class "hdrm_single" with the components
+#' @return \item{data}{the initial input data.}
+#' @return \item{f}{the degrees of freedom \eqn{f}.}
+#' @return \item{statistic}{the test statistic \eqn{W}.}
+#' @return \item{tau}{the convergence parameter \eqn{\tau},}
+#' @return \item{H}{the hypothesis-matrix used.}
+#' @return \item{hypothesis}{a character. Will be 'custom' if `hypothesis` was
+#'   given as a matrix, otherwise `hypothesis[1]`.}
+#' @return \item{p.value}{the p-value of the test statistic.}
+#' @return \item{dim}{a named vector giving the dimensions \eqn{d \times N} of `data`.}
+#' @return \item{removed.cases}{number of subjects removed for having missing values.}
+#'
+#' @references \insertAllCited
+#'
+#' @export
+hdrm_single_matrix <- function(data, hypothesis = c("flat","equal"),...){
+
+  # data matrix?
+  if(!is.numeric(data) | !is.matrix(data)) stop("data must be a numeric matrix")
+
+  #Anforderungen ueberpruefen
+  check_criteria_single(X = data, hypothesis = hypothesis)
+
+  # Output erstellen
+  out <- list(data = data)
+  # Funktionsaufruf
+  out <- c(out, hdrm1_internal(X = data, hypothesis = hypothesis,...))
+  class(out) <- "hdrm_single"
+  return(out)
+}
+
+
+
+#' Test for one group high dimensional repeated measures
+#'
+#' @description This function implements the methods outlined in
+#'   \insertCite{Pauly2015;textual}{hdrm} for data in a longtable format. For data in
+#'   a widetable format see [hdrm_single_matrix].
+#'
+#' @param data a data.frame in longtable fromat.
+#' @param hypothesis either a character "flat", "equal" or a quadratic numeric matrix.
+#' @param value name or number of value column.
+#' @param subject name or number of subject column.
+#' @param factor name or number of factor column.
+#' @param ... further arguments are currently ignored.
+#' @details
+#' The function can deal with missing values only in the `value` column.
+#' Affected subjects are dropped with a warning. Missing values in any other
+#' column of data will result in an error.
+#'
+#' The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
+#' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as
+#' a `character` or a `list`. Legal characters are "flat" (default) and "equal"
+#' "flat" and "equal" stand for \eqn{H_0}: flat(equal time profile. Other
+#' characters will result in an error.
+#'
+#' Alternatively `hypothesis` can be a quadratic hypothesis matrix \eqn{T} with
+#' the number of rows equal to the number of rows of `data`. \eqn{T} must be
+#' idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
+#' match those criteria will result in an error.
+#'
+#'
+#' @returns Returns a list with class "hdrm_single" with the components
+#' @return \item{data}{the initial input data.}
+#' @return \item{f}{the degrees of freedom \eqn{f}.}
+#' @return \item{statistic}{the test statistic \eqn{W}.}
+#' @return \item{tau}{the convergence parameter \eqn{\tau}.}
+#' @return \item{H}{the hypothesis-matrix used.}
+#' @return \item{hypothesis}{a character. Will be 'custom' if `hypothesis` was
+#'   given as a matrix, otherwise `hypothesis[1]`.}
+#' @return \item{p.value}{the p-value of the test statistic}
+#' @return \item{dim}{a named vector giving the dimensions \eqn{d \times N} of `data`.}
+#' @return \item{removed.cases}{number of subjects removed for having missing values.}
+#'
+#' @references \insertAllCited
+#'
+#' @export
+hdrm_single_data.frame <- function(data, hypothesis = c("flat", "equal"), value, subject, factor,...){
+
+  if(!is.data.frame(data)) stop("data must be a data.frame")
+  if(length(value) != 1) stop("value must be of length 1")
+  if(length(subject) != 1) stop("subject must be of length 1")
+  if(length(factor) != 1) stop("factor must be of length 1")
+
+  ## relevante spalten extrahieren
+  # auf diese weise koennen value, subject, factor sowohl die namen als auch die nummer der spalte sein
+  df <- data.frame(value = data[[value]],
+                   subject = data[[subject]],
+                   factor = data[[factor]])
+  # falls eine der spalten nicht gefunden werden kann ist diese NULL und df kuerzer als 3:
+  if(ncol(df) != 3) stop("could not find at least one of the columns")
+
+  # nicht benutzte Faktorlevel loeschen, sicherstellen, dass subject und factor
+  # faktoren sind und value numerisch ist
+  df$subject <- droplevels(as.factor(df$subject))
+  df$factor <- droplevels(as.factor(df$factor))
+  if(!is.numeric(df$value)) stop("value must be numeric")
+
+  # Überpruefen, ob alle dimensionen gleich sind
+  if(length(unique(table(df$subject))) != 1) stop("All subjects must have the same number of dimensions")
+  if(length(unique(table(df$factor))) != 1) stop("Unequal distribution of dimensions to subjects")
+  d <- nlevels(df$factor)
+  N <- nlevels(df$subject)
+
+  ### Matrix bauen
+  M <- matrix(NA, d, N)
+  for (i in 1:N) { # baue Matrix spaltenweise/fuege in jedem Schritt ein Individuum in die i-te Spalte ein
+    M[ ,i] <- df$value[df$subject == i][order(df$factor[df$subject == i])]
+  }
+
+  #Anforderungen ueberpruefen
+  check_criteria_single(X = data, hypothesis = hypothesis)
+
+  # output erstellen
+  out <- list(data = df)
+  ## Funktionsaufruf
+  out <- c(out, hdrm1_internal(X = M, hypothesis = hypothesis, alpha = 0.05))
+  class(out) <- "hdrm_single"
+  return(out)
+}
+
+
+
+# Print Funktionen --------------------------------------------------------
+
+#' @method print hdrm_single
+#' @export
+print.hdrm_single <- function(x, digits = 4,...){
+  # hypothese vorbereiten
+  hypothesis <- x$hypothesis
+  if(hypothesis %in% c("equal","flat")) hypothesis = paste0(hypothesis," time profile")
+  if(hypothesis == "custom") hypothesis <- "custom"
+
+  # print-output
+  cat("\n")
+  cat("           One Group Repeated Measure
+       \nAnalysis of", x$dim[2], "subjects in", paste0(x$dim[1]), "dimensions:",
+      "\nW =", round(x$statisitc, digits), " f =", round(x$f, digits), " p.value =", round(x$p.value, digits),
+      "\nNull-Hypothesis:", hypothesis,
+      "\nConvergence parameter \u03c4 =", round(x$tau, digits))
+  cat("\n")
+}

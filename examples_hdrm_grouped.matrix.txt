@@ -1,0 +1,13 @@
+data("sunspots_matrix")
+?sunspots_matrix
+
+# divide the twelve months intwo two groups arbitrarily
+group <- rep(c(1,2), each = 6)
+
+## testing whether there is a time effect in the 2 groups
+hdrm_grouped_matrix(sunspots_matrix,
+                    hypothesis = "sub",
+                    group = group,
+                    bootstrap = FALSE,
+                    B = "100*N"
+                    )
