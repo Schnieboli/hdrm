@@ -2,9 +2,9 @@
 
 S3method(print,hdrm_grouped)
 S3method(print,hdrm_single)
-export(hdrm_grouped_data.frame)
-export(hdrm_grouped_matrix)
-export(hdrm_single_data.frame)
-export(hdrm_single_matrix)
+export(hdrm_grouped_longtable)
+export(hdrm_grouped_widetable)
+export(hdrm_single_longtable)
+export(hdrm_single_widetable)
 importFrom(Rcpp,sourceCpp)
 useDynLib(hdrm, .registration = TRUE)

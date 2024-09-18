@@ -2,7 +2,7 @@
 #'
 #' @description This function implements the methods outlined
 #'   \insertCite{Sattler2018;textual}{hdrm} for data in a widetable format. For data in
-#'   a longtable format see [hdrm_grouped_data.frame].
+#'   a longtable format see [hdrm_grouped_longtable].
 #'
 #' @param data a matrix with subjects represented by columns and factor levels represented by rows.
 #' @param hypothesis either one of "whole", "sub" and "interaction" or a named
@@ -72,7 +72,7 @@
 #' @example examples_hdrm_grouped.matrix.txt
 #'
 #' @export
-hdrm_grouped_matrix <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
+hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
 
   # data muss matrix sein
   if(!is.matrix(data)) stop("data must be a matrix")
@@ -130,8 +130,7 @@ hdrm_grouped_matrix <- function(data, hypothesis = c("whole","sub","interaction"
 #'
 #' @description This function implements the methods outlined in
 #'   \insertCite{Sattler2018;textual}{hdrm} for data in a longtable format. For data in
-#'   a widetable format see [hdrm_grouped_matrix].
-#'
+#'   a widetable format see [hdrm_grouped_widetable]
 #' @param data a data.frame in longtable format.
 #' @param hypothesis either one of "whole", "sub" and "interaction" or a named
 #'   list with quadratic matrices `TW` and `TS`.
@@ -150,7 +149,7 @@ hdrm_grouped_matrix <- function(data, hypothesis = c("whole","sub","interaction"
 #' performed without the affected subjects. Missing values in any of the other
 #' columns of `data` will result in an error.
 #'
-#' The `data` is converted to a matrix the test outlined in
+#' The `data` is converted to a matrix and the test outlined in
 #' \insertCite{Sattler2018;textual}{hdrm} is performed for the hypothesis given by
 #' `hypothesis`. The `hypothesis` can either be given as a `character` or a `list`.
 #' Legal characters are "whole" (default), "sub" or "interaction". "whole" and
@@ -164,13 +163,13 @@ hdrm_grouped_matrix <- function(data, hypothesis = c("whole","sub","interaction"
 #' idempotent, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
 #' Also, the number of rows and columns of `TW` must be equal to the number of
 #' groups and the number of rows and columns of `TS` must be equal to the number
-#' of factor levels. Lists that do not match those criteria will result in an
+#' of factor levels. Lists that do not match those criteria will cause an
 #' error.
 #'
 #' Note that for `bootstrap = FALSE` your results are seed dependent, because
 #' the computational heaviest trace estimator is still calculated using
-#' bootstraps. Also, the non bootstrap versions might not be faster for small
-#' data, depending on the choice of `B`.
+#' bootstraps. Also, depending on the choice of `B`, the non bootstrap versions might not be faster for small
+#' data.
 #'
 #' That also means, that even for `bootstrap = FALSE` the `p.value` depends
 #' heavily on the choice of `B`, as it depends on the degrees of freedom `f`,
@@ -204,7 +203,7 @@ hdrm_grouped_matrix <- function(data, hypothesis = c("whole","sub","interaction"
 #' @example example_hdrm_grouped_data.frame.txt
 #'
 #' @export
-hdrm_grouped_data.frame <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
+hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a data.frame")

@@ -2,7 +2,7 @@
 #'
 #' @description This function implements the methods outlined in
 #'   \insertCite{Pauly2015;textual}{hdrm} for data in a widetable format. For
-#'   data in a longtable format see [hdrm_single_data.frame].
+#'   data in a longtable format see [hdrm_single_longtable].
 #'
 #' @param data a matrix with subjects represented by columns and factor levels
 #'   represented by rows.
@@ -39,7 +39,7 @@
 #' @references \insertAllCited
 #'
 #' @export
-hdrm_single_matrix <- function(data, hypothesis = c("flat","equal"),...){
+hdrm_single_widetable <- function(data, hypothesis = c("flat","equal"),...){
 
   # data matrix?
   if(!is.numeric(data) | !is.matrix(data)) stop("data must be a numeric matrix")
@@ -61,7 +61,7 @@ hdrm_single_matrix <- function(data, hypothesis = c("flat","equal"),...){
 #'
 #' @description This function implements the methods outlined in
 #'   \insertCite{Pauly2015;textual}{hdrm} for data in a longtable format. For data in
-#'   a widetable format see [hdrm_single_matrix].
+#'   a widetable format see [hdrm_single_widetable].
 #'
 #' @param data a data.frame in longtable fromat.
 #' @param hypothesis either a character "flat", "equal" or a quadratic numeric matrix.
@@ -101,7 +101,7 @@ hdrm_single_matrix <- function(data, hypothesis = c("flat","equal"),...){
 #' @references \insertAllCited
 #'
 #' @export
-hdrm_single_data.frame <- function(data, hypothesis = c("flat", "equal"), value, subject, factor,...){
+hdrm_single_longtable <- function(data, hypothesis = c("flat", "equal"), value, subject, factor,...){
 
   if(!is.data.frame(data)) stop("data must be a data.frame")
   if(length(value) != 1) stop("value must be of length 1")
