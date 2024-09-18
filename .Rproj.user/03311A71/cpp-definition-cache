@@ -1,6 +1,6 @@
 [
     {
-        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
         "file_last_write": 1726134295.0,
         "definitions": [
             {
@@ -8,7 +8,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "A1_cpp(arma::mat &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
                 "line": 7,
                 "column": 8,
                 "hidden": false
@@ -18,7 +18,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "A3_cpp(arma::mat &, double)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
                 "line": 30,
                 "column": 8,
                 "hidden": false
@@ -28,7 +28,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "A1star_cpp(const arma::mat &, int &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
                 "line": 80,
                 "column": 8,
                 "hidden": false
@@ -38,7 +38,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "A2star_cpp(const arma::mat &, arma::mat &, int &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
                 "line": 103,
                 "column": 8,
                 "hidden": false
@@ -48,7 +48,7 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "A3star_cpp(const arma::mat &, int &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
                 "line": 131,
                 "column": 8,
                 "hidden": false
@@ -58,8 +58,35 @@
                 "kind": 6,
                 "parent_name": "",
                 "name": "C5star_cpp_internal(arma::mat &, arma::vec &, const int &, arma::uvec &)",
-                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/utils_mult_group.cpp",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_grouped_utils.cpp",
                 "line": 155,
+                "column": 8,
+                "hidden": false
+            }
+        ],
+        "hidden": false
+    },
+    {
+        "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
+        "file_last_write": 1725806682.0,
+        "definitions": [
+            {
+                "usr": "c:@F@B2_cpp#&$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "B2_cpp(arma::mat &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
+                "line": 5,
+                "column": 8,
+                "hidden": false
+            },
+            {
+                "usr": "c:@F@B3_cpp#&$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "B3_cpp(arma::mat &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
+                "line": 33,
                 "column": 8,
                 "hidden": false
             }
