@@ -26,8 +26,20 @@ get_hypothesis_mult <- function(hypothesis, a, d){
     ## ueberpruefen, ob Matrizen richtige dimensionen haben
     if(all(dim(TW) != c(a,a))) stop("TW must be a quadratic matrix with a rows")
     if(all(dim(TS) != c(d,d))) stop("TS must be a quadratic matrix with a rows")
-    # idempotenz
-    if(!(all.equal(TW%*%t(TW),TW) == TRUE) | !(all.equal(TS%*%t(TS),TS) == TRUE) | !isSymmetric.matrix(TW) | !isSymmetric.matrix(TS)) stop("TW and TS must be idempotent")
+    # Symmetrie
+    if(!isSymmetric.matrix(TW) | !isSymmetric.matrix(TS)) stop("TW and TS must be symmetric")
+    # Idempotenz TW
+    if(!identical(TW%*%TW,TW)){ # wenn nicht identisch, dann checke ob all.equal TRUE ist
+      # wenn ja, dann milde warnung
+      if((mean(TW%*%TW - TW) < sqrt(.Machine$double.eps))) warning(paste("TW is not exactly idempotent (mean difference = ", mean(TW%*%TW - TW),"). The effect on the test result is probably be negligible."))
+      # wenn nein, dann starke warnung
+        else warning(paste("TW is not idempotent (mean difference = ", mean(TW%*%TW - TW),"). This will likely affect the test result heavily!"))
+    }
+    # Idempotenz TS
+    if(!identical(TS%*%TS,TS)){ # wenn nicht identisch, dann checke ob all.equal TRUE ist
+      if((mean(TS%*%TS - TS) < sqrt(.Machine$double.eps))) warning(paste("TS is not exactly idempotent (mean difference = ", mean(TS%*%TS - TS),"). The effect on the test result is probably be negligible."))
+      else warning(paste("TS is not idempotent (mean difference = ", mean(TS%*%TS - TS),"). This will likely affect the test result heavily!"))
+    }
   }
 
   # Fall: hypothesis ist character
