@@ -29,7 +29,16 @@ hdrm1_internal <- function(X, hypothesis,...){
   # wenn keiner der oberen faelle zutrifft oder ein NA in TM ist oder TM nicht
   # numeric ist, dann breche ab
   if(any(is.na(TM)) | !is.numeric(TM)) stop("Please specify valid hypothesis.")
-
+  # Symmetrie und Idempotenz pruefen
+  # Symmetrie
+  if(all(TM != t(TM))) stop("hypothesis must be symmetric.")
+  # Idempootenz
+  if(!identical(TM%*%TM,TM)){ # wenn nicht identisch, dann checke ob all.equal TRUE ist
+    # wenn ja, dann milde warnung
+    if((mean(TM%*%TM - TM) < sqrt(.Machine$double.eps))) warning(paste0("TM is not exactly idempotent (mean difference = ", mean(TM%*%TM - TM),"). The effect on the test result is probably be negligible."), call. = FALSE)
+    # wenn nein, dann starke warnung
+    else warning(paste("TM is not idempotent (mean difference = ", mean(TM%*%TM - TM),"). This will affect the test result heavily!"))
+  }
 
   ### Teststatistik Q
   XT <- TM %*% X
