@@ -1,6 +1,6 @@
 Package: hdrm
 Title: High Dimensional Repeated Measures
-Version: 0.0.0.9000
+Version: 0.9
 Authors@R: 
     person("Nils", "Hichert", , "nils.hichert@tu-dortmund.de", role = c("aut", "cre"))
 Description: Providing a one sample and a multiple sample test for high dimensional repeated measures
