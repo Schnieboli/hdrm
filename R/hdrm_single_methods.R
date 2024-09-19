@@ -4,18 +4,18 @@
 #'   \insertCite{Pauly2015;textual}{hdrm} for data in a widetable format. For
 #'   data in a longtable format see [hdrm_single_longtable].
 #'
-#' @param data a matrix with subjects represented by columns and factor levels
+#' @param data a data.frame with subjects represented by columns and factor levels
 #'   represented by rows.
-#' @param hypothesis either a character "flat", "equal" or a quadratic numeric matrix.
+#' @param hypothesis either "equal" or a quadratic numeric matrix.
 #' @param ... further arguments are currently ignored.
 #' @details
 #' If `data` contains missing values, affected subjects will be dropped with a
-#' warning.
+#' warning. Non numeric values in `data` will result in an error.
 #'
 #' The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
 #' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as
-#' a `character` or a `list`. Legal characters are "flat" (default) and "equal", where
-#' "flat" and "equal" stand for \eqn{H_0}: flat/equal time profile. Other
+#' a `character` or a `list`. The only legal character is "flat" (default).
+#' "flat" stands for \eqn{H_0}: time profile is flat. Other
 #' characters will result in an error.
 #'
 #' Alternatively, `hypothesis` can be the quadratic hypothesis matrix \eqn{T} with
@@ -39,18 +39,18 @@
 #' @references \insertAllCited
 #'
 #' @export
-hdrm_single_widetable <- function(data, hypothesis = c("flat","equal"),...){
+hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 
   # data matrix?
-  if(!is.numeric(data) | !is.matrix(data)) stop("data must be a numeric matrix")
-
+  if(!is.data.frame(data) | !all(sapply(data, is.numeric))) stop("data must be a data.frame with numeric entries")
+  M <- as.matrix(data)
   #Anforderungen ueberpruefen
-  check_criteria_single(X = data, hypothesis = hypothesis)
+  check_criteria_single(X = M, hypothesis = hypothesis)
 
   # Output erstellen
   out <- list(data = data)
   # Funktionsaufruf
-  out <- c(out, hdrm1_internal(X = data, hypothesis = hypothesis,...))
+  out <- c(out, hdrm1_internal(X = M, hypothesis = hypothesis,...))
   class(out) <- "hdrm_single"
   return(out)
 }
@@ -60,28 +60,29 @@ hdrm_single_widetable <- function(data, hypothesis = c("flat","equal"),...){
 #' Test for one group high dimensional repeated measures
 #'
 #' @description This function implements the methods outlined in
-#'   \insertCite{Pauly2015;textual}{hdrm} for data in a longtable format. For data in
-#'   a widetable format see [hdrm_single_widetable].
+#'   \insertCite{Pauly2015;textual}{hdrm} for data in a longtable format. For
+#'   data in a widetable format see [hdrm_single_widetable].
 #'
-#' @param data a data.frame in longtable fromat.
-#' @param hypothesis either a character "flat", "equal" or a quadratic numeric matrix.
+#' @param data a data.frame in longtable format.
+#' @param hypothesis either "equal" or a quadratic numeric matrix.
 #' @param value name or number of value column.
 #' @param subject name or number of subject column.
-#' @param factor name or number of factor column.
+#' @param dimension name or number of dimension column.
 #' @param ... further arguments are currently ignored.
 #' @details
 #' The function can deal with missing values only in the `value` column.
 #' Affected subjects are dropped with a warning. Missing values in any other
-#' column of data will result in an error.
+#' column of data will result in an error. Non numeric values in the value
+#' column of `data` will result in an error.
 #'
 #' The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
 #' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as
-#' a `character` or a `list`. Legal characters are "flat" (default) and "equal"
-#' "flat" and "equal" stand for \eqn{H_0}: flat(equal time profile. Other
+#' a `character` or a `list`. The only legal character is "flat" (default).
+#' "flat" stands for \eqn{H_0}: time profile is flat. Other
 #' characters will result in an error.
 #'
 #' Alternatively `hypothesis` can be a quadratic hypothesis matrix \eqn{T} with
-#' the number of rows equal to the number of rows of `data`. \eqn{T} must be
+#' the number of rows equal to the number of levels in the  of `data`. \eqn{T} must be
 #' idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
 #' match those criteria will result in an error.
 #'
@@ -101,18 +102,18 @@ hdrm_single_widetable <- function(data, hypothesis = c("flat","equal"),...){
 #' @references \insertAllCited
 #'
 #' @export
-hdrm_single_longtable <- function(data, hypothesis = c("flat", "equal"), value, subject, factor,...){
+hdrm_single_longtable <- function(data, hypothesis = "flat", value, subject, dimension,...){
 
   if(!is.data.frame(data)) stop("data must be a data.frame")
   if(length(value) != 1) stop("value must be of length 1")
   if(length(subject) != 1) stop("subject must be of length 1")
-  if(length(factor) != 1) stop("factor must be of length 1")
+  if(length(dimension) != 1) stop("dimension must be of length 1")
 
   ## relevante spalten extrahieren
   # auf diese weise koennen value, subject, factor sowohl die namen als auch die nummer der spalte sein
   df <- data.frame(value = data[[value]],
                    subject = data[[subject]],
-                   factor = data[[factor]])
+                   factor = data[[dimension]])
   # falls eine der spalten nicht gefunden werden kann ist diese NULL und df kuerzer als 3:
   if(ncol(df) != 3) stop("could not find at least one of the columns")
 

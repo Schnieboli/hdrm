@@ -22,8 +22,8 @@ hdrm1_internal <- function(X, hypothesis,...){
   if(is.matrix(hypothesis) & all(dim(hypothesis) == c(d,d))) TM <- hypothesis
   #hypothesis ist character
   if(is.character(hypothesis)){
-    if(hypothesis[1] == "equal") TM <- diag(d)
     if(hypothesis[1] == "flat") TM <- diag(d) -  matrix(1/d, d, d)
+    else stop("The only legal character is 'flat'. Other hypotheses can be specified by a matrix.")
   }
 
   # wenn keiner der oberen faelle zutrifft oder ein NA in TM ist oder TM nicht
@@ -31,13 +31,10 @@ hdrm1_internal <- function(X, hypothesis,...){
   if(any(is.na(TM)) | !is.numeric(TM)) stop("Please specify valid hypothesis.")
   # Symmetrie und Idempotenz pruefen
   # Symmetrie
-  if(all(TM != t(TM))) stop("hypothesis must be symmetric.")
+  if((mean(t(TM) - TM) >= sqrt(.Machine$double.eps))) warning(paste("TM is not symmetric (mean difference = ", mean(t(TM) - TM),"). This will likely have a big influence on the test result!"))
   # Idempootenz
-  if(!identical(TM%*%TM,TM)){ # wenn nicht identisch, dann checke ob all.equal TRUE ist
-    # wenn ja, dann milde warnung
-    if((mean(TM%*%TM - TM) < sqrt(.Machine$double.eps))) warning(paste0("TM is not exactly idempotent (mean difference = ", mean(TM%*%TM - TM),"). The effect on the test result is probably be negligible."), call. = FALSE)
-    # wenn nein, dann starke warnung
-    else warning(paste("TM is not idempotent (mean difference = ", mean(TM%*%TM - TM),"). This will affect the test result heavily!"))
+  # checke ob all.equal TRUE ist -> wenn ja, dann milde warnung
+    if((mean(TM%*%TM - TM) >= sqrt(.Machine$double.eps))) warning(paste("TM is not idempotent (mean difference = ", mean(TM%*%TM - TM),"). This will likely have a big influence on the test result!"))
   }
 
   ### Teststatistik Q
