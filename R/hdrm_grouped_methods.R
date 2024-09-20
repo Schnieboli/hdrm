@@ -77,8 +77,8 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a a data.frame with numeric entries")
-  # group muss vector sein
-  if(!is.vector(group)) stop("group must be a vector")
+  # group muss vektor sein
+  if(!is.vector(group) & !is.factor(group)) stop("group must be a vector")
 
   # fehlende werte entfernen
   M <- as.matrix(data)
