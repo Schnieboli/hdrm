@@ -75,20 +75,21 @@
 #' @export
 hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
 
-  # data muss matrix sein
-  if(!is.matrix(data)) stop("data must be a matrix")
+  # data muss data.frame sein
+  if(!is.data.frame(data)) stop("data must be a a data.frame with numeric entries")
   # group muss vector sein
   if(!is.vector(group)) stop("group must be a vector")
 
   # fehlende werte entfernen
-  N_with_NA <- ncol(data)
-  group <- group[stats::complete.cases(t(data))]
+  M <- as.matrix(data)
+  N_with_NA <- ncol(M)
+  group <- group[stats::complete.cases(t(M))]
   group <- droplevels(as.factor(group))
-  data <- t(stats::na.omit(t(data)))
+  M <- t(stats::na.omit(t(M)))
 
   # Dimensionen extrahieren
-  N <- ncol(data)
-  d <- nrow(data)
+  N <- ncol(M)
+  d <- nrow(M)
 
   # Warnung fuer NAs
   if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
@@ -105,14 +106,14 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
   reps <- ceiling(reps)
 
   # Voraussetzungen ueberpruefen
-  check_criteria_grouped(X = data, group = group, hypothesis = hypothesis, reps = reps, bootstrap = bootstrap)
+  check_criteria_grouped(X = M, group = group, hypothesis = hypothesis, reps = reps, bootstrap = bootstrap)
   bootstrap <- bootstrap[1]
 
   # output erstellen
   out <- list(data = data)
   #funktionsaufruf
   out <- c(out, hdrm_grouped_internal(
-    data = data[, order(group)],
+    data = M[, order(group)],
     group = sort(as.integer(group)),
     hypothesis = hypothesis,
     B = reps,
@@ -204,7 +205,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' @example example_hdrm_grouped_data.frame.txt
 #'
 #' @export
-hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, factor, bootstrap = FALSE, B = "500*N",...){
+hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, dimension, bootstrap = FALSE, B = "500*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a data.frame")
@@ -212,13 +213,13 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
   if(length(group) != 1) stop("group must be of length 1")
   if(length(value) != 1) stop("value must be of length 1")
   if(length(subject) != 1) stop("subject must be of length 1")
-  if(length(factor) != 1) stop("factor must be of length 1")
+  if(length(dimension) != 1) stop("dimension must be of length 1")
 
   # relevante spalten extrahieren
   df <- data.frame(value = data[[value]],
                    subject = data[[subject]],
                    whole = data[[group]],
-                   sub = data[[factor]]
+                   sub = data[[dimension]]
                    )
 
   # wenn eine spalte nicht gefunden werden konnte, sit sie NULL und df zu kurz
@@ -272,7 +273,7 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
     group <- c(group, rep(j, nlevels(temp$subject)))
     k = 1
     for (i in levels(temp$subject)) {
-      M[,k] <- temp$value[temp$subject == i]
+      M[, k] <- temp$value[temp$subject == i]
       k <- k + 1
     }
     X <- cbind(X,M)
