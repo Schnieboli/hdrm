@@ -1,6 +1,6 @@
 ---
 output: github_document
-bibliography: biblio.bib 
+bibliography: inst/REFERENCES.bib 
 csl: 2d-materials.csl
 ---
 
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-R package for performing tests on high dimensional repeated measure data for one group @Pauly2015-jo or multiple groups @Sattler2018-az.
+R package for performing tests on high dimensional repeated measure data for one group @Pauly2015 or multiple groups @Sattler2018.
 
 ## Installation
 
@@ -33,57 +33,57 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("Schnieboli/hdrm", dependencies = TRUE)
 ```
 
-## One group case
+## One Group Test
 
-A one group test can be performed by using the function hdrm1. Generic functions exist for the classes matrix, list and data.frame.
+A one group test can be performed by using the function `hdrm_single_longtabe` or `hdrm_single_widetable` depending the format of your data. Both take a `data.frame` as their first argument. The package has two data sets included: `birthrates` @birthrates comes in a wide table format and contains the birthrates of German states from 1990 to 2023. `EEG` @EEG_dataset contains EEG data in 40 dimensions and comes in a long table format.
 
-```{r example hdrm1, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+```{r example hdrm_single, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
 library(hdrm)
-## hdrm1 with matrix
-N <- 60
-d <- 30
-# example data with N = 60 subjects in columns and d = 30 factor levels in rows
-M <- matrix(rnorm(d*N), d, N)
 
-# test M for H_0 = mu_1 = mu_2 = mu_3 = 0 (no effect in first three factor levels)
-H <- matrix(0,d,d)
-H[c(1, d+2, 2*d+3)] <- 1
-hdrm1(data = M, hypothesis = H)
+### One sample test for data in wide table format with built in data set birthrates
+hdrm_single_widetable(data = birthrates,
+                      hypothesis = "flat", # test whether time profile is flat
+                      )
 
-## hdrm1 with data.frame in longtable format
-head(EEG)
-# for 'formula' we are interested in value = value, subject = subject and factor = dimension
-formula <- value ~ subject + dimension
-
-# test EEG for equal time profile
-hdrm1(data = EEG, formula = formula, hypothesis = "equal")
-
-
+### One sample test for data in long table format with built in data set EEG
+# hypothesis can also be given as a matrix
+hypothesis <- matrix(1/40, nrow = 40, ncol = 40) # matrix equivalent to 'flat'
+hdrm_single_longtable(data = EEG,
+                      hypothesis = hypothesis,
+                      value = "value", # can all be given as a character...
+                      subject = 4,     # ...or a number
+                      dimension = "dimension"
+                      )
 ```
 
 
-## Multiple group case
-A test for multiple groups can be performed by the function hdrm_test. Here also exist generics for objects of class matrix, list and data.frame.
-```{r example hdrm_test, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+## Multiple Group Test
+A test for multiple groups can be performed by using the function `hdrm_grouped_longtabe` or `hdrm_grouped_widetable` depending the format of your data. As for the one group test, both take a `data.frame` as their first argument. The test is performed using bootstraps to estimate the computationally heaviest estimator. The number of bootstraps can be controlled via the argument `B`. If your data is large, setting `bootstrap = TRUE` will call the bootstrap versions for the other estimators as well.
+```{r example hdrm_grouped, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
 library(hdrm)
-## hdrm1 with matrix
-N <- 60
-d <- 30
-# example data with N = 60 subjects in columns and d = 30 factor levels in rows...
-M <- matrix(rnorm(d*N), d, N)
 
-# ... divided into a = 6 groups of n_i = 10
-group <- rep(1:6, each = 10)
+### Test for multiple groups for data in wide table format with built in data set birthrates
 
-# test M for group differences
-#hdrm_test(data = M, hypothesis = "time", group = group)
+## a vector with the same length as ncol(data) is needed that divides subjects into groups
+# divide German states in east and west:
+group <- factor(c(1,1,2,2,1,1,1,2,1,1,1,1,2,2,1,2), labels = c("west","east"))
+hdrm_grouped_widetable(data = birthrates,
+                       hypothesis = "interaction", # test for interaction effect between group and dimension
+                       group = group
+)
 
-## hdrm1 with data.frame in longtable format
-head(EEG)
-# for 'formula' we are interested in value = value, subject = subject and factor = dimension
-formula <- value ~ subject + dimension
+### Test for multiple groups for data in long table format with built in data set EEG
+# hypothesis can also be given as a matrix
+hypothesis <- list(TW = diag(4) - matrix(1/4, 4, 4),
+                   TS =matrix(1/40, 40, 40)
+                     ) # list entries equivalent to 'whole'
+hdrm_grouped_longtable(data = EEG,
+                       hypothesis = hypothesis, # test for time effect in groups
+                       group = "group",
+                       value = "value", # can all be given as a character...
+                       subject = 4,     # ...or a number
+                       dimension = "dimension"
+)
+```
 
-# test EEG for equal time profile
-hdrm1(data = EEG, formula = formula, hypothesis = "equal")
-
-
+### References
