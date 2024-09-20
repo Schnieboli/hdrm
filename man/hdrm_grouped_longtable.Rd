@@ -10,7 +10,7 @@ hdrm_grouped_longtable(
   group,
   value,
   subject,
-  factor,
+  dimension,
   bootstrap = FALSE,
   B = "500*N",
   ...
@@ -28,7 +28,7 @@ list with quadratic matrices \code{TW} and \code{TS}.}
 
 \item{subject}{name or number of subject column.}
 
-\item{factor}{name or number of factor column.}
+\item{dimension}{name or number of dimension column.}
 
 \item{bootstrap}{\code{logical}. Specifying whether the bootstrap versions for all
 trace estimators should be used (see details).}

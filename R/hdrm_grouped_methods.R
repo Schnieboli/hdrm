@@ -139,7 +139,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' @param group name or number of group column.
 #' @param value name or number of value column.
 #' @param subject name or number of subject column.
-#' @param factor name or number of factor column.
+#' @param dimension name or number of dimension column.
 #' @param B a `string` specifying a function of the number of subjects \eqn{N}.
 #'   Determines the number of bootstraps used by the  bootstrap trace estimators.
 #' @param bootstrap `logical`. Specifying whether the bootstrap versions for all
