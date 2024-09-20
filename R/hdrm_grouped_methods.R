@@ -70,7 +70,7 @@
 #' \insertNoCite{Sattler2018}{hdrm}
 #' @references \insertAllCited
 #'
-#' @example examples_hdrm_grouped.matrix.txt
+# #' @example examples_hdrm_grouped.matrix.txt
 #'
 #' @export
 hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
@@ -78,7 +78,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a a data.frame with numeric entries")
   # group muss vektor sein
-  if(!is.vector(group) & !is.factor(group)) stop("group must be a vector")
+  if(!is.vector(group) & !is.factor(group)) stop("group must be a character vector or a factor.")
 
   # fehlende werte entfernen
   M <- as.matrix(data)
