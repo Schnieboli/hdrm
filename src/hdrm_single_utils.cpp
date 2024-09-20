@@ -2,6 +2,26 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
+double B0_cpp(arma::mat& mat){
+  int d = mat.n_rows;
+  int N = mat.n_cols;
+  double out = 0;
+  double c = 0;
+  arma::vec col(d);
+
+  for(int i = 0; i < N; ++i){
+    c = 0;
+    col = mat.col(i);
+    for(int j = 0; j < d; ++j){
+      c += pow(col(j), 2);
+    }
+    out += c;
+  }
+  return out/N;
+}
+
+
+// [[Rcpp::export]]
 double B2_cpp(arma::mat& mat) {
   int d = mat.n_rows;
   int N = mat.n_cols;
