@@ -5,7 +5,7 @@ L <- list(1:160, 1:40)
 test_that("perfect case works",{
   # hypothesis = whole
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "whole",
       group = "group",
@@ -19,7 +19,7 @@ test_that("perfect case works",{
 
   # hypothesis = sub
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -32,7 +32,7 @@ test_that("perfect case works",{
   )
   # hypothesis = interaction
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "interaction",
       group = "group",
@@ -45,7 +45,7 @@ test_that("perfect case works",{
   )
   # bootstrap = TRUE
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "whole",
       group = "group",
@@ -60,7 +60,7 @@ test_that("perfect case works",{
   # first elemet legal, second illegal
   expect_warning(
     expect_no_error(
-      hdrm_grouped_data.frame(
+      hdrm_grouped_longtable(
         EEG,
         hypothesis = c("whole", "SUB"),
         group = "group",
@@ -75,7 +75,7 @@ test_that("perfect case works",{
 
   # legal list to hypothesis
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(4), TS = diag(40), TR = diag(120)),
       group = "group",
@@ -89,7 +89,7 @@ test_that("perfect case works",{
 
   # eine zahl
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "whole",
       group = 1,
@@ -103,7 +103,7 @@ test_that("perfect case works",{
 
   # argument to ...
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "whole",
       group = "group",
@@ -121,7 +121,7 @@ test_that("perfect case works",{
 test_that("wrong input: data",{
   # data as list
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       L,
       hypothesis = "whole",
       group = "group",
@@ -135,7 +135,7 @@ test_that("wrong input: data",{
 
   # data as matrix
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       M,
       hypothesis = "whole",
       group = "group",
@@ -154,7 +154,7 @@ test_that("missing values",{
   df <- EEG
   df$value[123] <- NA
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       df,
       hypothesis = "sub",
       group = "group",
@@ -170,7 +170,7 @@ test_that("missing values",{
   df <- EEG
   df$group[234] <- NA
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       df,
       hypothesis = "sub",
       group = "group",
@@ -186,7 +186,7 @@ test_that("missing values",{
   df <- EEG
   df$subject[145] <- NA
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       df,
       hypothesis = "sub",
       group = "group",
@@ -202,7 +202,7 @@ test_that("missing values",{
   df <- EEG
   df$dimension[165] <- NA
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       df,
       hypothesis = "sub",
       group = "group",
@@ -218,7 +218,7 @@ test_that("missing values",{
   df <- EEG
   df$variable[134] <- NA
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       df,
       hypothesis = "sub",
       group = "group",
@@ -232,7 +232,7 @@ test_that("missing values",{
 
   # nonexistant column
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "nonexistant",
@@ -250,7 +250,7 @@ test_that("wrong input: hypothesis",{
 
   # multiple arguments
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       group = "group",
       value = "value",
@@ -263,7 +263,7 @@ test_that("wrong input: hypothesis",{
 
  # a number
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = 1,
       group = "group",
@@ -277,7 +277,7 @@ test_that("wrong input: hypothesis",{
 
   # illegal character
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = c("flat"),
       group = "group",
@@ -292,7 +292,7 @@ test_that("wrong input: hypothesis",{
 
   # list TS missing
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(4), ST = diag(40)),
       group = "group",
@@ -305,7 +305,7 @@ test_that("wrong input: hypothesis",{
   )
   # TW missing
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(WT = diag(4), TS = diag(40)),
       group = "group",
@@ -319,7 +319,7 @@ test_that("wrong input: hypothesis",{
 
   # wrong dimension of matrix TW
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(3), TS = diag(40)),
       group = "group",
@@ -333,7 +333,7 @@ test_that("wrong input: hypothesis",{
 
  # wrong dimension of TS
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(4), TS = diag(51)),
       group = "group",
@@ -347,7 +347,7 @@ test_that("wrong input: hypothesis",{
 
   # TW not symmetrical
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(4) + c(0, 1), TS = diag(40)),
       group = "group",
@@ -361,7 +361,7 @@ test_that("wrong input: hypothesis",{
 
   # TS not symmetrical
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(4), TS = diag(40) + c(1,0)),
       group = "group",
@@ -374,8 +374,8 @@ test_that("wrong input: hypothesis",{
   )
 
   # TW not idempotent
-  expect_error(
-    hdrm_grouped_data.frame(
+  expect_warning(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(1:4), TS = diag(40)),
       group = "group",
@@ -388,8 +388,8 @@ test_that("wrong input: hypothesis",{
   )
 
   # TS not idempotent
-  expect_error(
-    hdrm_grouped_data.frame(
+  expect_warning(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = list(TW = diag(4), TS = diag(1:40)),
       group = "group",
@@ -403,7 +403,7 @@ test_that("wrong input: hypothesis",{
 
   # matrix
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = diag(160),
       group = "group",
@@ -421,7 +421,7 @@ test_that("wrong input: hypothesis",{
 test_that("false input: colum indicators",{
   # column name doent exist
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "nonexistant",
@@ -435,7 +435,7 @@ test_that("false input: colum indicators",{
 
   # column name doent exist
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "grouü",
@@ -449,7 +449,7 @@ test_that("false input: colum indicators",{
 
   # column name doent exist
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -463,7 +463,7 @@ test_that("false input: colum indicators",{
 
   # column name doent exist
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -477,7 +477,7 @@ test_that("false input: colum indicators",{
 
   # number too high
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = 10,
@@ -491,7 +491,7 @@ test_that("false input: colum indicators",{
 
   # column name doent exist
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -505,7 +505,7 @@ test_that("false input: colum indicators",{
 
   # column name doent exist
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -518,7 +518,7 @@ test_that("false input: colum indicators",{
   )
 
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -532,7 +532,7 @@ test_that("false input: colum indicators",{
 
   # vector
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = EEG$group,
@@ -546,7 +546,7 @@ test_that("false input: colum indicators",{
 
   # vector
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -560,7 +560,7 @@ test_that("false input: colum indicators",{
 
   # vector
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -573,7 +573,7 @@ test_that("false input: colum indicators",{
   )
 
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -590,7 +590,7 @@ test_that("false input: colum indicators",{
 test_that("false input: bootstrap",{
   # works
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -604,7 +604,7 @@ test_that("false input: bootstrap",{
 
   # works
   expect_no_condition(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -618,7 +618,7 @@ test_that("false input: bootstrap",{
 
   # logical as string
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -632,7 +632,7 @@ test_that("false input: bootstrap",{
 
   # string
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -648,7 +648,7 @@ test_that("false input: bootstrap",{
   # warning because length 2
   expect_warning(
     expect_error(
-      hdrm_grouped_data.frame(
+      hdrm_grouped_longtable(
         EEG,
         hypothesis = "sub",
         group = "group",
@@ -663,7 +663,7 @@ test_that("false input: bootstrap",{
 
   # works, but warning because length 2
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -678,7 +678,7 @@ test_that("false input: bootstrap",{
   # input logical matrix: works, because it can be coerced to vector
   # warning because length >1
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -693,7 +693,7 @@ test_that("false input: bootstrap",{
   # non logical matrix: error and warning, because "only first elemt used" comes first
   expect_warning(
     expect_error(
-      hdrm_grouped_data.frame(
+      hdrm_grouped_longtable(
         EEG,
         hypothesis = "sub",
         group = "group",
@@ -709,7 +709,7 @@ test_that("false input: bootstrap",{
   # input list: warning and error, because list is length 2
   expect_warning(
     expect_error(
-      hdrm_grouped_data.frame(
+      hdrm_grouped_longtable(
         EEG,
         hypothesis = "sub",
         group = "group",
@@ -726,7 +726,7 @@ test_that("false input: bootstrap",{
   # input data.frame: warning and error, because EEG[1] is possible
   expect_warning(
     expect_error(
-      hdrm_grouped_data.frame(
+      hdrm_grouped_longtable(
         EEG,
         hypothesis = "sub",
         group = "group",
@@ -744,7 +744,7 @@ test_that("false input: bootstrap",{
 test_that("false input: B",{
   # character length 2
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -758,7 +758,7 @@ test_that("false input: B",{
 
   # numeric length 2
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -772,7 +772,7 @@ test_that("false input: B",{
 
   # c(100, "10*N"): "100" works!
   expect_warning(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -786,7 +786,7 @@ test_that("false input: B",{
 
   # negative number
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -800,7 +800,7 @@ test_that("false input: B",{
 
   # negative character
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -814,7 +814,7 @@ test_that("false input: B",{
 
   # function with nonexistant argument
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
@@ -828,7 +828,7 @@ test_that("false input: B",{
 
   # B wrong class
   expect_error(
-    hdrm_grouped_data.frame(
+    hdrm_grouped_longtable(
       EEG,
       hypothesis = "sub",
       group = "group",
