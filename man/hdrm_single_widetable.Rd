@@ -4,13 +4,13 @@
 \alias{hdrm_single_widetable}
 \title{Test for one group high dimensional repeated measures}
 \usage{
-hdrm_single_widetable(data, hypothesis = c("flat", "equal"), ...)
+hdrm_single_widetable(data, hypothesis = "flat", ...)
 }
 \arguments{
-\item{data}{a matrix with subjects represented by columns and factor levels
+\item{data}{a data.frame with subjects represented by columns and factor levels
 represented by rows.}
 
-\item{hypothesis}{either a character "flat", "equal" or a quadratic numeric matrix.}
+\item{hypothesis}{either "equal" or a quadratic numeric matrix.}
 
 \item{...}{further arguments are currently ignored.}
 }
@@ -47,8 +47,8 @@ warning.
 
 The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
 the hypothesis given by \code{hypothesis}. The \code{hypothesis} can either be given as
-a \code{character} or a \code{list}. Legal characters are "flat" (default) and "equal", where
-"flat" and "equal" stand for \eqn{H_0}: flat/equal time profile. Other
+a \code{character} or a \code{list}. The only legal character is "flat" (default).
+"flat" stands for \eqn{H_0}: time profile is flat. Other
 characters will result in an error.
 
 Alternatively, \code{hypothesis} can be the quadratic hypothesis matrix \eqn{T} with

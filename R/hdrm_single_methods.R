@@ -10,7 +10,7 @@
 #' @param ... further arguments are currently ignored.
 #' @details
 #' If `data` contains missing values, affected subjects will be dropped with a
-#' warning. Non numeric values in `data` will result in an error.
+#' warning.
 #'
 #' The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
 #' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as
@@ -72,8 +72,7 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 #' @details
 #' The function can deal with missing values only in the `value` column.
 #' Affected subjects are dropped with a warning. Missing values in any other
-#' column of data will result in an error. Non numeric values in the value
-#' column of `data` will result in an error.
+#' column of data will result in an error.
 #'
 #' The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
 #' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as

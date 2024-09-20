@@ -6,23 +6,23 @@
 \usage{
 hdrm_single_longtable(
   data,
-  hypothesis = c("flat", "equal"),
+  hypothesis = "flat",
   value,
   subject,
-  factor,
+  dimension,
   ...
 )
 }
 \arguments{
-\item{data}{a data.frame in longtable fromat.}
+\item{data}{a data.frame in longtable format.}
 
-\item{hypothesis}{either a character "flat", "equal" or a quadratic numeric matrix.}
+\item{hypothesis}{either "equal" or a quadratic numeric matrix.}
 
 \item{value}{name or number of value column.}
 
 \item{subject}{name or number of subject column.}
 
-\item{factor}{name or number of factor column.}
+\item{dimension}{name or number of dimension column.}
 
 \item{...}{further arguments are currently ignored.}
 }
@@ -50,8 +50,8 @@ given as a matrix, otherwise \code{hypothesis[1]}.}
 }
 \description{
 This function implements the methods outlined in
-\insertCite{Pauly2015;textual}{hdrm} for data in a longtable format. For data in
-a widetable format see \link{hdrm_single_widetable}.
+\insertCite{Pauly2015;textual}{hdrm} for data in a longtable format. For
+data in a widetable format see \link{hdrm_single_widetable}.
 }
 \details{
 The function can deal with missing values only in the \code{value} column.
@@ -60,12 +60,12 @@ column of data will result in an error.
 
 The test outlined in \insertCite{Pauly2015;textual}{hdrm} is performed for
 the hypothesis given by \code{hypothesis}. The \code{hypothesis} can either be given as
-a \code{character} or a \code{list}. Legal characters are "flat" (default) and "equal"
-"flat" and "equal" stand for \eqn{H_0}: flat(equal time profile. Other
+a \code{character} or a \code{list}. The only legal character is "flat" (default).
+"flat" stands for \eqn{H_0}: time profile is flat. Other
 characters will result in an error.
 
 Alternatively \code{hypothesis} can be a quadratic hypothesis matrix \eqn{T} with
-the number of rows equal to the number of rows of \code{data}. \eqn{T} must be
+the number of rows equal to the number of levels in the  of \code{data}. \eqn{T} must be
 idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
 match those criteria will result in an error.
 }

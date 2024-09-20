@@ -14,7 +14,8 @@ hdrm_grouped_widetable(
 )
 }
 \arguments{
-\item{data}{a matrix with subjects represented by columns and factor levels represented by rows.}
+\item{data}{a data frame with subjects represented by columns and factor
+levels represented by rows.}
 
 \item{hypothesis}{either one of "whole", "sub" and "interaction" or a named
 list with quadratic matrices \code{TW} and \code{TS}.}
@@ -97,21 +98,6 @@ the test statistic \eqn{W} is also seed dependent.
 The number of bootstraps \code{B} can also be a numeric value. However, this is
 not advised, as \code{B} should be a function of \eqn{N} that goes to \eqn{\infty}
 for \eqn{N\to\infty}.
-}
-\examples{
-data("sunspots_matrix")
-?sunspots_matrix
-
-# divide the twelve months intwo two groups arbitrarily
-group <- rep(c(1,2), each = 6)
-
-## testing whether there is a time effect in the 2 groups
-hdrm_grouped_matrix(sunspots_matrix,
-                    hypothesis = "sub",
-                    group = group,
-                    bootstrap = FALSE,
-                    B = "100*N"
-                    )
 }
 \references{
 \insertAllCited

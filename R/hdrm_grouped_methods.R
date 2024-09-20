@@ -4,7 +4,8 @@
 #'   \insertCite{Sattler2018;textual}{hdrm} for data in a widetable format. For data in
 #'   a longtable format see [hdrm_grouped_longtable].
 #'
-#' @param data a matrix with subjects represented by columns and factor levels represented by rows.
+#' @param data a data frame with subjects represented by columns and factor
+#' levels represented by rows.
 #' @param hypothesis either one of "whole", "sub" and "interaction" or a named
 #'   list with quadratic matrices `TW` and `TS`.
 #' @param group a `factor` specifying the groups.
