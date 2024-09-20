@@ -31,18 +31,18 @@ get_hypothesis_mult <- function(hypothesis, a, d){
     ############# Annahmen TW
     # Symmetrie und Idempotenz pruefen
     # Symmetrie
-    if((mean(t(TS) - TS) >= sqrt(.Machine$double.eps))) warning(paste0("TS is not symmetric (mean difference = ", mean(t(TM) - TM),"). This will likely have a big influence on the test result!"))
+    if((mean(t(TW) - TW) >= sqrt(.Machine$double.eps))) warning(paste0("TW is not symmetric (mean difference = ", mean(t(TW) - TW),"). This will likely have a big influence on the test result!"))
     # Idempotenz
     # checke ob all.equal TRUE ist -> wenn ja, dann milde warnung
-    if((mean(TS%*%TS - TS) >= sqrt(.Machine$double.eps))) warning(paste0("TS is not idempotent (mean difference = ", mean(TM%*%TM - TM),"). This will likely have a big influence on the test result!"))
+    if((mean(TW%*%TW - TW) >= sqrt(.Machine$double.eps))) warning(paste0("TW is not idempotent (mean difference = ", mean(TW%*%TW - TW),"). This will likely have a big influence on the test result!"))
 
     ############# Annahmen TS
     # Symmetrie und Idempotenz pruefen
     # Symmetrie
-    if((mean(t(TS) - TS) >= sqrt(.Machine$double.eps))) warning(paste0("TS is not symmetric (mean difference = ", mean(t(TM) - TM),"). This will likely have a big influence on the test result!"))
+    if((mean(t(TS) - TS) >= sqrt(.Machine$double.eps))) warning(paste0("TS is not symmetric (mean difference = ", mean(t(TS) - TS),"). This will likely have a big influence on the test result!"))
     # Idempotenz
     # checke ob all.equal TRUE ist -> wenn ja, dann milde warnung
-    if((mean(TS%*%TS - TS) >= sqrt(.Machine$double.eps))) warning(paste0("TS is not idempotent (mean difference = ", mean(TM%*%TM - TM),"). This will likely have a big influence on the test result!"))
+    if((mean(TS%*%TS - TS) >= sqrt(.Machine$double.eps))) warning(paste0("TS is not idempotent (mean difference = ", mean(TS%*%TS - TS),"). This will likely have a big influence on the test result!"))
 
   }
 
@@ -124,18 +124,18 @@ check_criteria_grouped <- function(X, group, hypothesis, reps, bootstrap){
 
 # Exact -------------------------------------------------------------------
 
-#' @keywords internal
-A1 <- function(X){
-  Result <- 0
-  n <- ncol(X)
-  for (i in 1:(n - 1)){
-    for (j in (i + 1):n){
-      a1 <- X[, i] - X[, j]
-      Result <- Result + sum(a1^2)
-    }
-  }
-  return(Result/(n*(n-1)))
-}
+# #' @keywords internal
+# A1 <- function(X){
+#   Result <- 0
+#   n <- ncol(X)
+#   for (i in 1:(n - 1)){
+#     for (j in (i + 1):n){
+#       a1 <- X[, i] - X[, j]
+#       Result <- Result + sum(a1^2)
+#     }
+#   }
+#   return(Result/(n*(n-1)))
+# }
 
 
 #' @keywords internal
@@ -156,58 +156,58 @@ A2 <- function(X, Y){
 }
 
 
-#' @keywords internal
-A3 <- function(X){
-  nX <- ncol(X)
-  Part1 <- 0
-  Part2 <- 0
-  Part3 <- 0
-  Part4 <- 0
-  Part5 <- 0
-  Part6 <- 0
-  Part7 <- 0
-
-  for (l2 in 1:nX){
-    a22 = sum(X[,l2]^2)
-    Part7 = Part7 + a22
-    for (l1 in 1:nX){
-      a12 = sum(X[, l1] * X[, l2])
-      Part1 = Part1 + a12^2 * (l1 != l2)
-      for (l3 in 1:nX){
-        a23 = sum(X[, l2] * X[, l3])
-        a13 = sum(X[, l1] * X[, l3])
-        Part5 = Part5 + a12 * a23 * (l1 != l2)
-        Part2 = Part2 + a12 * a13 * (l1 != l2) * (l1 != l3) * (l2 != l3)
-        Part3 = Part3 + a13 * (a23 + a12) * (l1 != l3) * (l2 != l3)
-        Part4 = Part4 + a13 * a22 * (l1 != l2) * (l1 != l3) * (l2 != l3)
-      }
-    }
-  }
-
-  Part1 = Part1 * (nX - 2) * (nX - 3)
-  Part2 = Part2 * (2 * nX - 5)
-  a8 = rowMeans(X)
-  Part6 = nX ^ 2 * sum(a8 * a8)
-
-  PSSchaetzer = (Part1 - Part2 - Part3 - Part4 - Part5 + Part6 * (Part6 - Part7)) / (nX * (nX - 1) * (nX - 2) * (nX - 3))
-  return(as.numeric(PSSchaetzer))
-}
+# #' @keywords internal
+# A3 <- function(X){
+#   nX <- ncol(X)
+#   Part1 <- 0
+#   Part2 <- 0
+#   Part3 <- 0
+#   Part4 <- 0
+#   Part5 <- 0
+#   Part6 <- 0
+#   Part7 <- 0
+#
+#   for (l2 in 1:nX){
+#     a22 = sum(X[,l2]^2)
+#     Part7 = Part7 + a22
+#     for (l1 in 1:nX){
+#       a12 = sum(X[, l1] * X[, l2])
+#       Part1 = Part1 + a12^2 * (l1 != l2)
+#       for (l3 in 1:nX){
+#         a23 = sum(X[, l2] * X[, l3])
+#         a13 = sum(X[, l1] * X[, l3])
+#         Part5 = Part5 + a12 * a23 * (l1 != l2)
+#         Part2 = Part2 + a12 * a13 * (l1 != l2) * (l1 != l3) * (l2 != l3)
+#         Part3 = Part3 + a13 * (a23 + a12) * (l1 != l3) * (l2 != l3)
+#         Part4 = Part4 + a13 * a22 * (l1 != l2) * (l1 != l3) * (l2 != l3)
+#       }
+#     }
+#   }
+#
+#   Part1 = Part1 * (nX - 2) * (nX - 3)
+#   Part2 = Part2 * (2 * nX - 5)
+#   a8 = rowMeans(X)
+#   Part6 = nX ^ 2 * sum(a8 * a8)
+#
+#   PSSchaetzer = (Part1 - Part2 - Part3 - Part4 - Part5 + Part6 * (Part6 - Part7)) / (nX * (nX - 1) * (nX - 2) * (nX - 3))
+#   return(as.numeric(PSSchaetzer))
+# }
 
 
 # bootstrap ------------------------------------------------------
 
-A1star <- function(X, B){
-  res <- 0
-  n <- ncol(X)
-  d <- nrow(X)
-  sigma <- matrix(0, d, 2)
-
-  for (b in 1:B) {
-    sigma <- X[, sample.int(n, 2)]
-    res <- res + sum((sigma[, 1] - sigma[, 2])^2)
-  }
-  return(res/(2*B))
-}
+# A1star <- function(X, B){
+#   res <- 0
+#   n <- ncol(X)
+#   d <- nrow(X)
+#   sigma <- matrix(0, d, 2)
+#
+#   for (b in 1:B) {
+#     sigma <- X[, sample.int(n, 2)]
+#     res <- res + sum((sigma[, 1] - sigma[, 2])^2)
+#   }
+#   return(res/(2*B))
+# }
 
 
 # A2star <- function(X, Y, B){
@@ -274,44 +274,44 @@ A1star <- function(X, B){
 # }
 
 
-#' @keywords internal
-C5star <- function(X, group, TW, TS, B){ # X mit Individuen in Spalten und Dimensionen in Zeilen
-
-  stopifnot(length(group) == ncol(X))
-
-  a <- length(table(group))
-  d <- nrow(X)
-  N <- ncol(X)
-  n <- as.integer(table(group))
-  stopifnot(all(n >= 6))
-
-  ind <- cumsum(c(1, n)) # zum indexen der Gruppen, ausnutzen, dass X sortiert ist!
-
-  Y <- matrix(0, a*d, N)
-  for(i in 1:a){ # Teil von X der i-ten Gruppe mit dem entsprechenden Teil der Hypothesenmatrix und den Vorfaktoren multiplizieren
-    Y[, ind[i]:(ind[i+1]-1)] <- kronecker(TW[, i], TS%*%(X[, ind[i]:(ind[i+1]-1)] * sqrt(N/n[i])))
-  }
-
-  Rout <- numeric(1)
-  for (b in 1:B) {
-    # Vektoren Initialisieren/zuruecksetzen
-    Z12 <- numeric(d*a)
-    Z34 <- numeric(d*a)
-    Z56 <- numeric(d*a)
-    # Zufallsindividuen auswaehlen
-    sigma = matrix(0.0, a*d, 6*a)
-    for(i in 1:a){
-      # Indizes ziehen
-      sigma[,(i-1)*6 + (1:6)] <- Y[ , sample(ind[i]:(ind[i+1]-1), 6)]
-      ## Z_ij erstellen
-      Z12 <- Z12 + (sigma[, 1 + 6*(i-1)] - sigma[, 2 + 6*(i-1)])
-      Z34 <- Z34 + (sigma[, 3 + 6*(i-1)] - sigma[, 4 + 6*(i-1)])
-      Z56 <- Z56 + (sigma[, 5 + 6*(i-1)] - sigma[, 6 + 6*(i-1)])
-    }
-    Rout <- Rout + (sum(Z12 * Z34) * sum(Z34 * Z56) * sum(Z56 * Z12))
-  }
-  return(Rout/(8*B))
-}
+# #' @keywords internal
+# C5star <- function(X, group, TW, TS, B){ # X mit Individuen in Spalten und Dimensionen in Zeilen
+#
+#   stopifnot(length(group) == ncol(X))
+#
+#   a <- length(table(group))
+#   d <- nrow(X)
+#   N <- ncol(X)
+#   n <- as.integer(table(group))
+#   stopifnot(all(n >= 6))
+#
+#   ind <- cumsum(c(1, n)) # zum indexen der Gruppen, ausnutzen, dass X sortiert ist!
+#
+#   Y <- matrix(0, a*d, N)
+#   for(i in 1:a){ # Teil von X der i-ten Gruppe mit dem entsprechenden Teil der Hypothesenmatrix und den Vorfaktoren multiplizieren
+#     Y[, ind[i]:(ind[i+1]-1)] <- kronecker(TW[, i], TS%*%(X[, ind[i]:(ind[i+1]-1)] * sqrt(N/n[i])))
+#   }
+#
+#   Rout <- numeric(1)
+#   for (b in 1:B) {
+#     # Vektoren Initialisieren/zuruecksetzen
+#     Z12 <- numeric(d*a)
+#     Z34 <- numeric(d*a)
+#     Z56 <- numeric(d*a)
+#     # Zufallsindividuen auswaehlen
+#     sigma = matrix(0.0, a*d, 6*a)
+#     for(i in 1:a){
+#       # Indizes ziehen
+#       sigma[,(i-1)*6 + (1:6)] <- Y[ , sample(ind[i]:(ind[i+1]-1), 6)]
+#       ## Z_ij erstellen
+#       Z12 <- Z12 + (sigma[, 1 + 6*(i-1)] - sigma[, 2 + 6*(i-1)])
+#       Z34 <- Z34 + (sigma[, 3 + 6*(i-1)] - sigma[, 4 + 6*(i-1)])
+#       Z56 <- Z56 + (sigma[, 5 + 6*(i-1)] - sigma[, 6 + 6*(i-1)])
+#     }
+#     Rout <- Rout + (sum(Z12 * Z34) * sum(Z34 * Z56) * sum(Z56 * Z12))
+#   }
+#   return(Rout/(8*B))
+# }
 
 
 #' @keywords internal
