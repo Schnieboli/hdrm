@@ -11,7 +11,7 @@ test_that("perfect case works",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -25,7 +25,7 @@ test_that("perfect case works",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -38,7 +38,7 @@ test_that("perfect case works",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -51,7 +51,7 @@ test_that("perfect case works",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = "10*N"
     )
@@ -66,7 +66,7 @@ test_that("perfect case works",{
         group = "group",
         value = "value",
         subject = "subject",
-        factor = "dimension",
+        dimension = "dimension",
         bootstrap = FALSE,
         B = "10*N"
       )
@@ -81,7 +81,7 @@ test_that("perfect case works",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -95,7 +95,7 @@ test_that("perfect case works",{
       group = 1,
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -109,7 +109,7 @@ test_that("perfect case works",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "100*N",
       a = 5
@@ -127,7 +127,7 @@ test_that("wrong input: data",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = "10*N"
     )
@@ -141,7 +141,7 @@ test_that("wrong input: data",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = "10*N"
     )
@@ -160,7 +160,7 @@ test_that("missing values",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -176,7 +176,7 @@ test_that("missing values",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -192,13 +192,13 @@ test_that("missing values",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
   )
 
-  # NA in factor
+  # NA in dimension
   df <- EEG
   df$dimension[165] <- NA
   expect_error(
@@ -208,7 +208,7 @@ test_that("missing values",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -224,7 +224,7 @@ test_that("missing values",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -238,7 +238,7 @@ test_that("missing values",{
       group = "nonexistant",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = "10*N"
     )
@@ -255,7 +255,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -269,7 +269,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -283,7 +283,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -298,7 +298,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -311,7 +311,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -325,7 +325,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -339,7 +339,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -353,7 +353,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -367,7 +367,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -381,7 +381,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -395,7 +395,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -409,7 +409,7 @@ test_that("wrong input: hypothesis",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -427,7 +427,7 @@ test_that("false input: colum indicators",{
       group = "nonexistant",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -441,7 +441,7 @@ test_that("false input: colum indicators",{
       group = "grouü",
       value = "nonexistant",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -455,7 +455,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "value",
       subject = "nonexistant",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -469,7 +469,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "nonexistant",
+      dimension = "nonexistant",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -483,7 +483,7 @@ test_that("false input: colum indicators",{
       group = 10,
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -497,7 +497,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "10",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -511,7 +511,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "value",
       subject = 10,
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -524,7 +524,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = 10,
+      dimension = 10,
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -538,7 +538,7 @@ test_that("false input: colum indicators",{
       group = EEG$group,
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -552,7 +552,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = EEG$value,
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -566,7 +566,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "value",
       subject = EEG$subject,
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -579,7 +579,7 @@ test_that("false input: colum indicators",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = EEG$dimension,
+      dimension = EEG$dimension,
       bootstrap = FALSE,
       B = "10*N"
     )
@@ -596,7 +596,7 @@ test_that("false input: bootstrap",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = 1,
       B = "10*N"
     )
@@ -610,7 +610,7 @@ test_that("false input: bootstrap",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = 0,
       B = "10*N"
     )
@@ -624,7 +624,7 @@ test_that("false input: bootstrap",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = "TRUE",
       B = "10*N"
     )
@@ -638,7 +638,7 @@ test_that("false input: bootstrap",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = "notlogical",
       B = "10*N"
     )
@@ -654,7 +654,7 @@ test_that("false input: bootstrap",{
         group = "group",
         value = "value",
         subject = "subject",
-        factor = "dimension",
+        dimension = "dimension",
         bootstrap = c(TRUE, "maybe"),
         B = "10*N"
       )
@@ -669,7 +669,7 @@ test_that("false input: bootstrap",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = c(TRUE, FALSE),
       B = "10*N"
     )
@@ -684,7 +684,7 @@ test_that("false input: bootstrap",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = diag(c(TRUE, FALSE)),
       B = "10*N"
     )
@@ -699,7 +699,7 @@ test_that("false input: bootstrap",{
         group = "group",
         value = "value",
         subject = "subject",
-        factor = "dimension",
+        dimension = "dimension",
         bootstrap = M,
         B = "10*N"
       )
@@ -715,7 +715,7 @@ test_that("false input: bootstrap",{
         group = "group",
         value = "value",
         subject = "subject",
-        factor = "dimension",
+        dimension = "dimension",
         bootstrap = L,
         B = "10*N"
       )
@@ -732,7 +732,7 @@ test_that("false input: bootstrap",{
         group = "group",
         value = "value",
         subject = "subject",
-        factor = "dimension",
+        dimension = "dimension",
         bootstrap = EEG,
         B = "10*N"
       )
@@ -750,7 +750,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = c("10*N", "20*N")
     )
@@ -764,7 +764,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = c(100, 1000)
     )
@@ -778,7 +778,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = FALSE,
       B = c(100, "10*N")
     )
@@ -792,7 +792,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = -10
     )
@@ -806,7 +806,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = "-10*N"
     )
@@ -820,7 +820,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = "10 *asdfghjkl"
     )
@@ -834,7 +834,7 @@ test_that("false input: B",{
       group = "group",
       value = "value",
       subject = "subject",
-      factor = "dimension",
+      dimension = "dimension",
       bootstrap = TRUE,
       B = M
     )
