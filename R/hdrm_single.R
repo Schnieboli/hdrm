@@ -43,7 +43,7 @@ hdrm1_internal <- function(X, hypothesis,...){
 
 
   ### Schaetzer berechnen
-  spurNormal <- B0(XT)
+  spurNormal <- B0_cpp(XT)
   spurQuadrat <- B2_cpp(XT)
   spurHoch3 <- B3_cpp(XT)/choose(N,3) # das muss so, weil ich nicht weiss, wie man in cpp bionom ausrechnet
 
