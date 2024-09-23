@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this package, please cite it as below."
+authors:
+- family-names: "Hichert"
+  given-names: "Nils"
+- family-names: "Pauly"
+  given-names: "Markus"
+  orcid: "https://orcid.org/0000-0002-0976-7190"
+- family-names: "Sattler"
+  given-names: "Paavo Aljoscha Nanosch"
+title: "hdrm"
+version: 0.9
+date-released: 2024-10-01
+url: "https://github.com/Schnieboli/hdrm"
