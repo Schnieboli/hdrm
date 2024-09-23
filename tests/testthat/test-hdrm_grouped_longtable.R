@@ -12,7 +12,7 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -26,7 +26,7 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -39,11 +39,11 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
-  # bootstrap = TRUE
+  # subsampling = TRUE
   expect_no_condition(
     hdrm_grouped_longtable(
       EEG,
@@ -52,7 +52,7 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = "10*N"
     )
   )
@@ -67,7 +67,7 @@ test_that("perfect case works",{
         value = "value",
         subject = "subject",
         dimension = "dimension",
-        bootstrap = FALSE,
+        subsampling = FALSE,
         B = "10*N"
       )
     )
@@ -82,7 +82,7 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -96,7 +96,7 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -110,7 +110,7 @@ test_that("perfect case works",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "100*N",
       a = 5
     )
@@ -128,7 +128,7 @@ test_that("wrong input: data",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = "10*N"
     )
   )
@@ -142,7 +142,7 @@ test_that("wrong input: data",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = "10*N"
     )
   )
@@ -161,7 +161,7 @@ test_that("missing values",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -177,7 +177,7 @@ test_that("missing values",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -193,7 +193,7 @@ test_that("missing values",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -209,7 +209,7 @@ test_that("missing values",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -225,7 +225,7 @@ test_that("missing values",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -239,7 +239,7 @@ test_that("missing values",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = "10*N"
     )
   )
@@ -256,7 +256,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -270,7 +270,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -284,7 +284,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -299,7 +299,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -312,7 +312,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -326,7 +326,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -340,7 +340,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -354,7 +354,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -368,7 +368,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -382,7 +382,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -396,7 +396,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -410,7 +410,7 @@ test_that("wrong input: hypothesis",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -428,7 +428,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -442,7 +442,7 @@ test_that("false input: colum indicators",{
       value = "nonexistant",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -456,7 +456,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "nonexistant",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -470,7 +470,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "subject",
       dimension = "nonexistant",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -484,7 +484,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -498,7 +498,7 @@ test_that("false input: colum indicators",{
       value = "10",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -512,7 +512,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = 10,
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -525,7 +525,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "subject",
       dimension = 10,
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -539,7 +539,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -553,7 +553,7 @@ test_that("false input: colum indicators",{
       value = EEG$value,
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -567,7 +567,7 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = EEG$subject,
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
@@ -580,14 +580,14 @@ test_that("false input: colum indicators",{
       value = "value",
       subject = "subject",
       dimension = EEG$dimension,
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = "10*N"
     )
   )
 
 })
 
-test_that("false input: bootstrap",{
+test_that("false input: subsampling",{
   # works
   expect_no_condition(
     hdrm_grouped_longtable(
@@ -597,7 +597,7 @@ test_that("false input: bootstrap",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = 1,
+      subsampling = 1,
       B = "10*N"
     )
   )
@@ -611,7 +611,7 @@ test_that("false input: bootstrap",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = 0,
+      subsampling = 0,
       B = "10*N"
     )
   )
@@ -625,7 +625,7 @@ test_that("false input: bootstrap",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = "TRUE",
+      subsampling = "TRUE",
       B = "10*N"
     )
   )
@@ -639,7 +639,7 @@ test_that("false input: bootstrap",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = "notlogical",
+      subsampling = "notlogical",
       B = "10*N"
     )
   )
@@ -655,7 +655,7 @@ test_that("false input: bootstrap",{
         value = "value",
         subject = "subject",
         dimension = "dimension",
-        bootstrap = c(TRUE, "maybe"),
+        subsampling = c(TRUE, "maybe"),
         B = "10*N"
       )
     )
@@ -670,7 +670,7 @@ test_that("false input: bootstrap",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = c(TRUE, FALSE),
+      subsampling = c(TRUE, FALSE),
       B = "10*N"
     )
   )
@@ -685,7 +685,7 @@ test_that("false input: bootstrap",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = diag(c(TRUE, FALSE)),
+      subsampling = diag(c(TRUE, FALSE)),
       B = "10*N"
     )
   )
@@ -700,7 +700,7 @@ test_that("false input: bootstrap",{
         value = "value",
         subject = "subject",
         dimension = "dimension",
-        bootstrap = M,
+        subsampling = M,
         B = "10*N"
       )
     )
@@ -716,7 +716,7 @@ test_that("false input: bootstrap",{
         value = "value",
         subject = "subject",
         dimension = "dimension",
-        bootstrap = L,
+        subsampling = L,
         B = "10*N"
       )
     )
@@ -733,7 +733,7 @@ test_that("false input: bootstrap",{
         value = "value",
         subject = "subject",
         dimension = "dimension",
-        bootstrap = EEG,
+        subsampling = EEG,
         B = "10*N"
       )
     )
@@ -751,7 +751,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = c("10*N", "20*N")
     )
   )
@@ -765,7 +765,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = c(100, 1000)
     )
   )
@@ -779,7 +779,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = FALSE,
+      subsampling = FALSE,
       B = c(100, "10*N")
     )
   )
@@ -793,7 +793,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = -10
     )
   )
@@ -807,7 +807,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = "-10*N"
     )
   )
@@ -821,7 +821,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = "10 *asdfghjkl"
     )
   )
@@ -835,7 +835,7 @@ test_that("false input: B",{
       value = "value",
       subject = "subject",
       dimension = "dimension",
-      bootstrap = TRUE,
+      subsampling = TRUE,
       B = M
     )
   )
