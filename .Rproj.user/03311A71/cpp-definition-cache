@@ -68,15 +68,25 @@
     },
     {
         "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
-        "file_last_write": 1725806682.0,
+        "file_last_write": 1726869430.0,
         "definitions": [
+            {
+                "usr": "c:@F@B0_cpp#&$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "B0_cpp(arma::mat &)",
+                "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
+                "line": 5,
+                "column": 8,
+                "hidden": false
+            },
             {
                 "usr": "c:@F@B2_cpp#&$@N@arma@S@Mat>#d#",
                 "kind": 6,
                 "parent_name": "",
                 "name": "B2_cpp(arma::mat &)",
                 "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
-                "line": 5,
+                "line": 25,
                 "column": 8,
                 "hidden": false
             },
@@ -86,7 +96,7 @@
                 "parent_name": "",
                 "name": "B3_cpp(arma::mat &)",
                 "file": "C:/Users/nilsh/OneDrive/Desktop/Studium/Bachelorarbeit/hdrm/src/hdrm_single_utils.cpp",
-                "line": 33,
+                "line": 53,
                 "column": 8,
                 "hidden": false
             }
