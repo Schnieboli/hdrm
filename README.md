@@ -20,6 +20,10 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 devtools::install_github("Schnieboli/hdrm", dependencies = TRUE)
 ```
 
+Be aware that the respective
+[rtools-version](https://cran.r-project.org/bin/windows/Rtools/) for
+your version of R is required for installation.
+
 ## One Group Test
 
 A one group test can be performed by using the function
