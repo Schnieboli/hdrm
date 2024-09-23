@@ -18,11 +18,11 @@ hdrm_single_longtable(
 
 \item{hypothesis}{either "equal" or a quadratic numeric matrix.}
 
-\item{value}{name or number of value column.}
+\item{value}{name or index of value column.}
 
-\item{subject}{name or number of subject column.}
+\item{subject}{name or index of subject column.}
 
-\item{dimension}{name or number of dimension column.}
+\item{dimension}{name or index of dimension column.}
 
 \item{...}{further arguments are currently ignored.}
 }
@@ -66,8 +66,38 @@ characters will result in an error.
 
 Alternatively \code{hypothesis} can be a quadratic hypothesis matrix \eqn{T} with
 the number of rows equal to the number of levels in the  of \code{data}. \eqn{T} must be
-idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
+a projection matrix, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
 match those criteria will result in an error.
+}
+\examples{
+data(EEG)
+names(EEG)
+# name (index) of columns of interest are:
+# value = value (2)
+# subject = subject (4)
+# dimension = dimension (7)
+
+# call test
+hdrm_single_longtable(data = EEG,
+                      # test if time profiles are flat
+                      hypothesis = "flat",
+                      value = "value",
+                      # columns can also be specified by their indices
+                      subject = 4,
+                      dimension = "dimension"
+)
+
+
+# hypothesis as list
+hypothesis_matrix <- diag(40) - matrix(1/40, 40, 40)
+
+hdrm_single_longtable(data = EEG,
+                      # test if time profiles are flat
+                      hypothesis = hypothesis_matrix,
+                      value = "value",
+                      subject = "subject",
+                      dimension = "dimension"
+)
 }
 \references{
 \insertAllCited

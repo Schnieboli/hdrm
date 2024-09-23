@@ -79,7 +79,7 @@ error.
 Alternatively, \code{hypothesis} can be a named list with quadratic
 matrices \code{TW} for the wholeplot-part and \code{TS} for the subplot-part of \eqn{T
 = T_W \otimes T_S}. If \code{hypothesis} is a list, \code{TW} and \code{TS} must be
-idempotent, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
+projection matrices, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
 Also, the number of rows and columns of \code{TW} must be equal to the number of
 groups and the number of rows and columns of \code{TS} must be equal to the number
 of factor levels. Lists that do not match those criteria will result in an

@@ -53,8 +53,28 @@ characters will result in an error.
 
 Alternatively, \code{hypothesis} can be the quadratic hypothesis matrix \eqn{T} with
 the number of rows equal to the number of rows of \code{data}. \eqn{T} must be
-idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
+a projection matrix, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
 match those criteria will result in an error.
+}
+\examples{
+data("birthrates")
+
+# call test
+hdrm_single_widetable(data = birthrates,
+                       # test if time profiles are flat
+                       hypothesis = "flat",
+)
+
+
+# hypothesis as list
+hypothesis_matrix <- diag(34) - matrix(1/34, 34, 34)
+
+hdrm_single_widetable(data = birthrates,
+                      # equivalent to hypothesis = "flat"
+                      hypothesis = "flat",
+)
+
+rm(hypothesis_matrix)
 }
 \references{
 \insertAllCited

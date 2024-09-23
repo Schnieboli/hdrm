@@ -22,13 +22,13 @@ hdrm_grouped_longtable(
 \item{hypothesis}{either one of "whole", "sub" and "interaction" or a named
 list with quadratic matrices \code{TW} and \code{TS}.}
 
-\item{group}{name or number of group column.}
+\item{group}{name or index of group column.}
 
-\item{value}{name or number of value column.}
+\item{value}{name or index of value column.}
 
-\item{subject}{name or number of subject column.}
+\item{subject}{name or index of subject column.}
 
-\item{dimension}{name or number of dimension column.}
+\item{dimension}{name or index of dimension column.}
 
 \item{subsampling}{\code{logical}. Specifying whether the subsampling versions for all
 trace estimators should be used (see details).}
@@ -88,7 +88,7 @@ wholeplot-factor. Other characters will result in an error.
 Alternatively, \code{hypothesis} can be a named list with quadratic
 matrices \code{TW} for the wholeplot-part and \code{TS} for the subplot-part of \eqn{T
 = T_W \otimes T_S}. If \code{hypothesis} is a list, \code{TW} and \code{TS} must be
-idempotent, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
+projection matrices, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
 Also, the number of rows and columns of \code{TW} must be equal to the number of
 groups and the number of rows and columns of \code{TS} must be equal to the number
 of factor levels. Lists that do not match those criteria will cause an
@@ -110,48 +110,56 @@ for \eqn{N\to\infty}.
 }
 \examples{
 data(EEG)
-?EEG
-# columns of interest are:
-# group = group
-# value = value
-# subject = subject
-# factor = dimension
-
-## Testing whether there is an effect in the diagnostic groups
-hdrm_grouped_data.frame(data = EEG,
-                        hypothesis = "whole",
-                        group = "group",
-                        value = "value",
-                        subject = "subject",
-                        factor = "dimension",
-                        bootstrap = FALSE,
-                        B = "100*N")
-
-## columns can also be specified by their respective numbers
 names(EEG)
-# "group"  "value"  "sex"  "subject"  "variable"  "region"  "dimension"
-hdrm_grouped_data.frame(data = EEG,
-                        hypothesis = "whole",
-                        group = 1,
-                        value = 2,
-                        subject = 4,
-                        factor = 7,
-                        bootstrap = FALSE,
-                        B = "100*N")
+# name (index) of columns of interest are:
+# group = group (1)
+# value = value (2)
+# subject = subject (4)
+# dimension = dimension (7)
 
-## hypothesis can also be a named list with components TW and TS
-## Here: TW and TS are chosen to give the same result as hypothesis = "sub"
+# call test
+hdrm_grouped_longtable(data = EEG,
+                       # test for no group effect
+                       hypothesis = "whole",
+                       group = "group",
+                       value = "value",
+                       # columns can also be specified by their indices
+                       subject = 4,
+                       dimension = "dimension",
+                       subsampling = FALSE,
+                       B = "100*N"
+)
+
+
+# test using all subsampling version of the trace estimators
+hdrm_grouped_longtable(data = EEG,
+                       # test for no time effect
+                       hypothesis = "sub",
+                       group = "group",
+                       value = "value",
+                       subject = "subject",
+                       dimension = "dimension",
+                       subsampling = TRUE,
+                       # B can also be given as a number
+                       B = 10000
+)
+
+
+# hypothesis as list
 hypothesis_list <- list(TW = matrix(1/4, 4, 4),
                         TS = diag(40) - matrix(1/40, 40, 40)
-                        )
-hdrm_grouped_data.frame(data = EEG,
-                        hypothesis = hypothesis_list,
-                        group = 1,
-                        value = 2,
-                        subject = 4,
-                        factor = 7,
-                        bootstrap = FALSE,
-                        B = "100*N")
+) # equivalent to hypothesis = "sub"
+
+# call test
+hdrm_grouped_longtable(data = EEG,
+                       hypothesis = hypothesis_list,
+                       group = "group",
+                       value = "value",
+                       subject = "subject",
+                       dimension = "dimension",
+                       subsampling = FALSE,
+                       B = "100*N"
+)
 rm(hypothesis_list)
 }
 \references{
