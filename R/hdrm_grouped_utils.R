@@ -102,8 +102,8 @@ check_criteria_grouped <- function(X, group, hypothesis, reps, subsampling){
   d <- nrow(X)
   N <- ncol(X)
 
-  if(a < 2) stop("at least two groups needed", call. = FALSE)
-  if(d < 2) stop("at least 2 dimensions are needed", call. = FALSE)
+  if(a < 2) stop("At least two groups needed. Did you mean to call hdrm_single_...?", call. = FALSE)
+  if(d < 2) stop("At least 2 dimensions are needed", call. = FALSE)
   if(any(n < 6)) stop("all group sizes must be >= 6", call. = FALSE)
   if(length(group) != N) stop("length(group) must be ncol(data)", call. = FALSE)
   if(!is.character(hypothesis) & !is.list(hypothesis)) stop("hypothesis must be a character or a list", call. = FALSE)
