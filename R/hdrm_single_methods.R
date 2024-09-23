@@ -20,7 +20,7 @@
 #'
 #' Alternatively, `hypothesis` can be the quadratic hypothesis matrix \eqn{T} with
 #' the number of rows equal to the number of rows of `data`. \eqn{T} must be
-#' idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
+#' a projection matrix, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
 #' match those criteria will result in an error.
 #'
 #'
@@ -35,6 +35,8 @@
 #' @return \item{p.value}{the p-value of the test statistic.}
 #' @return \item{dim}{a named vector giving the dimensions \eqn{d \times N} of `data`.}
 #' @return \item{removed.cases}{number of subjects removed for having missing values.}
+#'
+#' @example examples/examples_hdrm_single_widetable.R
 #'
 #' @references \insertAllCited
 #'
@@ -65,9 +67,9 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 #'
 #' @param data a data.frame in longtable format.
 #' @param hypothesis either "equal" or a quadratic numeric matrix.
-#' @param value name or number of value column.
-#' @param subject name or number of subject column.
-#' @param dimension name or number of dimension column.
+#' @param value name or index of value column.
+#' @param subject name or index of subject column.
+#' @param dimension name or index of dimension column.
 #' @param ... further arguments are currently ignored.
 #' @details
 #' The function can deal with missing values only in the `value` column.
@@ -82,7 +84,7 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 #'
 #' Alternatively `hypothesis` can be a quadratic hypothesis matrix \eqn{T} with
 #' the number of rows equal to the number of levels in the  of `data`. \eqn{T} must be
-#' idempotent, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
+#' a projection matrix, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
 #' match those criteria will result in an error.
 #'
 #'
@@ -97,6 +99,8 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 #' @return \item{p.value}{the p-value of the test statistic}
 #' @return \item{dim}{a named vector giving the dimensions \eqn{d \times N} of `data`.}
 #' @return \item{removed.cases}{number of subjects removed for having missing values.}
+#'
+#' @example examples/examples_hdrm_single_longtable.R
 #'
 #' @references \insertAllCited
 #'
