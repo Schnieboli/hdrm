@@ -21,7 +21,6 @@ SystemRequirements:
 Imports:
     Rcpp,
     RcppArmadillo,
-    rlang,
     stats,
     Rdpack
 LinkingTo: 
