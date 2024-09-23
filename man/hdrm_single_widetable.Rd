@@ -57,7 +57,7 @@ a projection matrix, meaning symmetrical and \eqn{T^2 = T}. A matrix that does n
 match those criteria will result in an error.
 }
 \examples{
-data("birthrates")
+data(birthrates)
 
 # call test
 hdrm_single_widetable(data = birthrates,
