@@ -5,7 +5,7 @@
 #' \itemize{
 #'   \item `group` Diagnostic group of the subject: Alzheimer's Disease (AD), Mild Cognitive Impairment (MCI), Subject Cognitive Complaints (SCC+, SCC-).
 #'   \item `value` Measured data of a subject at a specific variable and region.
-#'   \item `sex`` Sex of the subject: Male (M) or Female (W).
+#'   \item `sex` Sex of the subject: Male (M) or Female (W).
 #'   \item `subject` A unique identification of a subject.
 #'   \item `variable` The variables measured are activity, complexity, mobility and brain rate coded from 1 to 4.
 #'   \item `region` Frontal left/right, central left/right, temporal left/right, occipital left/right, parietal left/right coded as 1 to 10.
