@@ -78,7 +78,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","int
   W <- as.numeric((QN - EW) / sqrt(Var))
 
   # f und p-Wert
-  f <- as.numeric(A4^3 / C5^2)
+  f <- max(1, as.numeric(A4^3 / C5^2))
   p.value <- 1 - stats::pchisq(W * sqrt(2 * f) + f, df = f)
 
 

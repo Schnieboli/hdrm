@@ -51,7 +51,7 @@ hdrm1_internal <- function(X, hypothesis,...){
   W <- (Qn - spurNormal) / sqrt(2*spurQuadrat)
 
   ### Verteilungsparameter f schaetzen
-  f <- spurQuadrat^3 / spurHoch3^2
+  f <- max(1, spurQuadrat^3 / spurHoch3^2)
 
   ### p-Wert
   p.value <- 1 - stats::pchisq(W * sqrt(2 * f) + f, df = f)
