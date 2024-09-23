@@ -8,7 +8,7 @@ hdrm_grouped_widetable(
   data,
   hypothesis = c("whole", "sub", "interaction"),
   group,
-  bootstrap = FALSE,
+  subsampling = FALSE,
   B = "500*N",
   ...
 )
@@ -22,11 +22,11 @@ list with quadratic matrices \code{TW} and \code{TS}.}
 
 \item{group}{a \code{factor} specifying the groups.}
 
-\item{bootstrap}{\code{logical}. Specifying whether the bootstrap versions for all
+\item{subsampling}{\code{logical}. Specifying whether the subsampling versions for all
 trace estimators should be used (see details).}
 
 \item{B}{a \code{string} specifying a function of the number of subjects \eqn{N}.
-Determines the number of bootstraps used by the  bootstrap trace estimators.}
+Determines the number of subsamples used by the  subsampling trace estimators.}
 
 \item{...}{further arguments. Currently ignored}
 }
@@ -35,7 +35,7 @@ a named list of class "hdrm_grouped" with the components
 
 \item{data}{the input data used.}
 
-\item{f}{the degrees of freedom \eqn{f}.}
+\item{f}{the estimated degrees of freedom \eqn{f}.}
 
 \item{tau}{the convergence parameter \eqn{\tau}}
 
@@ -55,7 +55,7 @@ and distribution of groups \code{table}.}
 
 \item{removed.cases}{number of incomplete subjects removed.}
 
-\item{subsamples}{number of subsamples used for bootstrap estimators.}
+\item{subsamples}{number of subsamples used for subsampling estimators.}
 
 \insertNoCite{Sattler2018}{hdrm}
 }
@@ -85,17 +85,18 @@ groups and the number of rows and columns of \code{TS} must be equal to the numb
 of factor levels. Lists that do not match those criteria will result in an
 error.
 
-Note that for \code{bootstrap = FALSE} your results are seed dependent, because
+Note that for \code{subsampling = FALSE} your results are still seed dependent, because
 the computational heaviest trace estimator is still calculated using
-bootstraps. Also, the non bootstrap versions might not be faster for small
+subsamples Also, the non subsampling versions might not be faster for small
 data, depending on the choice of \code{B}.
 
-That also means, that even for \code{bootstrap = FALSE} the \code{p.value} depends
-heavily on the choice of \code{B}, as it depends on the degrees of freedom \code{f},
-which are always estimated by the bootstrap version. For \code{bootstrap = TRUE}
+That also means, that even for \code{subsampling = FALSE} the \code{p.value} depends
+heavily on the choice of \code{B}, as it depends on the estimated degrees of
+freedom \code{f}, which are always estimated by the subsampling version. For
+\code{subsampling = TRUE}
 the test statistic \eqn{W} is also seed dependent.
 
-The number of bootstraps \code{B} can also be a numeric value. However, this is
+The number of subsamples \code{B} can also be a numeric value. However, this is
 not advised, as \code{B} should be a function of \eqn{N} that goes to \eqn{\infty}
 for \eqn{N\to\infty}.
 }

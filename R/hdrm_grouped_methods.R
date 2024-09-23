@@ -10,8 +10,8 @@
 #'   list with quadratic matrices `TW` and `TS`.
 #' @param group a `factor` specifying the groups.
 #' @param B a `string` specifying a function of the number of subjects \eqn{N}.
-#'   Determines the number of bootstraps used by the  bootstrap trace estimators.
-#' @param bootstrap `logical`. Specifying whether the bootstrap versions for all
+#'   Determines the number of subsamples used by the  subsampling trace estimators.
+#' @param subsampling `logical`. Specifying whether the subsampling versions for all
 #'   trace estimators should be used (see details).
 #' @param ... further arguments. Currently ignored
 #'
@@ -36,24 +36,25 @@
 #' of factor levels. Lists that do not match those criteria will result in an
 #' error.
 #'
-#' Note that for `bootstrap = FALSE` your results are seed dependent, because
+#' Note that for `subsampling = FALSE` your results are still seed dependent, because
 #' the computational heaviest trace estimator is still calculated using
-#' bootstraps. Also, the non bootstrap versions might not be faster for small
+#' subsamples Also, the non subsampling versions might not be faster for small
 #' data, depending on the choice of `B`.
 #'
-#' That also means, that even for `bootstrap = FALSE` the `p.value` depends
-#' heavily on the choice of `B`, as it depends on the degrees of freedom `f`,
-#' which are always estimated by the bootstrap version. For `bootstrap = TRUE`
+#' That also means, that even for `subsampling = FALSE` the `p.value` depends
+#' heavily on the choice of `B`, as it depends on the estimated degrees of
+#' freedom `f`, which are always estimated by the subsampling version. For
+#' `subsampling = TRUE`
 #' the test statistic \eqn{W} is also seed dependent.
 #'
-#' The number of bootstraps `B` can also be a numeric value. However, this is
+#' The number of subsamples `B` can also be a numeric value. However, this is
 #' not advised, as `B` should be a function of \eqn{N} that goes to \eqn{\infty}
 #' for \eqn{N\to\infty}.
 #'
 #'
 #' @return a named list of class "hdrm_grouped" with the components
 #' @returns \item{data}{the input data used.}
-#' @returns \item{f}{the degrees of freedom \eqn{f}.}
+#' @returns \item{f}{the estimated degrees of freedom \eqn{f}.}
 #' @returns \item{tau}{the convergence parameter \eqn{\tau}}
 #' @returns \item{H}{a named list with components `TW` and `TS` that give the
 #'   components of the hypothesis matrix}
@@ -65,7 +66,7 @@
 #' @returns \item{groups}{a named list with components number of groups `a`
 #'   and distribution of groups `table`.}
 #' @returns \item{removed.cases}{number of incomplete subjects removed.}
-#' @returns \item{subsamples}{number of subsamples used for bootstrap estimators.}
+#' @returns \item{subsamples}{number of subsamples used for subsampling estimators.}
 #'
 #' \insertNoCite{Sattler2018}{hdrm}
 #' @references \insertAllCited
@@ -73,7 +74,7 @@
 # #' @example examples_hdrm_grouped.matrix.txt
 #'
 #' @export
-hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, bootstrap = FALSE, B = "500*N",...){
+hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, subsampling = FALSE, B = "500*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a a data.frame with numeric entries")
@@ -106,8 +107,8 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
   reps <- ceiling(reps)
 
   # Voraussetzungen ueberpruefen
-  check_criteria_grouped(X = M, group = group, hypothesis = hypothesis, reps = reps, bootstrap = bootstrap)
-  bootstrap <- bootstrap[1]
+  check_criteria_grouped(X = M, group = group, hypothesis = hypothesis, reps = reps, subsampling = subsampling)
+  subsampling <- subsampling[1]
 
   # output erstellen
   out <- list(data = data)
@@ -117,7 +118,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
     group = sort(as.integer(group)),
     hypothesis = hypothesis,
     B = reps,
-    bootstrap = bootstrap
+    subsampling = subsampling
   ))
   # weiteren output hinzufügen
   out$groups$table <- table(group)
@@ -141,8 +142,8 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' @param subject name or number of subject column.
 #' @param dimension name or number of dimension column.
 #' @param B a `string` specifying a function of the number of subjects \eqn{N}.
-#'   Determines the number of bootstraps used by the  bootstrap trace estimators.
-#' @param bootstrap `logical`. Specifying whether the bootstrap versions for all
+#'   Determines the number of subsamples used by the  subsampling trace estimators.
+#' @param subsampling `logical`. Specifying whether the subsampling versions for all
 #'   trace estimators should be used (see details).
 #' @param ... further arguments. Currently ignored
 #'
@@ -168,17 +169,17 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' of factor levels. Lists that do not match those criteria will cause an
 #' error.
 #'
-#' Note that for `bootstrap = FALSE` your results are seed dependent, because
+#' Note that for `subsampling = FALSE` your results are still seed dependent, because
 #' the computational heaviest trace estimator is still calculated using
-#' bootstraps. Also, depending on the choice of `B`, the non bootstrap versions might not be faster for small
+#' subsamples. Also, depending on the choice of `B`, the non subsampling versions might not be faster for small
 #' data.
 #'
-#' That also means, that even for `bootstrap = FALSE` the `p.value` depends
+#' That also means, that even for `subsampling = FALSE` the `p.value` depends
 #' heavily on the choice of `B`, as it depends on the degrees of freedom `f`,
-#' which are always estimated by the bootstrap version. For `bootstrap = TRUE`
+#' which are always estimated by the subsampling version. For `subsampling = TRUE`
 #' the test statistic \eqn{W} is also seed dependent.
 #'
-#' The number of bootstraps `B` can also be a numeric value. However, this is
+#' The number of subsamples `B` can also be a numeric value. However, this is
 #' not advised, as `B` should be a function of \eqn{N} that goes to \eqn{\infty}
 #' for \eqn{N\to\infty}.
 #'
@@ -197,7 +198,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' @returns \item{groups}{a named list with components number of groups `a`
 #'   and distribution of groups `table`.}
 #' @returns \item{removed.cases}{number of incomplete subjects removed.}
-#' @returns \item{subsamples}{number of subsamples used for bootstrap estimators.}
+#' @returns \item{subsamples}{number of subsamples used for subsampling estimators.}
 #'
 #' \insertNoCite{Sattler2018}{hdrm}
 #' @references \insertAllCited
@@ -205,7 +206,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' @example example_hdrm_grouped_data.frame.txt
 #'
 #' @export
-hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, dimension, bootstrap = FALSE, B = "500*N",...){
+hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, dimension, subsampling = FALSE, B = "500*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a data.frame")
@@ -290,8 +291,8 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
   N <- ncol(X)
 
   # Voraussetzungen erneut ueberpruefen
-  check_criteria_grouped(X = X, group = group, hypothesis = hypothesis, reps = reps, bootstrap = bootstrap)
-  bootstrap <- bootstrap[1]
+  check_criteria_grouped(X = X, group = group, hypothesis = hypothesis, reps = reps, subsampling = subsampling)
+  subsampling <- subsampling[1]
   # Warnung fuer fehlende Werte
   if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
 
@@ -302,7 +303,7 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
     group = sort(as.integer(group)),
     hypothesis = hypothesis,
     B = reps,
-    bootstrap = as.logical(bootstrap)
+    subsampling = as.logical(subsampling)
   ))
   # noch output hinzufuegen
   out$groups$table <- table(group)
