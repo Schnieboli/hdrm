@@ -30,7 +30,7 @@
 #' Alternatively, `hypothesis` can be a named list with quadratic
 #' matrices `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{T
 #' = T_W \otimes T_S}. If `hypothesis` is a list, `TW` and `TS` must be
-#' idempotent, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
+#' projection matrices, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
 #' Also, the number of rows and columns of `TW` must be equal to the number of
 #' groups and the number of rows and columns of `TS` must be equal to the number
 #' of factor levels. Lists that do not match those criteria will result in an
@@ -71,7 +71,7 @@
 #' \insertNoCite{Sattler2018}{hdrm}
 #' @references \insertAllCited
 #'
-# #' @example examples_hdrm_grouped.matrix.txt
+# #' @example examples_hdrm_grouped_widetable.R
 #'
 #' @export
 hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, subsampling = FALSE, B = "500*N",...){
@@ -137,10 +137,10 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' @param data a data.frame in longtable format.
 #' @param hypothesis either one of "whole", "sub" and "interaction" or a named
 #'   list with quadratic matrices `TW` and `TS`.
-#' @param group name or number of group column.
-#' @param value name or number of value column.
-#' @param subject name or number of subject column.
-#' @param dimension name or number of dimension column.
+#' @param group name or index of group column.
+#' @param value name or index of value column.
+#' @param subject name or index of subject column.
+#' @param dimension name or index of dimension column.
 #' @param B a `string` specifying a function of the number of subjects \eqn{N}.
 #'   Determines the number of subsamples used by the  subsampling trace estimators.
 #' @param subsampling `logical`. Specifying whether the subsampling versions for all
@@ -163,7 +163,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' Alternatively, `hypothesis` can be a named list with quadratic
 #' matrices `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{T
 #' = T_W \otimes T_S}. If `hypothesis` is a list, `TW` and `TS` must be
-#' idempotent, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
+#' projection matrices, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
 #' Also, the number of rows and columns of `TW` must be equal to the number of
 #' groups and the number of rows and columns of `TS` must be equal to the number
 #' of factor levels. Lists that do not match those criteria will cause an
@@ -203,7 +203,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' \insertNoCite{Sattler2018}{hdrm}
 #' @references \insertAllCited
 #'
-#' @example example_hdrm_grouped_data.frame.txt
+#' @example examples/example_hdrm_grouped_longtable.R
 #'
 #' @export
 hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, dimension, subsampling = FALSE, B = "500*N",...){
@@ -267,7 +267,6 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
   M <- matrix(NA, d, N)
   L <- split(df, df$whole)
   group <- numeric(0)
-
   for(j in 1:a){
     temp = droplevels(L[[j]])
     M <- matrix(0, d, nlevels(temp$subject))
