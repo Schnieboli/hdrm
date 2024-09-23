@@ -11,7 +11,9 @@ An object of class \code{data.frame} with 34 rows and 16 columns.
 birthrates
 }
 \description{
-A dataset containing the number of births per woman in each German State for 1990-2023 \insertCite{birthrates}{hdrm}.
+A data set containing the number of births per woman in each German State for
+1990-2023 \insertCite{birthrates}{hdrm}. States are represented by columns
+and time is represented by rows.
 }
 \references{
 {\insertAllCited{}}
