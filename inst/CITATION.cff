@@ -1,0 +1,10 @@
+citHeader("To cite hdrm, please use:")
+citEntry(entry = "MISC",
+         title        = "hdrm",
+         author       = personList(as.person("Nils Hichert"),
+                                   as.person("Markus Pauly"),
+                                   as.person("Paavo A. N. Sattler")),
+         url          = "https://github.com/Schnieboli/hdrm"
+         year         = "2024",
+         textVersion  = paste("Hichert, N., Pauly, M. and Sattler, P. A. N. (2024).", "hdrm", "https://github.com/Schnieboli/hdrm.")
+)
