@@ -9,7 +9,7 @@ authors:
 - family-names: "Sattler"
   given-names: "Paavo Aljoscha Nanosch"
 title: "hdrm"
-subtitle: ""
+subtitle: "A package for testing high dimensional repeated measures"
 version: 0.9
 date-released: 2024-10-01
 url: "https://github.com/Schnieboli/hdrm"
