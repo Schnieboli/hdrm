@@ -24,8 +24,8 @@ get_hypothesis_mult <- function(hypothesis, a, d){
     TW <- hypothesis$TW
     TS <- hypothesis$TS
     ## ueberpruefen, ob Matrizen richtige dimensionen haben
-    if(all(dim(TW) != c(a,a))) stop("TW must be a quadratic matrix with a rows")
-    if(all(dim(TS) != c(d,d))) stop("TS must be a quadratic matrix with d rows")
+    if(any(dim(TW) != c(a,a))) stop(paste0("TW must be a quadratic matrix with ", a, " rows"))
+    if(any(dim(TS) != c(d,d))) stop(paste0("TS must be a quadratic matrix with ", d, " rows"))
     # Symmetrie
     if(!isSymmetric.matrix(TW) | !isSymmetric.matrix(TS)) stop("TW and TS must be symmetric")
     ############# Annahmen TW
