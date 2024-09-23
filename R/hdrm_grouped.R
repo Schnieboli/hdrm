@@ -3,7 +3,7 @@
 ## group = vector der Laenge N mit der Gruppenzuweisung
 ## hypothesis = character %in% c("time","group","interaction") oder liste mit Eintraegen TW und TS mit dim(TW) = c(a,a) und dim(TS) = c(d,d)
 #' @keywords internal
-hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","interaction"), B, bootstrap){
+hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","interaction"), B, subsampling){
 
   # N, n, d, a bestimmen
   N <- ncol(data)
@@ -26,7 +26,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","int
 
   # A1 und A3
   for (i in 1:a) {
-    if(bootstrap){
+    if(subsampling){
       A1[i] <- A1star_cpp(X = X_TS[, group == i], B)
       A3[i] <- A3star_cpp(X = X_TS[, group == i], B)
     }else{
@@ -39,7 +39,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","int
   # A2
   for (i in 1:(a-1)) {
     for(r in (i+1):a){
-      if(bootstrap){
+      if(subsampling){
         A2[i,r] <- A2star_cpp(X = X_TS[, group == i], Y = X_TS[, group == r], B)
       }else{
         A2[i,r] <- A2(X = X_TS[, group == i], Y = X_TS[, group == r])

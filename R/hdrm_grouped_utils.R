@@ -95,7 +95,7 @@ get_hypothesis_mult <- function(hypothesis, a, d){
 # neues Kriterium auftaucht, muss es nicht in beiden Methoden geaendert werden...
 #
 #' @keywords internal
-check_criteria_grouped <- function(X, group, hypothesis, reps, bootstrap){
+check_criteria_grouped <- function(X, group, hypothesis, reps, subsampling){
 
   n <- as.integer(table(group))
   a <- length(n)
@@ -107,8 +107,8 @@ check_criteria_grouped <- function(X, group, hypothesis, reps, bootstrap){
   if(any(n < 6)) stop("all group sizes must be >= 6", call. = FALSE)
   if(length(group) != N) stop("length(group) must be ncol(data)", call. = FALSE)
   if(!is.character(hypothesis) & !is.list(hypothesis)) stop("hypothesis must be a character or a list", call. = FALSE)
-  if(length(bootstrap) > 1) warning("length(bootstrap) > 1. Only first element used", call. = FALSE)
-  if(!(bootstrap[1] %in% c(1, 0, TRUE, FALSE, T, F))) stop("bootstrap must be logical", call. = FALSE)
+  if(length(subsampling) > 1) warning("length(subsampling) > 1. Only first element used", call. = FALSE)
+  if(!(subsampling[1] %in% c(1, 0, TRUE, FALSE, T, F))) stop("subsampling must be logical", call. = FALSE)
   if(reps < 0) stop("subsamples must be > 0", call. = FALSE)
   if(!is.numeric(reps)) stop("subsamples could not be converted to a number", call. = FALSE)
 
