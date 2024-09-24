@@ -4,7 +4,7 @@ citEntry(entry = "MISC",
          author       = personList(as.person("Nils Hichert"),
                                    as.person("Markus Pauly"),
                                    as.person("Paavo Sattler")),
-         subtitle     = "A package for hypothesis testing with high dimensional repeated measures"
+         subtitle     = "A package for hypothesis testing with high dimensional repeated measures",
          year         = "2024",
          url          = "https://github.com/Schnieboli/hdrm/",
          textVersion  = paste("Hichert, N., Pauly, M., & Sattler, P. (2024). hdrm (Version 0.9) [Computer software]. https://github.com/Schnieboli/hdrm")
