@@ -71,7 +71,7 @@
 #' \insertNoCite{Sattler2018}{hdrm}
 #' @references \insertAllCited
 #'
-#' @example Example/hdrm_grouped_widetable.R
+#' @example examples/examples_hdrm_grouped_widetable.R
 #'
 #' @export
 hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction"), group, subsampling = FALSE, B = "500*N",...){
