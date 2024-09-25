@@ -19,8 +19,8 @@ hdrm_grouped_longtable(
 \arguments{
 \item{data}{a data.frame in longtable format.}
 
-\item{hypothesis}{either one of "whole", "sub" and "interaction" or a named
-list with quadratic matrices \code{TW} and \code{TS}.}
+\item{hypothesis}{either one of "whole", "sub" "interaction", "identical" or
+flat or a named list with quadratic matrices \code{TW} and \code{TS} (see details).}
 
 \item{group}{name or index of group column.}
 
@@ -30,11 +30,12 @@ list with quadratic matrices \code{TW} and \code{TS}.}
 
 \item{dimension}{name or index of dimension column.}
 
-\item{subsampling}{\code{logical}. Specifying whether the subsampling versions for all
-trace estimators should be used (see details).}
+\item{subsampling}{\code{logical}. Specifying whether the subsampling versions for
+all trace estimators should be used (see details).}
 
 \item{B}{a \code{string} specifying a function of the number of subjects \eqn{N}.
-Determines the number of subsamples used by the  subsampling trace estimators.}
+Determines the number of subsamples used by the  subsampling trace
+estimators.}
 
 \item{...}{further arguments. Currently ignored}
 }
@@ -55,27 +56,28 @@ list, otherwise \code{hypothesis[1]}.}
 
 \item{p.value}{the \eqn{p}-value of the test statistic.}
 
-\item{dim}{a named list with with number of factor levels \eqn{d}
-and number of subjects \eqn{N} of \code{data}}
+\item{dim}{a named list with with number of factor levels \eqn{d} and
+number of subjects \eqn{N} of \code{data}}
 
-\item{groups}{a named list with components number of groups \code{a}
-and distribution of groups \code{table}.}
+\item{groups}{a named list with components number of groups \code{a} and
+distribution of groups \code{table}.}
 
 \item{removed.cases}{number of incomplete subjects removed.}
 
-\item{subsamples}{number of subsamples used for subsampling estimators.}
+\item{subsamples}{number of subsamples used for subsampling
+estimators.}
 
 \insertNoCite{Sattler2018}{hdrm}
 }
 \description{
 This function implements the methods outlined in
-\insertCite{Sattler2018;textual}{hdrm} for data in a longtable format. For data in
-a widetable format see \link{hdrm_grouped_widetable}
+\insertCite{Sattler2018;textual}{hdrm} for data in a longtable format. For
+data in a widetable format see \link{hdrm_grouped_widetable}
 }
 \details{
-The function can deal with missing values only in \code{value}. The test is then
-performed without the affected subjects. Missing values in any of the other
-columns of \code{data} will result in an error.
+The function can deal with missing values only in \code{value}. The test
+is then performed without the affected subjects. Missing values in any of the
+other columns of \code{data} will result in an error.
 
 The test outlined in \insertCite{Sattler2018;textual}{hdrm} is performed for
 the hypothesis \eqn{(\bm T_W \otimes \bm T_S)\bm\mu = \bm 0}, with \eqn{\bm
@@ -110,19 +112,18 @@ rows and columns of \code{TW} must be equal to the number of groups and the numb
 of rows and columns of \code{TS} must be equal to the number of factor levels.
 Lists that do not match those criteria will result in an error.
 
-Note that for \code{subsampling = FALSE} your results are still seed dependent, because
-the computational heaviest trace estimator is still calculated using
-subsamples. Also, depending on the choice of \code{B}, the non subsampling versions might not be faster for small
-data.
+Note that for \code{subsampling = FALSE} your results are still seed dependent,
+because the computational heaviest trace estimator is still calculated using
+subsamples. Also, depending on the choice of \code{B}, the non subsampling versions
+might not be faster for small data.
 
 That also means, that even for \code{subsampling = FALSE} the \code{p.value} depends
 heavily on the choice of \code{B}, as it depends on the degrees of freedom \code{f},
-which are always estimated by the subsampling version. For \code{subsampling = TRUE}
-the test statistic \eqn{W} is also seed dependent.
+which are always estimated by the subsampling version. For \code{subsampling = TRUE} the test statistic \eqn{W} is also seed dependent.
 
-The number of subsamples \code{B} can also be a numeric value. However, this is
-not advised, as \code{B} should be a function of \eqn{N} that goes to \eqn{\infty}
-for \eqn{N\to\infty}.
+The number of subsamples \code{B} can also be a numeric value. However, this is not
+advised, as \code{B} should be a function of \eqn{N} that goes to \eqn{\infty} for
+\eqn{N\to\infty}.
 }
 \examples{
 data(EEG)

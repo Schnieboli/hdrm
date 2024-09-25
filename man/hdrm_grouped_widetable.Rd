@@ -17,8 +17,8 @@ hdrm_grouped_widetable(
 \item{data}{a data frame with subjects represented by columns and factor
 levels represented by rows.}
 
-\item{hypothesis}{either one of "whole", "sub" and "interaction" or a named
-list with quadratic matrices \code{TW} and \code{TS}.}
+\item{hypothesis}{either one of "whole", "sub" "interaction", "identical" or
+flat or a named list with quadratic matrices \code{TW} and \code{TS} (see details).}
 
 \item{group}{a \code{factor} specifying the groups.}
 
