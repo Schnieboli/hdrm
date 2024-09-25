@@ -19,22 +19,38 @@
 #' If `data` contains missing values, affected subjects will be dropped with a
 #' warning.
 #'
-#' The test outlined in \insertCite{Sattler2018;textual}{hdrm} is performed for
-#' the hypothesis given by `hypothesis`. The `hypothesis` can either be given as
-#' a `character` or a `list`. Legal characters are "whole" (default), "sub" or
-#' "interaction". "whole" and "sub" stand for \eqn{H_0}: no differences in
-#' wholeplot/subplot-factor, while "interaction" means \eqn{H_0}: no interaction
-#' between subplot- and wholeplot-factor. Other characters will result in an
-#' error.
+#'The test outlined in \insertCite{Sattler2018;textual}{hdrm} is performed for
+#'the hypothesis \eqn{(\bm T_W \otimes \bm T_S)\bm\mu = \bm 0}, with \eqn{\bm
+#'T_W}, \eqn{\bm T_S} given by `hypothesis`. The `hypothesis` can either be
+#'given as a `character` or a `list`. Legal characters are "whole" (default),
+#'"sub", "interaction", "identical" and "flat". The first three are given by (as
+#'outlined in \insertCite{Sattler2018;textual}{hdrm}):
+#' \itemize{
+#'  \item \eqn{H_0^{\overline W}\text{: } \left(\bm P_a \otimes \frac{1}{d}\bm J_d \right)\bm\mu=\bm 0}
+#' (no main effect in whole plot factor group)
+#'  \item  \eqn{H_0^{\overline S}\text{: } \left(\frac{1}{a}\bm J_a \otimes \bm P_d \right)\bm\mu=\bm 0}
+#' (no main effect in sub plot factor dimension)
+#'  \item \eqn{H_0^{WS}\text{: } \left(\bm P_a \otimes \bm P_d \right)\bm\mu=\bm 0}
+#' (no interaction effect of whole plot and sub plot factor).
+#'}
+#'Additionally, "identical" and "flat" specify the hypotheses
+#' \itemize{
+#' \item  \eqn{H_0^{W}\text{: } \left(\bm P_a \otimes \bm I_d \right)\bm\mu=\bm 0}
+#' (vectors of expexcted values are equal between all groups)
+#' \item \eqn{H_0^{S}\text{: } \left(\bm I_a \otimes \bm P_d \right)\bm\mu=\bm 0}
+#' (flat profile in all groups).
+#' }
+#'Other characters will result in an error.
 #'
-#' Alternatively, `hypothesis` can be a named list with quadratic
-#' matrices `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{T
-#' = T_W \otimes T_S}. If `hypothesis` is a list, `TW` and `TS` must be
-#' projection matrices, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
-#' Also, the number of rows and columns of `TW` must be equal to the number of
-#' groups and the number of rows and columns of `TS` must be equal to the number
-#' of factor levels. Lists that do not match those criteria will result in an
-#' error.
+#'Alternatively, `hypothesis` can be a named list with quadratic
+#' matrices `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{\bm T
+#' = \bm T_W \otimes \bm T_S}. If `hypothesis` is a list, `TW` and `TS` must be
+#'projection matrices, meaning symmetrical and \eqn{\bm T_W^2 = \bm T_W},
+#'\eqn{\bm T_S^2 = \bm T_S}. Differences up to the tolerance in `all.equal` are
+#'ignored, while bigger differences will throw a warning. Also, the number of
+#'rows and columns of `TW` must be equal to the number of groups and the number
+#'of rows and columns of `TS` must be equal to the number of factor levels.
+#'Lists that do not match those criteria will result in an error.
 #'
 #' Note that for `subsampling = FALSE` your results are still seed dependent, because
 #' the computational heaviest trace estimator is still calculated using
@@ -152,22 +168,38 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #' performed without the affected subjects. Missing values in any of the other
 #' columns of `data` will result in an error.
 #'
-#' The `data` is converted to a matrix and the test outlined in
-#' \insertCite{Sattler2018;textual}{hdrm} is performed for the hypothesis given by
-#' `hypothesis`. The `hypothesis` can either be given as a `character` or a `list`.
-#' Legal characters are "whole" (default), "sub" or "interaction". "whole" and
-#' "sub" stand for \eqn{H_0}: no differences in wholeplot/subplot-factor, while
-#' "interaction" means \eqn{H_0}: no interaction between subplot- and
-#' wholeplot-factor. Other characters will result in an error.
+#'The test outlined in \insertCite{Sattler2018;textual}{hdrm} is performed for
+#'the hypothesis \eqn{(\bm T_W \otimes \bm T_S)\bm\mu = \bm 0}, with \eqn{\bm
+#'T_W}, \eqn{\bm T_S} given by `hypothesis`. The `hypothesis` can either be
+#'given as a `character` or a `list`. Legal characters are "whole" (default),
+#'"sub", "interaction", "identical" and "flat". The first three are given by (as
+#'outlined in \insertCite{Sattler2018;textual}{hdrm}):
+#' \itemize{
+#'  \item \eqn{H_0^{\overline W}\text{: } \left(\bm P_a \otimes \frac{1}{d}\bm J_d \right)\bm\mu=\bm 0}
+#' (no main effect in whole plot factor group)
+#'  \item  \eqn{H_0^{\overline S}\text{: } \left(\frac{1}{a}\bm J_a \otimes \bm P_d \right)\bm\mu=\bm 0}
+#' (no main effect in sub plot factor dimension)
+#'  \item \eqn{H_0^{WS}\text{: } \left(\bm P_a \otimes \bm P_d \right)\bm\mu=\bm 0}
+#' (no interaction effect of whole plot and sub plot factor).
+#'}
+#'Additionally, "identical" and "flat" specify the hypotheses
+#' \itemize{
+#' \item  \eqn{H_0^{W}\text{: } \left(\bm P_a \otimes \bm I_d \right)\bm\mu=\bm 0}
+#' (vectors of expexcted values are equal between all groups)
+#' \item \eqn{H_0^{S}\text{: } \left(\bm I_a \otimes \bm P_d \right)\bm\mu=\bm 0}
+#' (flat profile in all groups).
+#' }
+#'Other characters will result in an error.
 #'
-#' Alternatively, `hypothesis` can be a named list with quadratic
-#' matrices `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{T
-#' = T_W \otimes T_S}. If `hypothesis` is a list, `TW` and `TS` must be
-#' projection matrices, meaning symmetrical and \eqn{T_W^2 = T_W}, \eqn{T_S^2 = T_S}.
-#' Also, the number of rows and columns of `TW` must be equal to the number of
-#' groups and the number of rows and columns of `TS` must be equal to the number
-#' of factor levels. Lists that do not match those criteria will cause an
-#' error.
+#'Alternatively, `hypothesis` can be a named list with quadratic
+#' matrices `TW` for the wholeplot-part and `TS` for the subplot-part of \eqn{\bm T
+#' = \bm T_W \otimes \bm T_S}. If `hypothesis` is a list, `TW` and `TS` must be
+#'projection matrices, meaning symmetrical and \eqn{\bm T_W^2 = \bm T_W},
+#'\eqn{\bm T_S^2 = \bm T_S}. Differences up to the tolerance in `all.equal` are
+#'ignored, while bigger differences will throw a warning. Also, the number of
+#'rows and columns of `TW` must be equal to the number of groups and the number
+#'of rows and columns of `TS` must be equal to the number of factor levels.
+#'Lists that do not match those criteria will result in an error.
 #'
 #' Note that for `subsampling = FALSE` your results are still seed dependent, because
 #' the computational heaviest trace estimator is still calculated using
