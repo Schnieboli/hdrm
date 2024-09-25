@@ -279,7 +279,7 @@ test_that("wrong input: hypothesis",{
   expect_error(
     hdrm_grouped_longtable(
       EEG,
-      hypothesis = c("flat"),
+      hypothesis = c("flart"),
       group = "group",
       value = "value",
       subject = "subject",
