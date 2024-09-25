@@ -156,17 +156,12 @@ hdrm_single_longtable <- function(data, hypothesis = "flat", value, subject, dim
 #' @method print hdrm_single
 #' @export
 print.hdrm_single <- function(x, digits = 4,...){
-  # hypothese vorbereiten
-  hypothesis <- x$hypothesis
-  if(hypothesis %in% c("equal","flat")) hypothesis = paste0(hypothesis," time profile")
-  if(hypothesis == "custom") hypothesis <- "custom"
-
   # print-output
   cat("\n")
   cat("           One Group Repeated Measure
        \nAnalysis of", x$dim[2], "subjects in", paste0(x$dim[1]), "dimensions:",
       "\nW =", round(x$statisitc, digits), " f =", round(x$f, digits), " p.value =", round(x$p.value, digits),
-      "\nNull-Hypothesis:", hypothesis,
+      "\nHypothesis type:", x$hypothesis,
       "\nConvergence parameter \u03c4 =", round(x$tau, digits))
   cat("\n")
 }
