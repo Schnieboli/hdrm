@@ -49,7 +49,7 @@ get_hypothesis_mult <- function(hypothesis, a, d){
   # Fall: hypothesis ist character
   if(is.character(hypothesis)){
     if(length(hypothesis) > 1) warning("length of hypothesis is > 1, only first element used.", call. = FALSE)
-    if(!(hypothesis[1] %in% c("whole","sub","interaction"))) stop("hypothesis must be one of c('whole', 'sub', 'interaction') or a list with components TW and TS")
+    if(!(hypothesis[1] %in% c("whole","sub","interaction", "identical", "flat"))) stop("hypothesis must be one of c('whole', 'sub', 'interaction') or a list with components TW and TS")
     if(hypothesis[1] == "whole"){
       # Matrizen erstellen
       TW <- diag(a) - matrix(1/a,a,a)
@@ -64,6 +64,16 @@ get_hypothesis_mult <- function(hypothesis, a, d){
       # Matrizen erstellen
       TW <- diag(a) - matrix(1,a,a)/a
       TS <- diag(d) - matrix(1,d,d)/d
+    }
+    if(hypothesis[1] == "identical"){
+      # Matrizen erstellen
+      TW <- diag(a)
+      TS <- diag(d) - matrix(1,d,d)/d
+    }
+    if(hypothesis[1] == "flat"){
+      # Matrizen erstellen
+      TW <- diag(a) - matrix(1,a,a)/a
+      TS <- diag(d)
     }
   }
 

@@ -6,7 +6,7 @@
 \usage{
 hdrm_grouped_widetable(
   data,
-  hypothesis = c("whole", "sub", "interaction"),
+  hypothesis = c("whole", "sub", "interaction", "identical", "flat"),
   group,
   subsampling = FALSE,
   B = "500*N",
