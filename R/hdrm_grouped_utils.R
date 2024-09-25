@@ -67,13 +67,13 @@ get_hypothesis_mult <- function(hypothesis, a, d){
     }
     if(hypothesis[1] == "identical"){
       # Matrizen erstellen
-      TW <- diag(a)
-      TS <- diag(d) - matrix(1,d,d)/d
+      TW <- diag(a) - matrix(1,a,a)/a
+      TS <- diag(d)
     }
     if(hypothesis[1] == "flat"){
       # Matrizen erstellen
-      TW <- diag(a) - matrix(1,a,a)/a
-      TS <- diag(d)
+      TW <- diag(a)
+      TS <- diag(d) - matrix(1,d,d)/d
     }
   }
 
