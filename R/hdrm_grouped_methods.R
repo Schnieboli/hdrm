@@ -239,7 +239,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'@example examples/examples_hdrm_grouped_longtable.R
 #'
 #'@export
-hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction"), group, value, subject, dimension, subsampling = FALSE, B = "500*N",...){
+hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction", "identical", "flat"), group, value, subject, dimension, subsampling = FALSE, B = "500*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a data.frame")

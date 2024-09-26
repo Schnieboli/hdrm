@@ -6,7 +6,7 @@
 \usage{
 hdrm_grouped_longtable(
   data,
-  hypothesis = c("whole", "sub", "interaction"),
+  hypothesis = c("whole", "sub", "interaction", "identical", "flat"),
   group,
   value,
   subject,
