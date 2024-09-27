@@ -12,8 +12,6 @@ hdrm1_internal <- function(X, hypothesis,...){
   ## Dimensionen definieren
   N <- ncol(X)
   d <- nrow(X)
-  # Warnung fuer fehlende Werte
-  if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
 
 
   ### Hypothesenmatrizen
@@ -63,8 +61,7 @@ hdrm1_internal <- function(X, hypothesis,...){
             H = TM,
             hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom"),
             p.value = p.value,
-            dim = c(d = d, N = N),
-            removed.cases = N_with_NA - N
+            dim = c(d = d, N = N)
   )
   return(L)
 

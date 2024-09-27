@@ -130,21 +130,39 @@ hdrm_single_longtable <- function(data, hypothesis = "flat", value, subject, dim
   if(length(unique(table(df$subject))) != 1) stop("All subjects must have the same number of dimensions")
   if(length(unique(table(df$factor))) != 1) stop("Unequal distribution of dimensions to subjects")
   d <- nlevels(df$factor)
+  N_with_NA <- nlevels(df$subject)
+
+
+  ## fehlende Werte entfernen
+  for (i in levels(df$subject)) {
+    if(any(is.na(df$value[df$subject == i]))){
+      df$value[df$subject == i] <- NA
+    }
+  }
+  df <- df[complete.cases(df),]
+  df <- droplevels(df)
   N <- nlevels(df$subject)
 
   ### Matrix bauen
+  k <- 1
   M <- matrix(NA, d, N)
-  for (i in 1:N) { # baue Matrix spaltenweise/fuege in jedem Schritt ein Individuum in die i-te Spalte ein
-    M[ ,i] <- df$value[df$subject == i][order(df$factor[df$subject == i])]
+  for (i in levels(df$subject)) { # baue Matrix spaltenweise/fuege in jedem Schritt ein Individuum in die i-te Spalte ein
+    M[ ,k] <- df$value[df$subject == i][order(df$factor[df$subject == i])]
+    k <- k+1
   }
 
   #Anforderungen ueberpruefen
   check_criteria_single(X = data, hypothesis = hypothesis)
 
+
+  # Warnung fuer fehlende Werte -> erst hier, da vorher Abbruch aus anderen Gruenden moeglich
+  if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
+
   # output erstellen
   out <- list(data = df)
   ## Funktionsaufruf
   out <- c(out, hdrm1_internal(X = M, hypothesis = hypothesis, alpha = 0.05))
+  out$removed.cases <- N_with_NA - N
   class(out) <- "hdrm_single"
   return(out)
 }

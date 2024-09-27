@@ -272,9 +272,19 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
   if(any(is.na(df$subject))) stop("data$subject must not contain missing values")
 
   ## Dimensionen extrahieren
-  N <- nlevels(df$subject)
+  N_with_NA <- nlevels(df$subject)
   a <- nlevels(df$whole)
   d <- nlevels(df$sub)
+
+  ## fehlende Werte entfernen
+  for (i in 1:N) {
+    if(any(is.na(df$value[df$subject == i]))){
+      df$value[df$subject == i] <- NA
+    }
+  }
+  df <- df[complete.cases(df),]
+  df <- droplevels(df)
+  N <- nlevels(df$subject)
 
   # erste Voraussetzungen ueberpruefen
   ## fuer eine dimension gibt es eine andere anzahl an subjects
@@ -313,19 +323,10 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
   }
   # X ist nach Gruppen sortiert, da gruppenweise aufgebaut
 
-
-  # fehlende werte entfernen
-  N_with_NA <- ncol(X)
-  group <- group[stats::complete.cases(t(X))]
-  group <- droplevels(as.factor(group))
-  X <- t(stats::na.omit(t(X)))
-  # neues N
-  N <- ncol(X)
-
   # Voraussetzungen erneut ueberpruefen
   check_criteria_grouped(X = X, group = group, hypothesis = hypothesis, reps = reps, subsampling = subsampling)
   subsampling <- subsampling[1]
-  # Warnung fuer fehlende Werte
+  # Warnung fuer fehlende Werte -> erst hier, da vorher aus anderen Gruenden abbrechen kann
   if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
 
   ### Output
