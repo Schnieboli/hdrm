@@ -1,19 +1,19 @@
 #' Test for multiple group high dimensional repeated measures
 #'
 #' @description This function implements the methods outlined
-#'   \insertCite{Sattler2018;textual}{hdrm} for data in a widetable format. For data in
-#'   a longtable format see [hdrm_grouped_longtable].
+#'   \insertCite{Sattler2018;textual}{hdrm} for data in widetable format. For data in
+#'    longtable format see [hdrm_grouped_longtable].
 #'
 #' @param data a data frame with subjects represented by columns and factor
 #' levels represented by rows.
 #' @param hypothesis either one of "whole", "sub" "interaction", "identical" or
-#'  flat or a named list with quadratic matrices `TW` and `TS` (see details).
+#'  "flat" or a named list with quadratic matrices `TW` and `TS` (see details).
 #' @param group a `factor` specifying the groups.
 #' @param B a `string` specifying a function of the number of subjects \eqn{N}.
 #'   Determines the number of subsamples used by the  subsampling trace estimators.
 #' @param subsampling `logical`. Specifying whether the subsampling versions for all
 #'   trace estimators should be used (see details).
-#' @param ... further arguments. Currently ignored
+#' @param ... further arguments. Currently ignored.
 #'
 #' @details
 #' If `data` contains missing values, affected subjects will be dropped with a
@@ -52,9 +52,9 @@
 #'of rows and columns of `TS` must be equal to the number of factor levels.
 #'Lists that do not match those criteria will result in an error.
 #'
-#' Note that for `subsampling = FALSE` your results are still seed dependent, because
+#' Note that for `subsampling = FALSE` results are still seed dependent, because
 #' the computational heaviest trace estimator is still calculated using
-#' subsamples Also, the non subsampling versions might not be faster for small
+#' subsamples. Also, the non subsampling versions might not be faster for small
 #' data, depending on the choice of `B`.
 #'
 #' That also means, that even for `subsampling = FALSE` the `p.value` depends
@@ -71,14 +71,14 @@
 #' @return a named list of class "hdrm_grouped" with the components
 #' @returns \item{data}{the input data used.}
 #' @returns \item{f}{the estimated degrees of freedom \eqn{f}.}
-#' @returns \item{tau}{the convergence parameter \eqn{\tau}}
+#' @returns \item{tau}{the convergence parameter \eqn{\tau}.}
 #' @returns \item{H}{a named list with components `TW` and `TS` that give the
 #'   components of the hypothesis matrix}
 #' @returns \item{hypothesis}{a character. Will be "custom" if `hypothesis` is a
 #'   list, otherwise `hypothesis[1]`.}
 #' @returns \item{p.value}{the \eqn{p}-value of the test statistic.}
 #' @returns \item{dim}{a named list with with number of factor levels \eqn{d}
-#'   and number of subjects \eqn{N} of `data`}
+#'   and number of subjects \eqn{N} of `data`.}
 #' @returns \item{groups}{a named list with components number of groups `a`
 #'   and distribution of groups `table`.}
 #' @returns \item{removed.cases}{number of incomplete subjects removed.}
@@ -148,11 +148,11 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'Test for multiple group high dimensional repeated measures
 #'
 #'@description This function implements the methods outlined in
-#'  \insertCite{Sattler2018;textual}{hdrm} for data in a longtable format. For
-#'  data in a widetable format see [hdrm_grouped_widetable]
+#'  \insertCite{Sattler2018;textual}{hdrm} for data in longtable format. For
+#'  data in widetable format see [hdrm_grouped_widetable].
 #'@param data a data.frame in longtable format.
 #'@param hypothesis either one of "whole", "sub" "interaction", "identical" or
-#'  flat or a named list with quadratic matrices `TW` and `TS` (see details).
+#'  "flat" or a named list with quadratic matrices `TW` and `TS` (see details).
 #'@param group name or index of group column.
 #'@param value name or index of value column.
 #'@param subject name or index of subject column.
@@ -162,7 +162,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'  estimators.
 #'@param subsampling `logical`. Specifying whether the subsampling versions for
 #'  all trace estimators should be used (see details).
-#'@param ... further arguments. Currently ignored
+#'@param ... further arguments. Currently ignored.
 #'
 #'@details The function can deal with missing values only in `value`. The test
 #'is then performed without the affected subjects. Missing values in any of the
@@ -201,7 +201,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'of rows and columns of `TS` must be equal to the number of factor levels.
 #'Lists that do not match those criteria will result in an error.
 #'
-#'Note that for `subsampling = FALSE` your results are still seed dependent,
+#'Note that for `subsampling = FALSE` results are still seed dependent,
 #'because the computational heaviest trace estimator is still calculated using
 #'subsamples. Also, depending on the choice of `B`, the non subsampling versions
 #'might not be faster for small data.
@@ -219,14 +219,14 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'@return a named list of class "hdrm_grouped" with the components
 #'@returns \item{data}{the input data used.}
 #'@returns \item{f}{the degrees of freedom \eqn{f}.}
-#'@returns \item{tau}{the convergence parameter \eqn{\tau}}
+#'@returns \item{tau}{the convergence parameter \eqn{\tau}.}
 #'@returns \item{H}{a named list with components `TW` and `TS` that give the
-#'  components of the hypothesis matrix}
+#'  components of the hypothesis matrix.}
 #'@returns \item{hypothesis}{a character. Will be "custom" if `hypothesis` is a
 #'  list, otherwise `hypothesis[1]`.}
 #'@returns \item{p.value}{the \eqn{p}-value of the test statistic.}
 #'@returns \item{dim}{a named list with with number of factor levels \eqn{d} and
-#'  number of subjects \eqn{N} of `data`}
+#'  number of subjects \eqn{N} of `data`.}
 #'@returns \item{groups}{a named list with components number of groups `a` and
 #'  distribution of groups `table`.}
 #'@returns \item{removed.cases}{number of incomplete subjects removed.}
@@ -277,7 +277,7 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
   d <- nlevels(df$sub)
 
   ## fehlende Werte entfernen
-  for (i in 1:N) {
+  for (i in levels(df$subject)) {
     if(any(is.na(df$value[df$subject == i]))){
       df$value[df$subject == i] <- NA
     }

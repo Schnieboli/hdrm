@@ -28,7 +28,7 @@
 #' @return \item{data}{the initial input data.}
 #' @return \item{f}{the degrees of freedom \eqn{f}.}
 #' @return \item{statistic}{the test statistic \eqn{W}.}
-#' @return \item{tau}{the convergence parameter \eqn{\tau},}
+#' @return \item{tau}{the convergence parameter \eqn{\tau}.}
 #' @return \item{H}{the hypothesis-matrix used.}
 #' @return \item{hypothesis}{a character. Will be 'custom' if `hypothesis` was
 #'   given as a matrix, otherwise `hypothesis[1]`.}
@@ -96,7 +96,7 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 #' @return \item{H}{the hypothesis-matrix used.}
 #' @return \item{hypothesis}{a character. Will be 'custom' if `hypothesis` was
 #'   given as a matrix, otherwise `hypothesis[1]`.}
-#' @return \item{p.value}{the p-value of the test statistic}
+#' @return \item{p.value}{the p-value of the test statistic.}
 #' @return \item{dim}{a named vector giving the dimensions \eqn{d \times N} of `data`.}
 #' @return \item{removed.cases}{number of subjects removed for having missing values.}
 #'

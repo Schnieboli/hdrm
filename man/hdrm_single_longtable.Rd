@@ -42,7 +42,7 @@ Returns a list with class "hdrm_single" with the components
 \item{hypothesis}{a character. Will be 'custom' if \code{hypothesis} was
 given as a matrix, otherwise \code{hypothesis[1]}.}
 
-\item{p.value}{the p-value of the test statistic}
+\item{p.value}{the p-value of the test statistic.}
 
 \item{dim}{a named vector giving the dimensions \eqn{d \times N} of \code{data}.}
 

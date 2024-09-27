@@ -20,7 +20,7 @@ hdrm_grouped_longtable(
 \item{data}{a data.frame in longtable format.}
 
 \item{hypothesis}{either one of "whole", "sub" "interaction", "identical" or
-flat or a named list with quadratic matrices \code{TW} and \code{TS} (see details).}
+"flat" or a named list with quadratic matrices \code{TW} and \code{TS} (see details).}
 
 \item{group}{name or index of group column.}
 
@@ -37,7 +37,7 @@ all trace estimators should be used (see details).}
 Determines the number of subsamples used by the  subsampling trace
 estimators.}
 
-\item{...}{further arguments. Currently ignored}
+\item{...}{further arguments. Currently ignored.}
 }
 \value{
 a named list of class "hdrm_grouped" with the components
@@ -46,10 +46,10 @@ a named list of class "hdrm_grouped" with the components
 
 \item{f}{the degrees of freedom \eqn{f}.}
 
-\item{tau}{the convergence parameter \eqn{\tau}}
+\item{tau}{the convergence parameter \eqn{\tau}.}
 
 \item{H}{a named list with components \code{TW} and \code{TS} that give the
-components of the hypothesis matrix}
+components of the hypothesis matrix.}
 
 \item{hypothesis}{a character. Will be "custom" if \code{hypothesis} is a
 list, otherwise \code{hypothesis[1]}.}
@@ -57,7 +57,7 @@ list, otherwise \code{hypothesis[1]}.}
 \item{p.value}{the \eqn{p}-value of the test statistic.}
 
 \item{dim}{a named list with with number of factor levels \eqn{d} and
-number of subjects \eqn{N} of \code{data}}
+number of subjects \eqn{N} of \code{data}.}
 
 \item{groups}{a named list with components number of groups \code{a} and
 distribution of groups \code{table}.}
@@ -71,8 +71,8 @@ estimators.}
 }
 \description{
 This function implements the methods outlined in
-\insertCite{Sattler2018;textual}{hdrm} for data in a longtable format. For
-data in a widetable format see \link{hdrm_grouped_widetable}
+\insertCite{Sattler2018;textual}{hdrm} for data in longtable format. For
+data in widetable format see \link{hdrm_grouped_widetable}.
 }
 \details{
 The function can deal with missing values only in \code{value}. The test
@@ -112,7 +112,7 @@ rows and columns of \code{TW} must be equal to the number of groups and the numb
 of rows and columns of \code{TS} must be equal to the number of factor levels.
 Lists that do not match those criteria will result in an error.
 
-Note that for \code{subsampling = FALSE} your results are still seed dependent,
+Note that for \code{subsampling = FALSE} results are still seed dependent,
 because the computational heaviest trace estimator is still calculated using
 subsamples. Also, depending on the choice of \code{B}, the non subsampling versions
 might not be faster for small data.

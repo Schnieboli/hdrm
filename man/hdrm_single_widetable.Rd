@@ -23,7 +23,7 @@ Returns a list with class "hdrm_single" with the components
 
 \item{statistic}{the test statistic \eqn{W}.}
 
-\item{tau}{the convergence parameter \eqn{\tau},}
+\item{tau}{the convergence parameter \eqn{\tau}.}
 
 \item{H}{the hypothesis-matrix used.}
 
@@ -62,7 +62,7 @@ data(birthrates)
 # call test
 hdrm_single_widetable(data = birthrates,
                        # test if time profiles are flat
-                       hypothesis = "flat",
+                       hypothesis = "flat"
 )
 
 
@@ -71,7 +71,7 @@ hypothesis_matrix <- diag(34) - matrix(1/34, 34, 34)
 
 hdrm_single_widetable(data = birthrates,
                       # equivalent to hypothesis = "flat"
-                      hypothesis = "flat",
+                      hypothesis = "flat"
 )
 
 rm(hypothesis_matrix)
