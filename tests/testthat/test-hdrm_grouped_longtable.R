@@ -842,3 +842,54 @@ test_that("false input: B",{
 
 
 })
+
+
+test_that("non continuous levels",{
+  df <- EEG
+  levels(df$subject) <- c(1, 3:161)
+
+  expect_no_condition(
+    hdrm_grouped_longtable(
+      EEG,
+      hypothesis = "whole",
+      group = "group",
+      value = "value",
+      subject = "subject",
+      dimension = "dimension",
+      subsampling = FALSE,
+      B = "10*N"
+    )
+  )
+
+  df <- EEG
+  levels(df$dimension) <- c(1, 3:50)
+
+  expect_no_condition(
+    hdrm_grouped_longtable(
+      EEG,
+      hypothesis = "whole",
+      group = "group",
+      value = "value",
+      subject = "subject",
+      dimension = "dimension",
+      subsampling = FALSE,
+      B = "10*N"
+    )
+  )
+
+  df <- EEG
+  levels(df$group) <- c(1,4,3,9)
+
+  expect_no_condition(
+    hdrm_grouped_longtable(
+      EEG,
+      hypothesis = "whole",
+      group = "group",
+      value = "value",
+      subject = "subject",
+      dimension = "dimension",
+      subsampling = FALSE,
+      B = "10*N"
+    )
+  )
+})
