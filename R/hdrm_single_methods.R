@@ -49,10 +49,17 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
   #Anforderungen ueberpruefen
   check_criteria_single(X = M, hypothesis = hypothesis)
 
+  # fehlende Werte
+  N_with_NA <- ncol(M)
+  M <- t(na.omit(t(M)))
+  N <- ncol(M)
+  if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
+
   # Output erstellen
-  out <- list(data = data)
+  out <- list(data = M)
   # Funktionsaufruf
   out <- c(out, hdrm1_internal(X = M, hypothesis = hypothesis,...))
+  out$removed.cases = N_with_NA - N
   class(out) <- "hdrm_single"
   return(out)
 }
