@@ -1,14 +1,6 @@
 #' @keywords internal
 hdrm1_internal <- function(X, hypothesis,...){
 
-  # Matrix X kommt eingegeben als: dim(X) = c(d,N)
-  ## Fehlende Werte
-  N_with_NA <- ncol(X)
-  # na.omit entfernt alle Zeilen mit fehlenden Werten, aber wir wollen alle Spalten entfernen
-  # -> doppelt transponieren
-  X <- t(stats::na.omit(t(X)))
-
-
   ## Dimensionen definieren
   N <- ncol(X)
   d <- nrow(X)
@@ -17,7 +9,7 @@ hdrm1_internal <- function(X, hypothesis,...){
   ### Hypothesenmatrizen
   TM <- NA
   # hypothesis is matrix
-  if(is.matrix(hypothesis) & all(dim(hypothesis) == c(d,d))) TM <- hypothesis
+  if(is.matrix(hypothesis)) TM <- hypothesis
   #hypothesis ist character
   if(is.character(hypothesis)){
     if(hypothesis[1] == "flat") TM <- diag(d) -  matrix(1/d, d, d)
