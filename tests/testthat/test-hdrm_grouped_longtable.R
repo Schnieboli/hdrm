@@ -30,6 +30,7 @@ test_that("perfect case works",{
       B = "10*N"
     )
   )
+
   # hypothesis = interaction
   expect_no_condition(
     hdrm_grouped_longtable(
@@ -43,6 +44,35 @@ test_that("perfect case works",{
       B = "10*N"
     )
   )
+
+  # hypothesis = identical
+  expect_no_condition(
+    hdrm_grouped_longtable(
+      EEG,
+      hypothesis = "identical",
+      group = "group",
+      value = "value",
+      subject = "subject",
+      dimension = "dimension",
+      subsampling = FALSE,
+      B = "10*N"
+    )
+  )
+
+  # hypothesis = all_flat
+  expect_no_condition(
+    hdrm_grouped_longtable(
+      EEG,
+      hypothesis = "flat",
+      group = "group",
+      value = "value",
+      subject = "subject",
+      dimension = "dimension",
+      subsampling = FALSE,
+      B = "10*N"
+    )
+  )
+
   # subsampling = TRUE
   expect_no_condition(
     hdrm_grouped_longtable(
@@ -248,7 +278,7 @@ test_that("missing values",{
 
 test_that("wrong input: hypothesis",{
 
-  # multiple arguments
+  # multiple arguments to hypothesis (default)
   expect_warning(
     hdrm_grouped_longtable(
       EEG,
