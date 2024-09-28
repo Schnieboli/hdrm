@@ -26,6 +26,9 @@ hdrm1_internal <- function(X, hypothesis,...){
 
   # wenn keiner der oberen faelle zutrifft oder ein NA in TM ist oder TM nicht
   # numeric ist, dann breche ab
+
+  ## Dimensionen pruefen
+  if(!all(dim(TM) == c(d,d))) stop("hypothesis must be a quadratic matrix with the number of rows equal to the number of dimension d.")
   if(any(is.na(TM)) | !is.numeric(TM)) stop("Please specify valid hypothesis.")
   # Symmetrie und Idempotenz pruefen
   # Symmetrie
