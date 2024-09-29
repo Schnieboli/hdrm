@@ -12,7 +12,7 @@ hdrm_grouped_longtable(
   subject,
   dimension,
   subsampling = FALSE,
-  B = "500*N",
+  B = "1000*N",
   ...
 )
 }

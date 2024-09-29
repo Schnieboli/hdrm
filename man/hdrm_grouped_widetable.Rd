@@ -9,7 +9,7 @@ hdrm_grouped_widetable(
   hypothesis = c("whole", "sub", "interaction", "identical", "flat"),
   group,
   subsampling = FALSE,
-  B = "500*N",
+  B = "1000*N",
   ...
 )
 }
