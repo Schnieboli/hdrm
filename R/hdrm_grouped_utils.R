@@ -140,11 +140,10 @@ check_criteria_grouped <- function(X, group, hypothesis, reps, subsampling){
 #   n <- ncol(X)
 #   for (i in 1:(n - 1)){
 #     for (j in (i + 1):n){
-#       a1 <- X[, i] - X[, j]
-#       Result <- Result + sum(a1^2)
+#       Result <- Result + crossprod(X[, i] - X[, j])
 #     }
 #   }
-#   return(Result/(n*(n-1)))
+#   return(as.numeric(Result)/(n*(n-1)))
 # }
 
 
@@ -178,14 +177,14 @@ A2 <- function(X, Y){
 #   Part7 <- 0
 #
 #   for (l2 in 1:nX){
-#     a22 = sum(X[,l2]^2)
+#     a22 = as.numeric(crossprod(X[,l2]))
 #     Part7 = Part7 + a22
 #     for (l1 in 1:nX){
-#       a12 = sum(X[, l1] * X[, l2])
-#       Part1 = Part1 + a12^2 * (l1 != l2)
+#       a12 = crossprod(X[, l1], X[, l2])
+#       Part1 = Part1 + as.numeric(a12^2) * (l1 != l2)
 #       for (l3 in 1:nX){
-#         a23 = sum(X[, l2] * X[, l3])
-#         a13 = sum(X[, l1] * X[, l3])
+#         a23 = as.numeric(crossprod(X[, l2], X[, l3]))
+#         a13 = as.numeric(crossprod(X[, l1], X[, l3]))
 #         Part5 = Part5 + a12 * a23 * (l1 != l2)
 #         Part2 = Part2 + a12 * a13 * (l1 != l2) * (l1 != l3) * (l2 != l3)
 #         Part3 = Part3 + a13 * (a23 + a12) * (l1 != l3) * (l2 != l3)
@@ -197,7 +196,7 @@ A2 <- function(X, Y){
 #   Part1 = Part1 * (nX - 2) * (nX - 3)
 #   Part2 = Part2 * (2 * nX - 5)
 #   a8 = rowMeans(X)
-#   Part6 = nX ^ 2 * sum(a8 * a8)
+#   Part6 = nX ^ 2 * crossprod(a8)
 #
 #   PSSchaetzer = (Part1 - Part2 - Part3 - Part4 - Part5 + Part6 * (Part6 - Part7)) / (nX * (nX - 1) * (nX - 2) * (nX - 3))
 #   return(as.numeric(PSSchaetzer))

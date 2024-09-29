@@ -39,7 +39,7 @@ check_criteria_single <- function(X, hypothesis){
 #   for (i in 2:N) {
 #     Y <-  X[, c(i:N, 1:(i-1))] * X
 #     S <- S + (colSums(Y))^2
-#     M <- M + sum(X[, i]^2)^2
+#     M <- M + crossprod(X[, i])^2
 #   }
 #   return(sum(S) - M)
 # }
@@ -52,7 +52,7 @@ check_criteria_single <- function(X, hypothesis){
 #   for (k in 1:(N-2)) {
 #     for (l in (k+1):(N-1)) {
 #       for (r in (l+1):N) {
-#         S <- S + (sum(X[, k] * X[, l]) * sum(X[, l] * X[, r]) * sum(X[, r] * X[, k]))
+#         S <- S + (crossprod(X[, k], X[, l]) * crossprod(X[, l], X[, r]) * crossprod(X[, r], X[, k]))
 #       }
 #     }
 #   }
