@@ -338,7 +338,7 @@ C5star_cpp <- function(X, group, TW, TS, B){ # ist zu gross; ich glaube es liegt
 
   Y <- matrix(0, a*d, N)
   for(i in 1:a){ # Teil von X der i-ten Gruppe mit dem entsprechenden Teil der Hypothesenmatrix und den Vorfaktoren multiplizieren
-    Y[, ind[i]:(ind[i+1]-1)] <- kronecker(TW[, i], TS%*%(X[, ind[i]:(ind[i+1]-1)] * sqrt(N/n[i])))
+    Y[, ind[i]:(ind[i+1]-1)] <- kronecker(TW[, i], (X[, ind[i]:(ind[i+1]-1)] * sqrt(N/n[i])))
   }
   # cpp-teil aufrufen
   return(C5star_cpp_internal(X = Y, group = group, B = B, n = n))
