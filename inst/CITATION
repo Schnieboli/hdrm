@@ -1,9 +1,7 @@
 citHeader("To cite hdrm, please use:")
 citEntry(entry = "MISC",
          title        = "hdrm",
-         author       = personList(as.person("Nils Hichert"),
-                                   as.person("Markus Pauly"),
-                                   as.person("Paavo Sattler")),
+         author       = personList(as.person("Nils Hichert")),
          subtitle     = "A package for hypothesis testing with high dimensional repeated measures",
          year         = "2024",
          url          = "https://github.com/Schnieboli/hdrm/",
