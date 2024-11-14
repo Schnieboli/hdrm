@@ -79,7 +79,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole","sub","int
 
   # f und p-Wert
   f <- max(1, as.numeric(A4^3 / C5^2))
-  p.value <- 1 - stats::pchisq(W * sqrt(2 * f) + f, df = f)
+  p.value <- max(1 - stats::pchisq(W * sqrt(2 * f) + f, df = f), .Machine$double.eps)
 
 
   ## Ausgabe
