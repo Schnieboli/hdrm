@@ -1,4 +1,4 @@
-
+This R package is part of my Bachelor's Thesis which is supervised by the authors of the respective Papers (Prof. Dr. Markus Pauly \& Dr. Paavo Sattler). My work has yet to be evaluated!
 # hdrm
 
 <!-- badges: start -->
