@@ -6,7 +6,7 @@
 #'
 #' @param data a data.frame with subjects represented by columns and factor levels
 #'   represented by rows.
-#' @param hypothesis either "equal" or a quadratic numeric matrix.
+#' @param hypothesis either "flat" or a quadratic numeric matrix.
 #' @param ... further arguments are currently ignored.
 #' @details
 #' If `data` contains missing values, affected subjects will be dropped with a
@@ -73,7 +73,7 @@ hdrm_single_widetable <- function(data, hypothesis = "flat",...){
 #'   data in a widetable format see [hdrm_single_widetable].
 #'
 #' @param data a data.frame in longtable format.
-#' @param hypothesis either "equal" or a quadratic numeric matrix.
+#' @param hypothesis either "flat" or a quadratic numeric matrix.
 #' @param value name or index of value column.
 #' @param subject name or index of subject column.
 #' @param dimension name or index of dimension column.
