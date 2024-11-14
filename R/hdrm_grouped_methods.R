@@ -353,13 +353,20 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
 #' @method print hdrm_grouped
 #' @export
 print.hdrm_grouped <- function(x, digits = 4,...){
+  ## p-Wert vorbereiten
+  p <- round(x$p.value, digits)
+  if(p <= 0){
+    p = paste0("< ", 10^(-digits))
+  }else{
+    p = paste0("= ", p)
+  }
+
   # print-output
   cat("\n")
   cat("          Multi Group Repeated Measure
       \nAnalysis of", x$dim$N, "individuals in", x$groups$a, "groups", "and", paste0(x$dim$d), "dimensions:",
-      "\nW =", round(x$statisitc, digits), " f =", round(x$f,digits), " p.value =", round(x$p.value, digits),
+      "\nW =", round(x$statisitc, digits), " f =", round(x$f,digits), " p.value", p,
       "\nHypothesis type:", ifelse(is.list(x$hypothesis), "custom", x$hypothesis),
       "\nConvergence parameter \u03c4 =", round(x$tau,digits))
   cat("\n")
 }
-
