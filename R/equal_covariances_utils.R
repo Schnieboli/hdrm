@@ -6,7 +6,7 @@ A1_eq <- function(X){
       S <- S + crossprod(X[j, ], X[k, ])
     }
   }
-  return(as.numeric(S))
+  return(as.numeric(S)/(n*(n-1)))
 }
 
 
