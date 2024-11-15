@@ -98,15 +98,18 @@ make_A2_eq <- function(X, group){
 C1_eq <- function(X){
   n <- ncol(X)
   S <- 0.0
-  for(l1 in 1:(n-5)){
-    for(l2 in (l1+1):(n-4)){
-      for(l3 in (l2+1):(n-3)){
-        for(l4 in (l3+1):(n-2)){
-          for(l5 in (l4+1):(n-1)){
-            for(l6 in (l5+1):(n)){
-              S <- S + crossprod(X[, l1] - X[, l2], X[, l3] - X[, l4]) *
-                crossprod(X[, l3] - X[, l4], X[, l5] - X[, l6]) *
-                crossprod(X[, l5] - X[, l6], X[, l1] - X[, l2])
+  for(l1 in 1:n){
+    for(l2 in 1:n){
+      for(l3 in 1:n){
+        for(l4 in 1:n){
+          for(l5 in 1:n){
+            for(l6 in 1:n){
+              vec <- c(l1,l2,l3,l4,l5,l6)
+              if(length(unique(vec)) == 6){
+                S <- S + crossprod(X[, l1] - X[, l2], X[, l3] - X[, l4]) *
+                  crossprod(X[, l3] - X[, l4], X[, l5] - X[, l6]) *
+                  crossprod(X[, l5] - X[, l6], X[, l1] - X[, l2])
+              }
             }
           }
         }
