@@ -173,7 +173,7 @@ make_C1_star_eq <- function(X, B, group){
   prefactor <- 0
   for(i in 1:a){
     n <- sum
-    out <- out + C1_eq(X[, group == i], B)
+    out <- out + C1_star_eq(X[, group == i], B)
   }
   return(out/(8 * a * B)) ## 8 * a*B considering B is equal for all groups
 }
