@@ -26,7 +26,7 @@ A2_eq <- function(X){
   n <- ncol(X)
   S <- 0.0
   for (l2 in 1:(n-1)) {
-    for(l1 in (l+1)2:n){
+    for(l1 in (l2+1):n){
       for(k2 in 1:(n-1)){
         # only call the loop if this condition is true
         if(k2 != l1 && k2!= l2){
