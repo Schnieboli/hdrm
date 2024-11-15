@@ -5,6 +5,10 @@ A1_eq_cpp <- function(mat) {
     .Call(`_hdrm_A1_eq_cpp`, mat)
 }
 
+A2_eq_cpp <- function(mat) {
+    .Call(`_hdrm_A2_eq_cpp`, mat)
+}
+
 A1_cpp <- function(mat) {
     .Call(`_hdrm_A1_cpp`, mat)
 }
