@@ -6,7 +6,7 @@
 ##
 ## Output: a numeric vector that gives the group estimation
 A1_eq <- function(X){
-  n <- nrow(X)
+  n <- ncol(X)
   S <- 0.0
   for(j in 1:(n-1)){
     for(k in j:n){
@@ -23,7 +23,7 @@ A1_eq <- function(X){
 ##
 ## Output: a numeric vector that gives the group estimation
 A2_eq <- function(X){
-  n <- nrow(X)
+  n <- ncol(X)
   S <- 0.0
   for (l2 in 1:(n-1)) {
     for(l1 in l2:n){
