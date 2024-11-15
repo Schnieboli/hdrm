@@ -1,3 +1,10 @@
+
+## A1_eq - function that calculates the estimator A1 form the equal covariances paper.
+##
+## Input: a numeric matrix, where cols represent the individuals of one group
+## and rows represent dimensions
+##
+## Output: a numeric vector that gives the group estimation
 A1_eq <- function(X){
   n <- nrow(X)
   S <- 0.0
@@ -6,7 +13,7 @@ A1_eq <- function(X){
       S <- S + crossprod(X[j, ], X[k, ])
     }
   }
-  return(as.numeric(S)/(n*(n-1)))
+  return(as.numeric(S))
 }
 
 ## A2_eq - function that calculates the estimator A2 form the equal covariances paper.
