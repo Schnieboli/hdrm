@@ -8,12 +8,12 @@
 A1_eq <- function(X){
   n <- ncol(X)
   S <- 0.0
-  for(j in 1:(n-1)){
-    for(k in j:n){
-      S <- S + crossprod(X[, j], X[, k])
+  for(l2 in 1:(n-1)){
+    for(l1 in l2:n){
+      S <- S + sum((X[, l1] -  X[, l2])^2)
     }
   }
-  return(as.numeric(S))
+  return(S)
 }
 
 ## A2_eq - function that calculates the estimator A2 form the equal covariances paper.
