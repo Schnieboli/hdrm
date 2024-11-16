@@ -108,8 +108,7 @@ C1_eq <- function(X){
                 for(l5 in 1:n){
                   if(l5 != l4){
                     for(l6 in 1:n){
-                      vec <- c(l1,l2,l3,l4,l5,l6)
-                      if(length(unique(vec)) == 6){
+                      if(length(unique(c(l1,l2,l3,l4,l5,l6))) == 6){
                         S <- S + crossprod(X[, l1] - X[, l2], X[, l3] - X[, l4]) *
                           crossprod(X[, l3] - X[, l4], X[, l5] - X[, l6]) *
                           crossprod(X[, l5] - X[, l6], X[, l1] - X[, l2])
