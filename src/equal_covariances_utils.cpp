@@ -33,21 +33,17 @@ double A2_eq_cpp(arma::mat &mat){
 
   for (int l2 = 0; l2 < (n-1); ++l2) {
     col2 = mat.col(l2);
-
-    for(int l1 = l2+1; l1 < n; ++l1){
+    for(int l1 = l2 + 1; l1 < n; ++l1){
       col1 = mat.col(l1);
-
       for(int k2 = 0; k2 < (n-1); ++k2){
         col4 = mat.col(k2);
-
+        // only call loop if condition is true
         if(k2 != l1 && k2!= l2){
-
           for(int k1 = k2 + 1; k1 < n; ++k1){
-
+            // only do calculations if condition is true
             if(k1 != l1 && k1 != l2){
               col3 = mat.col(k1);
               tmp = 0;
-
               for(int j = 0; j < d; ++j){
                 tmp += (col1(j) - col2(j)) * (col3(j) - col4(j));
               }
