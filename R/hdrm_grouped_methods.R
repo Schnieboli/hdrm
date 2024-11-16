@@ -90,7 +90,7 @@
 #' @example examples/examples_hdrm_grouped_widetable.R
 #'
 #' @export
-hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction", "identical", "flat"), group, subsampling = FALSE, B = "1000*N",...){
+hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interaction", "identical", "flat"), group, cov.equal = FALSE, subsampling = FALSE, B = "1000*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a a data.frame with numeric entries")
@@ -129,20 +129,39 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
   # output erstellen
   out <- list(data = data)
   #funktionsaufruf
-  out <- c(out, hdrm_grouped_internal(
-    data = M[, order(group)],
-    group = sort(as.integer(group)),
-    hypothesis = hypothesis,
-    B = reps,
-    subsampling = subsampling
-  ))
-  # weiteren output hinzufügen
-  out$groups$table <- table(group)
-  out$removed.cases <- N_with_NA - N
-  out$subsamples = reps
+  if(cov.equal){
+    out <- c(out, hdrm_grouped_eq_cov_internal(
+      data = M[, order(group)],
+      group = sort(as.integer(group)),
+      hypothesis = hypothesis,
+      B = reps,
+      subsampling = subsampling
+    ))
+    # weiteren output hinzufügen
+    out$groups$table <- table(group)
+    out$removed.cases <- N_with_NA - N
+    out$subsamples = reps
 
-  class(out) <- "hdrm_grouped"
-  return(out)
+    class(out) <- "hdrm_grouped"
+    return(out)
+  }
+
+  if(!cov.equal){
+    out <- c(out, hdrm_grouped_internal(
+      data = M[, order(group)],
+      group = sort(as.integer(group)),
+      hypothesis = hypothesis,
+      B = reps,
+      subsampling = subsampling
+    ))
+    # weiteren output hinzufügen
+    out$groups$table <- table(group)
+    out$removed.cases <- N_with_NA - N
+    out$subsamples = reps
+
+    class(out) <- "hdrm_grouped"
+    return(out)
+  }
 }
 
 #'Test for multiple group high dimensional repeated measures
@@ -239,7 +258,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'@example examples/examples_hdrm_grouped_longtable.R
 #'
 #'@export
-hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction", "identical", "flat"), group, value, subject, dimension, subsampling = FALSE, B = "1000*N",...){
+hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interaction", "identical", "flat"), group, value, subject, dimension, cov.equal = FALSE, subsampling = FALSE, B = "1000*N",...){
 
   # data muss data.frame sein
   if(!is.data.frame(data)) stop("data must be a data.frame")
@@ -331,19 +350,37 @@ hdrm_grouped_longtable <- function(data, hypothesis = c("whole","sub","interacti
 
   ### Output
   out <- list(data = df)
-  out <- c(out, hdrm_grouped_internal(
-    data = X[, order(group)],
-    group = sort(as.integer(group)),
-    hypothesis = hypothesis,
-    B = reps,
-    subsampling = as.logical(subsampling)
-  ))
-  # noch output hinzufuegen
-  out$groups$table <- table(group)
-  out$removed.cases <- N_with_NA - N
-  out$subsamples <- reps
-  class(out) <- "hdrm_grouped"
-  return(out)
+  if(cov.equal){
+    out <- c(out, hdrm_grouped_eq_cov_internal(
+      data = X[, order(group)],
+      group = sort(as.integer(group)),
+      hypothesis = hypothesis,
+      B = reps,
+      subsampling = as.logical(subsampling)
+    ))
+    # noch output hinzufuegen
+    out$groups$table <- table(group)
+    out$removed.cases <- N_with_NA - N
+    out$subsamples <- reps
+    class(out) <- "hdrm_grouped"
+    return(out)
+  }
+  if(!cov.equal){
+    out <- c(out, hdrm_grouped_internal(
+      data = X[, order(group)],
+      group = sort(as.integer(group)),
+      hypothesis = hypothesis,
+      B = reps,
+      subsampling = as.logical(subsampling)
+    ))
+    # noch output hinzufuegen
+    out$groups$table <- table(group)
+    out$removed.cases <- N_with_NA - N
+    out$subsamples <- reps
+    class(out) <- "hdrm_grouped"
+    return(out)
+  }
+
 }
 
 
