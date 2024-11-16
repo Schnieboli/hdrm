@@ -51,13 +51,10 @@ double A2_eq_cpp(arma::mat &mat){
               for(int j = 0; j < d; ++j){
                 tmp += (col1(j) - col2(j)) * (col3(j) - col4(j));
               }
-
               out += pow(tmp, 2);
             }
-
           }
         }
-
       }
     }
   }
