@@ -37,7 +37,7 @@ double A2_eq_cpp(arma::mat &mat){
     for(int l1 = l2+1; l1 < n; ++l1){
       col1 = mat.col(l1);
 
-      for(int k2 = 1; k2 < (n-1); ++k2){
+      for(int k2 = 0; k2 < (n-1); ++k2){
         col4 = mat.col(k2);
 
         if(k2 != l1 && k2!= l2){
@@ -103,4 +103,3 @@ double C1_eq_cpp(arma::mat &mat){
   }
   return out;
 }
-
