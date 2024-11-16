@@ -53,7 +53,7 @@ A2_eq <- function(X){
         # only call the loop if this condition is true
         if(k2 != l1 && k2!= l2){
           for(k1 in (k2+1):n){
-        # only add to total if this condition is true
+            # only add to total if this condition is true
             if(k1 != l1 && k1 != l2){
               S <- S + (crossprod(X[, l1] - X[, l2], X[, k1] - X[, k2]))^2
             }
@@ -62,7 +62,6 @@ A2_eq <- function(X){
       }
     }
   }
-
   return(as.numeric(S))
 }
 
