@@ -24,7 +24,7 @@ A1_eq <- function(X){
 ##  group - an integer vector, specifies the group membership
 ##
 ## Output: numeric; gives the estimator A1 for equal covariances
-make_A1_eq <- function(X, group, version = "cpp"){
+make_A1_eq <- function(X, group){
   ns <- unname(table(group))
   a <- length(ns)
   out <- 0.0
