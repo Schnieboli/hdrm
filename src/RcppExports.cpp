@@ -44,6 +44,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// C1_star_eq_cpp
+double C1_star_eq_cpp(arma::mat& mat, int B);
+RcppExport SEXP _hdrm_C1_star_eq_cpp(SEXP matSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type mat(matSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(C1_star_eq_cpp(mat, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 // A1_cpp
 double A1_cpp(arma::mat& mat);
 RcppExport SEXP _hdrm_A1_cpp(SEXP matSEXP) {
@@ -156,6 +168,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hdrm_A1_eq_cpp", (DL_FUNC) &_hdrm_A1_eq_cpp, 1},
     {"_hdrm_A2_eq_cpp", (DL_FUNC) &_hdrm_A2_eq_cpp, 1},
     {"_hdrm_C1_eq_cpp", (DL_FUNC) &_hdrm_C1_eq_cpp, 1},
+    {"_hdrm_C1_star_eq_cpp", (DL_FUNC) &_hdrm_C1_star_eq_cpp, 2},
     {"_hdrm_A1_cpp", (DL_FUNC) &_hdrm_A1_cpp, 1},
     {"_hdrm_A3_cpp", (DL_FUNC) &_hdrm_A3_cpp, 2},
     {"_hdrm_A1star_cpp", (DL_FUNC) &_hdrm_A1star_cpp, 2},

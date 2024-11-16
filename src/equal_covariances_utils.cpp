@@ -99,3 +99,35 @@ double C1_eq_cpp(arma::mat &mat){
   }
   return out;
 }
+
+// [[Rcpp::export()]]
+double C1_star_eq_cpp(arma::mat &mat, int B){
+  int n = mat.n_cols;
+  int d = mat.n_rows;
+  double tmp1 = 0;
+  double tmp2 = 0;
+  double tmp3 = 0;
+  double out = 0.0;
+  arma::vec v1(d), v2(d), v3(d), v4(d), v5(d), v6(d);
+  arma::uvec ind(6);
+
+  for(int b = 0; b < B; ++b){
+    ind = arma::randperm(n).head(6);
+    v1 = mat.col(ind(1));
+    v2 = mat.col(ind(2));
+    v3 = mat.col(ind(3));
+    v4 = mat.col(ind(4));
+    v5 = mat.col(ind(5));
+    v6 = mat.col(ind(6));
+    tmp1 = 0;
+    tmp2 = 0;
+    tmp3 = 0;
+    for(int j = 0; j < d; ++j){
+      tmp1 += (v1(j) - v2(j)) * (v3(j) - v4(j));
+      tmp2 += (v3(j) - v4(j)) * (v5(j) - v6(j));
+      tmp3 += (v5(j) - v6(j)) * (v1(j) - v2(j));
+    }
+    out += tmp1 * tmp2 * tmp3;
+  }
+  return out;
+}

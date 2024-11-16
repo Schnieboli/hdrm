@@ -13,6 +13,10 @@ C1_eq_cpp <- function(mat) {
     .Call(`_hdrm_C1_eq_cpp`, mat)
 }
 
+C1_star_eq_cpp <- function(mat, B) {
+    .Call(`_hdrm_C1_star_eq_cpp`, mat, B)
+}
+
 A1_cpp <- function(mat) {
     .Call(`_hdrm_A1_cpp`, mat)
 }
