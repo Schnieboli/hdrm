@@ -20,7 +20,7 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole","su
   # Schaetzer
   A1 <- make_A1_eq(X = X_TS, group = group)
   A2 <- make_A2_eq(X = X_TS, group = group)
-  C1 <- make_C1_star_eq(X = X_TS, group = group)
+  C1 <- make_C1_star_eq(X = X_TS, group = group, B = B)
 
   ### Teststatistik
   X_bar <- numeric(a*d)
@@ -41,7 +41,7 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole","su
   W <- as.numeric((QN - EW) / sqrt(Var))
 
   # f und p-Wert
-  f <- max(1, as.numeric(A4^3 / C5^2))
+  f <- max(1, as.numeric(A2^3 / C1^2))
   p.value <- max(1 - stats::pchisq(W * sqrt(2 * f) + f, df = f), .Machine$double.eps)
 
 
