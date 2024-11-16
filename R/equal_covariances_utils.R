@@ -24,16 +24,16 @@ A1_eq <- function(X){
 ##  group - an integer vector, specifies the group membership
 ##
 ## Output: numeric; gives the estimator A1 for equal covariances
-make_A1_eq <- function(X, group){
+make_A1_eq <- function(X, group, version = "cpp"){
   ns <- unname(table(group))
   a <- length(ns)
   out <- 0.0
   prefactor <- 0
-  for(i in 1:a){
-    n <- sum
-    out <- out + A1_eq(X[, group == i])
-    prefactor <- prefactor + (ns[i]* (ns[i] - 1))
-  }
+    for(i in 1:a){
+      n <- sum
+      out <- out + A1_eq_cpp(X[, group == i])
+      prefactor <- prefactor + (ns[i]* (ns[i] - 1))
+    }
   return(out/(prefactor))
 }
 
@@ -78,11 +78,11 @@ make_A2_eq <- function(X, group){
   a <- length(ns)
   out <- 0.0
   prefactor <- 0
-  for(i in 1:a){
-    n <- sum
-    out <- out + A2_eq(X[, group == i])
-    prefactor <- prefactor + (24* choose(ns[i], 4))
-  }
+    for(i in 1:a){
+      n <- sum
+      out <- out + A2_eq_cpp(X[, group == i])
+      prefactor <- prefactor + (24* choose(ns[i], 4))
+    }
   return(out/(prefactor))
 }
 
@@ -140,7 +140,7 @@ make_C1_eq <- function(X, group){
   prefactor <- 0
   for(i in 1:a){
     n <- sum
-    out <- out + C1_eq(X[, group == i])
+    out <- out + C1_eq_cpp(X[, group == i])
     prefactor <- prefactor + (choose(ns[i], 6))
   }
   return(out/(prefactor * 5760)) ## 5760 = 6! * 8
