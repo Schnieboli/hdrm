@@ -84,7 +84,7 @@ double C1_eq_cpp(arma::mat &mat){
                 tmp1 = 0;
                 tmp2 = 0;
                 tmp3 = 0;
-                for(int j = 0; j < n; ++j){
+                for(int j = 0; j < d; ++j){
                   tmp1 += (v1(j) - v2(j)) * (v3(j) - v4(j));
                   tmp2 += (v3(j) - v4(j)) * (v5(j) - v6(j));
                   tmp3 += (v5(j) - v6(j)) * (v1(j) - v2(j));
