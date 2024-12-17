@@ -32,7 +32,7 @@ if (!requireNamespace("devtools", quietly = TRUE)) {
 # install package
 devtools::install_github("Schnieboli/hdrm", dependencies = TRUE)
 ```
-Be aware that the respective [rtools-version](https://cran.r-project.org/bin/windows/Rtools/) for your version of R is required for installation.
+Be aware that the respective [rtools-version](https://cran.r-project.org/bin/windows/Rtools/) for your version of R is required for installation when using Windows.
 
 ## One Group Test
 
