@@ -15,14 +15,12 @@ Depends:
     R (>= 2.10)
 LazyData: 
     true
-SystemRequirements: 
-    C++11
 Imports:
     Rcpp,
     RcppArmadillo,
     stats,
     Rdpack
-LinkingTo: 
+LinkingTo:
     Rcpp,
     RcppArmadillo
 RdMacros:
