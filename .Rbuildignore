@@ -4,7 +4,5 @@
 ^data-raw$
 ^LICENSE\.md$
 ^README\.Rmd$
-^biblio\.bib$
 ^2d-materials\.csl$
-^Benchmarks$
 ^CITATION\.cff$
