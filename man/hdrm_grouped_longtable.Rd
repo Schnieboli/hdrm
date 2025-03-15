@@ -11,6 +11,7 @@ hdrm_grouped_longtable(
   value,
   subject,
   dimension,
+  cov.equal = FALSE,
   subsampling = FALSE,
   B = "1000*N",
   ...
@@ -29,6 +30,8 @@ hdrm_grouped_longtable(
 \item{subject}{name or index of subject column.}
 
 \item{dimension}{name or index of dimension column.}
+
+\item{cov.equal}{\code{logical}. Specifying whether group covariances are equal.}
 
 \item{subsampling}{\code{logical}. Specifying whether the subsampling versions for
 all trace estimators should be used (see details).}

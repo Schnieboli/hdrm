@@ -8,6 +8,7 @@ hdrm_grouped_widetable(
   data,
   hypothesis = c("whole", "sub", "interaction", "identical", "flat"),
   group,
+  cov.equal = FALSE,
   subsampling = FALSE,
   B = "1000*N",
   ...
@@ -21,6 +22,8 @@ levels represented by rows.}
 "flat" or a named list with quadratic matrices \code{TW} and \code{TS} (see details).}
 
 \item{group}{a \code{factor} specifying the groups.}
+
+\item{cov.equal}{\code{logical}. Specifying whether group covariances are equal.}
 
 \item{subsampling}{\code{logical}. Specifying whether the subsampling versions for all
 trace estimators should be used (see details).}

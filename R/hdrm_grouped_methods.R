@@ -11,6 +11,7 @@
 #' @param group a `factor` specifying the groups.
 #' @param B a `string` specifying a function of the number of subjects \eqn{N}.
 #'   Determines the number of subsamples used by the  subsampling trace estimators.
+#' @param cov.equal `logical`. Specifying whether group covariances are equal.
 #' @param subsampling `logical`. Specifying whether the subsampling versions for all
 #'   trace estimators should be used (see details).
 #' @param ... further arguments. Currently ignored.
@@ -179,6 +180,7 @@ hdrm_grouped_widetable <- function(data, hypothesis = c("whole","sub","interacti
 #'@param B a `string` specifying a function of the number of subjects \eqn{N}.
 #'  Determines the number of subsamples used by the  subsampling trace
 #'  estimators.
+#' @param cov.equal `logical`. Specifying whether group covariances are equal.
 #'@param subsampling `logical`. Specifying whether the subsampling versions for
 #'  all trace estimators should be used (see details).
 #'@param ... further arguments. Currently ignored.
