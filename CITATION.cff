@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+title: hdrm
+message: 'If you use this package, please cite it as below.'
+type: software
+authors:
+  - family-names: Hichert
+    given-names: Nils
+  - given-names: Paavo
+    family-names: Sattler
+    email: paavo.sattler@tu-dortmund.de
+    orcid: 'https://orcid.org/0000-0001-8731-0893'
+url: 'https://github.com/Schnieboli/hdrm'
+version: 0.9
+date-released: '2024-10-01'
+subtitle: A package for testing high dimensional repeated measures

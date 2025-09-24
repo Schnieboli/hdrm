@@ -1,0 +1,31 @@
+Package: hdrm
+Title: High Dimensional Repeated Measures
+Version: 1.0
+Authors@R: c(
+    person("Nils Hichert",  email = "nils.hichert@tu-dortmund.de", 
+    role = c("aut", "cre")),
+    person("Paavo", "Sattler", , "paavo.sattler@tu-dortmund.de", role = "aut",
+    comment = "0000-0001-8731-0893"),
+    person("Markus", "Pauly", role = "ctb"),
+    person("Edgar", "Brunner", role = "ctb"),
+    person("David", "Ellenberger", role = "ctb")
+           )           
+Description: A combination of one sample and a multiple sample test for the expectation vectors in high dimensional repeated measure designs. The investigated hypothesis can be specified through two corresponding hypothesis matrices or by choosing one of the basic hypotheses. The test are based on an approximation through a centered and standardized chi-square distributions, while the functions provide the p-values, the value of the test statistic as well as the convergence parameter.
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 3.5)
+LazyData: 
+    true
+Imports:
+    Rcpp,
+    RcppArmadillo,
+    stats
+LinkingTo:
+    Rcpp,
+    RcppArmadillo
