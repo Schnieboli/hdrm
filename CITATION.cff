@@ -5,11 +5,12 @@ type: software
 authors:
   - family-names: Hichert
     given-names: Nils
+    email: nils.hichert@tu-dortmund.de
   - given-names: Paavo
     family-names: Sattler
     email: paavo.sattler@tu-dortmund.de
     orcid: 'https://orcid.org/0000-0001-8731-0893'
 url: 'https://github.com/Schnieboli/hdrm'
-version: 0.9
-date-released: '2024-10-01'
+version: 1.0
+date-released: '2025-09-24'
 subtitle: A package for testing high dimensional repeated measures
