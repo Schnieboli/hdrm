@@ -104,8 +104,8 @@ equal covariances between groups if this assumption can be justified
 <div id="ref-Pauly2015" class="csl-entry">
 
 <span class="csl-left-margin">\[1\]
-</span><span class="csl-right-inline">Pauly M, Ellenberger D and Brunner
-E 2015 [Analysis of high-dimensional one group repeated measures
+</span><span class="csl-right-inline">Pauly M., Ellenberger D. and Brunner
+E. 2015 [Analysis of high-dimensional one group repeated measures
 designs](https://doi.org/10.1080/02331888.2015.1050022) *Statistics*
 **49** 1243–61</span>
 
@@ -114,7 +114,7 @@ designs](https://doi.org/10.1080/02331888.2015.1050022) *Statistics*
 <div id="ref-Sattler2018" class="csl-entry">
 
 <span class="csl-left-margin">\[2\]
-</span><span class="csl-right-inline">Sattler P and Pauly M 2018
+</span><span class="csl-right-inline">Sattler P. and Pauly M. 2018
 [Inference for high-dimensional split-plot-designs: A unified approach
 for small to large numbers of factor
 levels](https://doi.org/10.1214/18-ejs1465) *Electronic Journal of
@@ -125,7 +125,7 @@ Statistics* **12**</span>
 <div id="ref-Sattler2025" class="csl-entry">
 
 <span class="csl-left-margin">\[3\]
-</span><span class="csl-right-inline">Sattler P and Rosenbaum M 2025
+</span><span class="csl-right-inline">Sattler P. and Rosenbaum M. 2025
 [Choice of the hypothesis matrix for using the
 anova-type-statistic](https://doi.org/10.1016/j.spl.2025.110356)
 *Statistics & Probability Letters* 110356</span>
@@ -144,9 +144,9 @@ anova-type-statistic](https://doi.org/10.1016/j.spl.2025.110356)
 <div id="ref-EEG_dataset" class="csl-entry">
 
 <span class="csl-left-margin">\[5\]
-</span><span class="csl-right-inline">Höller Y, Bathke A C, Uhl A,
-Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner
-M, Jahanbekam A, Trinka E and Staffen W 2017 [Combining SPECT and
+</span><span class="csl-right-inline">Höller Y., Bathke A. C., Uhl A.,
+Strobl N., Lang A., Bergmann J., Nardone R., Rossini F., Zauner H., Kirschner
+M., Jahanbekam A., Trinka E. and Staffen W. 2017 [Combining SPECT and
 quantitative EEG analysis for the automated differential diagnosis of
 disorders with amnestic
 symptoms](https://doi.org/10.3389/fnagi.2017.00290) *Front. Aging
@@ -157,7 +157,7 @@ Neurosci.* **9** 290</span>
 <div id="ref-Sattler2021" class="csl-entry">
 
 <span class="csl-left-margin">\[6\]
-</span><span class="csl-right-inline">Sattler P 2021
+</span><span class="csl-right-inline">Sattler P. 2021
 [<span class="nocase">A comprehensive treatment of quadratic-form-based
 inference in repeated measures designs under diverse
 asymptotics</span>](https://doi.org/10.1214/21-EJS1865) *Electronic
