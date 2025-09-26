@@ -2,10 +2,10 @@ Package: hdrm
 Title: High Dimensional Repeated Measures
 Version: 1.0
 Authors@R: c(
-    person("Nils Hichert",  email = "nils.hichert@tu-dortmund.de", 
+    person("Nils", "Hichert",  email = "nils.hichert@tu-dortmund.de", 
     role = c("aut", "cre")),
     person("Paavo", "Sattler", , "paavo.sattler@tu-dortmund.de", role = "aut",
-    comment = "0000-0001-8731-0893"),
+    comment = c(ORCID = "0000-0001-8731-0893")),
     person("Markus", "Pauly", role = "ctb"),
     person("Edgar", "Brunner", role = "ctb"),
     person("David", "Ellenberger", role = "ctb")
