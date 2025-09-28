@@ -284,6 +284,7 @@ hdrm_grouped <- function(data, hypothesis = c("whole", "sub", "interaction", "id
       hypothesis = hypothesis,
       AM = AM,
       B = reps,
+      subsampling =as.logical(subsampling),
       seed = seed
     ))
   }

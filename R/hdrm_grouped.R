@@ -200,7 +200,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 #'@returns \item{subsamples}{number of subsamples used for subsampling
 #'  estimators.}
 #' @keywords internal
-hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, B, seed){
+hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, B, subsampling, seed){
 
   # Set the random seed for reproducibility, if provided
   if(!is.null(seed)){
@@ -243,7 +243,12 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   # Calculate estimators A1, A2, and C1 using the provided functions
   A1 <- make_A1_eq(X = X_TS, group = group)
   A2 <- make_A2_eq(X = X_TS, group = group)
-  C1 <- make_C1_star_eq(X = X_TS, group = group, B = B)
+  if(subsampling){
+    C1 <- make_C1_star_eq(X = X_TS, group = group, B = B)
+  }else{
+    C1 <- make_C1_eq(X = X_TS, group = group)
+  }
+
 
   ### Compute the test statistic
   X_bar <- numeric(a * d)  # Initialize a vector for the group-wise means

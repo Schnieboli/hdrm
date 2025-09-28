@@ -10,6 +10,7 @@ hdrm_grouped_eq_cov_internal(
   hypothesis = c("whole", "sub", "interaction"),
   AM,
   B,
+  subsampling,
   seed
 )
 }
@@ -35,11 +36,11 @@ the predefined setting.}
 \item{B}{\code{integer} that determines the number of subsamples used by the
 subsampling trace estimators.}
 
-\item{seed}{an optional natural number as seed, if it should be set for
-reproducibility.}
-
 \item{subsampling}{\code{logical}. Specifying whether the subsampling versions for
 all trace estimators should be used (see details).}
+
+\item{seed}{an optional natural number as seed, if it should be set for
+reproducibility.}
 }
 \value{
 a named list of class "hdrm_grouped" with the components
