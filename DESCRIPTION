@@ -24,7 +24,6 @@ LazyData:
     true
 Imports:
     Rcpp,
-    RcppArmadillo,
     stats
 LinkingTo:
     Rcpp,
