@@ -231,6 +231,7 @@ hdrm_grouped(birthrates,
              subsampling = TRUE,
              B = "100*N"
 )
+
 }
 \references{
 {

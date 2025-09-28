@@ -101,7 +101,6 @@ data(birthrates)
 # ?birthrates
 
 ## call test
-
 hdrm_single(data = birthrates,
             ## test if time profiles are flat
             hypothesis = "flat"
@@ -116,6 +115,7 @@ hdrm_single(data = birthrates,
             ## equivalent to hypothesis = "flat"
             hypothesis = hypothesis_matrix
 )
+
 }
 \references{
 {Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of high-dimensional one group repeated measures designs. Statistics, 49(6), 1243–1261. doi:10.1080/02331888.2015.1050022
