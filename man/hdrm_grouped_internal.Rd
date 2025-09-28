@@ -17,7 +17,7 @@ hdrm_grouped_internal(
 \arguments{
 \item{data}{a matrix where cols represent subjects and rows represent factor levels}
 
-\item{group}{parameter vector, which gives the allocation of the measurements
+\item{group}{vector, which gives the allocation of the matrix cols
 to the single groups}
 
 \item{hypothesis}{either one of "whole", "sub" "interaction", "identical" or
@@ -31,15 +31,11 @@ the predefined setting.}
 \item{subsampling}{\code{logical}. Specifying whether the subsampling versions for
 all trace estimators should be used (see details).}
 
-\item{B}{a \code{string} specifying a function of the number of subjects \eqn{N}.
-Determines the number of subsamples used by the subsampling trace
-estimators.}
+\item{B}{\code{integer} that determines the number of subsamples used by the
+subsampling trace estimators.}
 
 \item{seed}{an optional natural number as seed, if it should be set for
 reproducibility.}
-
-\item{subject}{optional parameter vector, which gives the allocation to the
-subjects of the measurement.}
 }
 \value{
 a named list of class "hdrm_grouped" with the components

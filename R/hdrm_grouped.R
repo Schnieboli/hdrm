@@ -3,20 +3,16 @@
 #' @description If all parameter and options are suitable when executing the function
 #' hdrm_grouped and after preparing the arguments, this function conducts the test.
 #' @param data a matrix where cols represent subjects and rows represent factor levels
-#'
 #' @param hypothesis either one of "whole", "sub" "interaction", "identical" or
 #'  "flat" or a named list with quadratic matrices `TW` and `TS`
 #' @param AM binary variable, specifying whether an alternative hypothesis
 #'  matrix based on Sattler and Rosenbaum (2025) should be used, which has
 #'  fewer rows but does not influence any values. The usage of this matrix is
 #'  the predefined setting.
-#' @param group parameter vector, which gives the allocation of the measurements
+#' @param group vector, which gives the allocation of the matrix cols
 #' to the single groups
-#' @param subject optional parameter vector, which gives the allocation to the
-#' subjects of the measurement.
-#' @param B a `string` specifying a function of the number of subjects \eqn{N}.
-#'  Determines the number of subsamples used by the subsampling trace
-#'  estimators.
+#' @param B `integer` that determines the number of subsamples used by the
+#' subsampling trace estimators.
 #' @param subsampling `logical`. Specifying whether the subsampling versions for
 #'  all trace estimators should be used (see details).
 #' @param seed an optional natural number as seed, if it should be set for
@@ -179,13 +175,10 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 #'  Sattler and Rosenbaum (2025) should be used, which has
 #'  fewer rows but does not influence any values. The usage of this matrix is
 #'  the predefined setting.
-#'@param group parameter vector, which gives the allocation of the measurements
+#' @param group vector, which gives the allocation of the matrix cols
 #' to the single groups
-#'@param subject optional parameter vector, which gives the allocation to the
-#' subjects of the measurement.
-#'@param B a `string` specifying a function of the number of subjects \eqn{N}.
-#'  Determines the number of subsamples used by the subsampling trace
-#'  estimators.
+#' @param B `integer` that determines the number of subsamples used by the
+#' subsampling trace estimators.
 #'@param subsampling `logical`. Specifying whether the subsampling versions for
 #'  all trace estimators should be used (see details).
 #'@param seed an optional natural number as seed, if it should be set for
@@ -206,7 +199,6 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 #'@returns \item{removed.cases}{number of incomplete subjects removed.}
 #'@returns \item{subsamples}{number of subsamples used for subsampling
 #'  estimators.}
-#' @keywords internal
 #' @keywords internal
 hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, B, seed){
 

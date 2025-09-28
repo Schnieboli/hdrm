@@ -20,7 +20,7 @@ possible:
 -A value column from a data frame, where in this case an additional parameter
 specifying the subjects is necessary.}
 
-\item{group}{parameter vector, which gives the allocation of the measurements
+\item{group}{vector, which gives the allocation of the matrix cols
 to the single groups}
 
 \item{hypothesis}{either one of "whole", "sub" "interaction", "identical" or
@@ -32,15 +32,11 @@ Sattler and Rosenbaum (2025) should be used, which has
 fewer rows but does not influence any values. The usage of this matrix is
 the predefined setting.}
 
-\item{B}{a \code{string} specifying a function of the number of subjects \eqn{N}.
-Determines the number of subsamples used by the subsampling trace
-estimators.}
+\item{B}{\code{integer} that determines the number of subsamples used by the
+subsampling trace estimators.}
 
 \item{seed}{an optional natural number as seed, if it should be set for
 reproducibility.}
-
-\item{subject}{optional parameter vector, which gives the allocation to the
-subjects of the measurement.}
 
 \item{subsampling}{\code{logical}. Specifying whether the subsampling versions for
 all trace estimators should be used (see details).}
