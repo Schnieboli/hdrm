@@ -5,8 +5,8 @@
 <!-- badges: end -->
 
 R package for performing tests on high dimensional repeated measure data
-for one group Pauly et al. (2015) or multiple groups Sattler & Pauly
-(2018), Sattler & Rosenbaum (2025).
+for one group (Pauly et al., 2015) or multiple groups (Sattler & Pauly,
+2018; Sattler & Rosenbaum, 2025).
 
 ## Installation
 
@@ -18,9 +18,9 @@ your version of R is required for installation when using Windows.
 
 ## Data Sets
 
-The package has two data sets included: `birthrates` Statistisches
-Bundesamt (Destatis) (2024) is a matrix that contains the birthrates of
-German states from 1990 to 2023. `EEG` Höller et al. (2017) is a data
+The package has two data sets included: `birthrates` (Statistisches
+Bundesamt (Destatis), 2024) is a matrix that contains the birthrates of
+German states from 1990 to 2023. `EEG` (Höller et al., 2017) is a data
 frame that contains EEG data in 40 dimensions.
 
 ## One Group Test
@@ -84,7 +84,7 @@ hdrm_grouped(data = birthrates,
 ##### Test for multiple groups with built in data set EEG
 # hypothesis can also be given as a matrix
 hypothesis <- list(TW = diag(4) - matrix(1/4, 4, 4),
-                   TS =matrix(1/40, 40, 40)
+                   TS = matrix(1/40, 40, 40)
 ) # list entries equivalent to hypothesis = 'whole'
 
 hdrm_grouped(data = EEG$value,
@@ -96,7 +96,7 @@ hdrm_grouped(data = EEG$value,
 
 The parameter `cov.equal` can be set to `TRUE` to perform the test for
 equal covariances between groups if this assumption can be justified
-Sattler (2021).
+(Sattler, 2021).
 
 ### References
 
