@@ -12,6 +12,15 @@ for one group (Pauly et al., 2015) or multiple groups (Sattler & Pauly,
 
 The current version can be installed by:
 
+``` r
+## install devtools package
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+# install package
+devtools::install_github("Schnieboli/hdrm", dependencies = TRUE)
+```
+
 Be aware that the respective
 [rtools-version](https://cran.r-project.org/bin/windows/Rtools/) for
 your version of R is required for installation when using Windows.
@@ -22,6 +31,14 @@ The package has two data sets included: `birthrates` (Statistisches
 Bundesamt (Destatis), 2024) is a matrix that contains the birthrates of
 German states from 1990 to 2023. `EEG` (Höller et al., 2017) is a data
 frame that contains EEG data in 40 dimensions.
+
+``` r
+data("birthrates")
+?birthrates
+
+data("EEG")
+?EEG
+```
 
 ## One Group Test
 
