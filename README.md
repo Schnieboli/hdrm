@@ -2,11 +2,11 @@
 # hdrm
 
 <!-- badges: start -->
-
 <!-- badges: end -->
 
 R package for performing tests on high dimensional repeated measure data
-for one group \[1\] or multiple groups \[2\], \[3\].
+for one group Pauly et al. (2015) or multiple groups Sattler & Pauly
+(2018), Sattler & Rosenbaum (2025).
 
 ## Installation
 
@@ -18,9 +18,10 @@ your version of R is required for installation when using Windows.
 
 ## Data Sets
 
-The package has two data sets included: `birthrates` \[4\] is a matrix
-that contains the birthrates of German states from 1990 to 2023. `EEG`
-\[5\] is a data frame that contains EEG data in 40 dimensions.
+The package has two data sets included: `birthrates` Statistisches
+Bundesamt (Destatis) (2024) is a matrix that contains the birthrates of
+German states from 1990 to 2023. `EEG` Höller et al. (2017) is a data
+frame that contains EEG data in 40 dimensions.
 
 ## One Group Test
 
@@ -95,73 +96,63 @@ hdrm_grouped(data = EEG$value,
 
 The parameter `cov.equal` can be set to `TRUE` to perform the test for
 equal covariances between groups if this assumption can be justified
-\[6\].
+Sattler (2021).
 
 ### References
 
-<div id="refs" class="references csl-bib-body">
-
-<div id="ref-Pauly2015" class="csl-entry">
-
-<span class="csl-left-margin">\[1\]
-</span><span class="csl-right-inline">Pauly M., Ellenberger D. and Brunner
-E. 2015 [Analysis of high-dimensional one group repeated measures
-designs](https://doi.org/10.1080/02331888.2015.1050022) *Statistics*
-**49** 1243–61</span>
-
-</div>
-
-<div id="ref-Sattler2018" class="csl-entry">
-
-<span class="csl-left-margin">\[2\]
-</span><span class="csl-right-inline">Sattler P. and Pauly M. 2018
-[Inference for high-dimensional split-plot-designs: A unified approach
-for small to large numbers of factor
-levels](https://doi.org/10.1214/18-ejs1465) *Electronic Journal of
-Statistics* **12**</span>
-
-</div>
-
-<div id="ref-Sattler2025" class="csl-entry">
-
-<span class="csl-left-margin">\[3\]
-</span><span class="csl-right-inline">Sattler P. and Rosenbaum M. 2025
-[Choice of the hypothesis matrix for using the
-anova-type-statistic](https://doi.org/10.1016/j.spl.2025.110356)
-*Statistics & Probability Letters* 110356</span>
-
-</div>
-
-<div id="ref-birthrates" class="csl-entry">
-
-<span class="csl-left-margin">\[4\]
-</span><span class="csl-right-inline">Statistisches Bundesamt (Destatis)
-2024 [Statistischer Bericht - Geburten 2023, Tabelle
-12612-09](https://destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html)</span>
-
-</div>
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0" line-spacing="2">
 
 <div id="ref-EEG_dataset" class="csl-entry">
 
-<span class="csl-left-margin">\[5\]
-</span><span class="csl-right-inline">Höller Y., Bathke A. C., Uhl A.,
-Strobl N., Lang A., Bergmann J., Nardone R., Rossini F., Zauner H., Kirschner
-M., Jahanbekam A., Trinka E. and Staffen W. 2017 [Combining SPECT and
-quantitative EEG analysis for the automated differential diagnosis of
-disorders with amnestic
-symptoms](https://doi.org/10.3389/fnagi.2017.00290) *Front. Aging
-Neurosci.* **9** 290</span>
+Höller, Y., Bathke, A. C., Uhl, A., Strobl, N., Lang, A., Bergmann, J.,
+Nardone, R., Rossini, F., Zauner, H., Kirschner, M., Jahanbekam, A.,
+Trinka, E., & Staffen, W. (2017). Combining SPECT and quantitative EEG
+analysis for the automated differential diagnosis of disorders with
+amnestic symptoms. *Front. Aging Neurosci.*, *9*, 290.
+<https://doi.org/10.3389/fnagi.2017.00290>
+
+</div>
+
+<div id="ref-Pauly2015" class="csl-entry">
+
+Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of
+high-dimensional one group repeated measures designs. *Statistics*,
+*49*(6), 1243–1261. <https://doi.org/10.1080/02331888.2015.1050022>
 
 </div>
 
 <div id="ref-Sattler2021" class="csl-entry">
 
-<span class="csl-left-margin">\[6\]
-</span><span class="csl-right-inline">Sattler P. 2021
-[<span class="nocase">A comprehensive treatment of quadratic-form-based
-inference in repeated measures designs under diverse
-asymptotics</span>](https://doi.org/10.1214/21-EJS1865) *Electronic
-Journal of Statistics* **15** 3611–34</span>
+Sattler, P. (2021). <span class="nocase">A comprehensive treatment of
+quadratic-form-based inference in repeated measures designs under
+diverse asymptotics</span>. *Electronic Journal of Statistics*, *15*(1),
+3611–3634. <https://doi.org/10.1214/21-EJS1865>
+
+</div>
+
+<div id="ref-Sattler2018" class="csl-entry">
+
+Sattler, P., & Pauly, M. (2018). Inference for high-dimensional
+split-plot-designs: A unified approach for small to large numbers of
+factor levels. *Electronic Journal of Statistics*, *12*(2).
+<https://doi.org/10.1214/18-ejs1465>
+
+</div>
+
+<div id="ref-Sattler2025" class="csl-entry">
+
+Sattler, P., & Rosenbaum, M. (2025). Choice of the hypothesis matrix for
+using the anova-type-statistic. *Statistics & Probability Letters*,
+110356. <https://doi.org/10.1016/j.spl.2025.110356>
+
+</div>
+
+<div id="ref-birthrates" class="csl-entry">
+
+Statistisches Bundesamt (Destatis). (2024). *Statistischer Bericht -
+Geburten 2023, Tabelle 12612-09*. Statisitsches Bundesamt.
+[destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html](https://destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html)
 
 </div>
 
