@@ -111,58 +111,110 @@ hdrm_grouped(data = EEG$value,
 )
 ```
 
+
 The parameter `cov.equal` can be set to `TRUE` to perform the test for
 equal covariances between groups if this assumption can be justified
-(Sattler, 2021).
+\[5\].
+To reduce computational complexity, an alternative hypothesis matrix
+can be employed. \[6\] establishes the existence of a companion
+matrix with minimal row dimension that yields identical values for the
+considered test statistics.The necessary computational tools to determine
+these matrices are implemented in the HypoShrink R package \[4\]. 
 
-### References
+## References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0" line-spacing="2">
+<div id="refs" class="references csl-bib-body">
 
 <div id="ref-EEG_dataset" class="csl-entry">
 
-Höller, Y., Bathke, A. C., Uhl, A., Strobl, N., Lang, A., Bergmann, J.,
-Nardone, R., Rossini, F., Zauner, H., Kirschner, M., Jahanbekam, A.,
-Trinka, E., & Staffen, W. (2017). Combining SPECT and quantitative EEG
-analysis for the automated differential diagnosis of disorders with
-amnestic symptoms. *Front. Aging Neurosci.*, *9*, 290.
-<https://doi.org/10.3389/fnagi.2017.00290>
+<span class="csl-left-margin">[1] </span>
+<span class="csl-right-inline">
+Höller Y, Bathke A C, Uhl A, Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner M, Jahanbekam A, Trinka E and Staffen W (2017)  
+<a href="https://doi.org/10.3389/fnagi.2017.00290">Combining SPECT and quantitative EEG analysis for the automated differential diagnosis of disorders with amnestic symptoms</a>.  
+<em>Frontiers in Aging Neuroscience</em>, <strong>9</strong>, 290.
+</span>
 
 </div>
+
+<br>
 
 <div id="ref-Pauly2015" class="csl-entry">
 
-Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of
-high-dimensional one group repeated measures designs. *Statistics*,
-*49*(6), 1243–1261. <https://doi.org/10.1080/02331888.2015.1050022>
+<span class="csl-left-margin">[2] </span>
+<span class="csl-right-inline">
+Pauly M, Ellenberger D and Brunner E (2015)  
+<a href="https://doi.org/10.1080/02331888.2015.1050022">Analysis of high-dimensional one group repeated measures designs</a>.  
+<em>Statistics</em>, <strong>49</strong>, 1243–1261.
+</span>
 
 </div>
 
-<div id="ref-Sattler2021" class="csl-entry">
-
-Sattler, P. (2021). <span class="nocase">A comprehensive treatment of
-quadratic-form-based inference in repeated measures designs under
-diverse asymptotics</span>. *Electronic Journal of Statistics*, *15*(1),
-3611–3634. <https://doi.org/10.1214/21-EJS1865>
-
-</div>
+<br>
 
 <div id="ref-Sattler2018" class="csl-entry">
 
-Sattler, P., & Pauly, M. (2018). Inference for high-dimensional
-split-plot-designs: A unified approach for small to large numbers of
-factor levels. *Electronic Journal of Statistics*, *12*(2).
-<https://doi.org/10.1214/18-ejs1465>
+<span class="csl-left-margin">[3] </span>
+<span class="csl-right-inline">
+Sattler P and Pauly M (2018)  
+<a href="https://doi.org/10.1214/18-ejs1465">Inference for high-dimensional split-plot-designs: A unified approach for small to large numbers of factor levels</a>.  
+<em>Electronic Journal of Statistics</em>, <strong>12</strong>.
+</span>
 
 </div>
 
+<br>
+
+<div id="ref-Sattler_HypoShrink2025" class="csl-entry">
+
+<span class="csl-left-margin">[4] </span>
+<span class="csl-right-inline">
+Sattler P and Rosenbaum M (2025)  
+<a href="https://doi.org/10.5281/zenodo.17214498">HypoShrink: Optimize your hypotheses. Keep what matters.</a>  
+R package version 1.0.0.  
+<a href="https://github.com/PSattlerStat/HypoShrink">https://github.com/PSattlerStat/HypoShrink</a>
+</span>
+
+</div>
+
+<br>
+
+<div id="ref-Sattler2021" class="csl-entry">
+
+<span class="csl-left-margin">[5] </span>
+<span class="csl-right-inline">
+Sattler P (2021)  
+<a href="https://doi.org/10.1214/21-EJS1865"><span class="nocase">A comprehensive treatment of quadratic-form-based inference in repeated measures designs under diverse asymptotics</span></a>.  
+<em>Electronic Journal of Statistics</em>, <strong>15</strong>, 3611–3634.
+</span>
+
+</div>
+
+<br>
+
 <div id="ref-Sattler2025" class="csl-entry">
 
-Sattler, P., & Rosenbaum, M. (2025). Choice of the hypothesis matrix for
-using the anova-type-statistic. *Statistics & Probability Letters*,
-110356. <https://doi.org/10.1016/j.spl.2025.110356>
+<span class="csl-left-margin">[6] </span>
+<span class="csl-right-inline">
+Sattler P and Rosenbaum M (2025)  
+<a href="https://doi.org/10.1016/j.spl.2025.110356">Choice of the hypothesis matrix for using the anova-type-statistic</a>.  
+<em>Statistics & Probability Letters</em>, 110356.
+</span>
 
+</div>
+
+<br>
+
+<div id="ref-birthrates" class="csl-entry">
+
+<span class="csl-left-margin">[7] </span>
+<span class="csl-right-inline">
+Statistisches Bundesamt (Destatis) (2024)  
+<a href="https://destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html">Statistischer Bericht - Geburten 2023, Tabelle 12612-09</a>.
+</span>
+
+</div>
+
+</div>
 </div>
 
 <div id="ref-birthrates" class="csl-entry">
