@@ -112,7 +112,7 @@ double C1_star_eq_cpp(arma::mat &mat, int B){
   arma::uvec ind(6);
 
   for(int b = 0; b < B; ++b){
-    ind = arma::randperm(n).head(6);
+    ind = arma::randperm(n, 6);
     v1 = mat.col(ind(0));
     v2 = mat.col(ind(1));
     v3 = mat.col(ind(2));

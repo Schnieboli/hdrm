@@ -26,7 +26,7 @@ double A1_cpp(arma::mat& mat){
     }
     return out / (N * (N - 1));
   }
-  
+
   // Fall 2: Wenn die Matrix nur eine Zeile hat
   else {
     for(int i = 0; i < N - 1; ++i){
@@ -103,7 +103,7 @@ double A1star_cpp(const arma::mat& X, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    ind = arma::randperm(n).head(2);
+    ind = arma::randperm(n, 2);
     v1 = X.col(ind(0));
     v2 = X.col(ind(1));
     for(int j = 0; j < d; ++j){
@@ -127,8 +127,8 @@ double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    indX = arma::randperm(nX).head(2);
-    indY = arma::randperm(nY).head(2);
+    indX = arma::randperm(nX, 2);
+    indY = arma::randperm(nY, 2);
     v1 = X.col(indX(0));
     v2 = X.col(indX(1));
     v3 = Y.col(indY(0));
@@ -154,7 +154,7 @@ double A3star_cpp(const arma::mat& X, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    ind = arma::randperm(n).head(4);
+    ind = arma::randperm(n, 4);
     v1 = X.col(ind(0));
     v2 = X.col(ind(1));
     v3 = X.col(ind(2));
@@ -184,7 +184,7 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
     Z56.zeros();
     int shift = 0;
     for(int i = 0; i < a; ++i){
-      indizes = arma::randperm(n(i)).head(6); // einfach so lassen!!!
+      indizes = arma::randperm(n(i), 6); // einfach so lassen!!!
       for(int j = 0; j < 6; ++j){
         ind = shift + indizes(j);
         sigma.col(6*i + j) = X.col(ind);
