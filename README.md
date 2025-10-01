@@ -6,7 +6,7 @@
 
 R package for performing tests on high dimensional repeated measure data
 for one group (Pauly et al., 2015) or multiple groups (Sattler & Pauly,
-2018; Sattler & Rosenbaum, 2025).
+2018; Sattler & Rosenbaum, 2025a).
 
 ## Installation
 
@@ -113,7 +113,12 @@ hdrm_grouped(data = EEG$value,
 
 The parameter `cov.equal` can be set to `TRUE` to perform the test for
 equal covariances between groups if this assumption can be justified
-(Sattler, 2021).
+(Sattler, 2021). To reduce computational complexity, an alternative
+hypothesis matrix can be employed. (Sattler & Rosenbaum, 2025a)
+establish the existence of a companion matrix with minimal row dimension
+that yields identical values for the considered test statistics.The
+necessary computational tools to determine these matrices are
+implemented in the package (Sattler & Rosenbaum, 2025b).
 
 ### References
 
@@ -159,9 +164,17 @@ factor levels. *Electronic Journal of Statistics*, *12*(2).
 
 <div id="ref-Sattler2025" class="csl-entry">
 
-Sattler, P., & Rosenbaum, M. (2025). Choice of the hypothesis matrix for
-using the anova-type-statistic. *Statistics & Probability Letters*,
+Sattler, P., & Rosenbaum, M. (2025a). Choice of the hypothesis matrix
+for using the anova-type-statistic. *Statistics & Probability Letters*,
 110356. <https://doi.org/10.1016/j.spl.2025.110356>
+
+</div>
+
+<div id="ref-HypoShrink" class="csl-entry">
+
+Sattler, P., & Rosenbaum, M. (2025b). *HypoShrink: Optimize your
+hypotheses. Keep what matters.*
+<https://doi.org/10.5281/zenodo.17214498>
 
 </div>
 
