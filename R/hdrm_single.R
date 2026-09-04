@@ -78,7 +78,7 @@ hdrm_single <- function(
     subject = NULL,
     AM = TRUE
 ) {
-  if (
+  if ( # test if AM is logical
     !(is.logical(AM) || is.numeric(AM)) ||
     length(AM) != 1L ||
     is.na(AM) ||
@@ -93,7 +93,7 @@ hdrm_single <- function(
 
   AM <- as.logical(AM)
 
-  if (is.character(hypothesis)) {
+  if (is.character(hypothesis)) { # check if hypothesis as character is correct
     if (
       length(hypothesis) != 1L ||
       is.na(hypothesis)
