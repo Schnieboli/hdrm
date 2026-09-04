@@ -1,0 +1,9 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^hdrm\.Rproj$
+^data-raw$
+^LICENSE\.md$
+^README\.Rmd$
+^2d-materials\.csl$
+^CITATION\.cff$
+^build$

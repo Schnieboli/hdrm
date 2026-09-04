@@ -1,0 +1,169 @@
+---
+output: github_document
+bibliography: inst/REFERENCES.bib 
+csl: 2d-materials.csl
+---
+
+
+```{r, results = 'hide', warning = FALSE, error = FALSE, message = FALSE, echo=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# hdrm
+
+<!-- badges: start -->
+[![DOI](https://img.shields.io/badge/DOI-10.48550%2FarXiv.2512.17478-blue)](https://doi.org/10.48550/arXiv.2512.17478)
+<!-- badges: end -->
+
+The `hdrm` package provides inference procedures for high-dimensional
+repeated-measures data in one-sample and multiple-group designs
+[@Pauly2015; @Sattler2018].
+
+## Installation
+
+The current version can be installed with:
+
+```{r installation, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+## install devtools package
+if (!requireNamespace("devtools", quietly = TRUE)) {
+  install.packages("devtools")
+}
+# install package
+devtools::install_github("Schnieboli/hdrm", dependencies = TRUE)
+```
+Be aware that the respective [rtools-version](https://cran.r-project.org/bin/windows/Rtools/) for your version of R is required for installation when using Windows.
+
+## Citation
+
+If you use `hdrm` in a scientific publication, please cite
+@SattlerHichert2025hdrm.
+
+The citation can also be obtained in R using:
+
+```{r citation, eval = FALSE}
+citation("hdrm")
+```
+
+## One-Group Test
+
+A one-group test can be performed using `hdrm_single()`. The function
+accepts either a numeric matrix with dimensions in rows and subjects in
+columns, or a numeric vector together with a subject identifier.
+
+The package includes two example data sets: `birthrates` @birthrates,
+a wide-format data set containing birth rates for the 16 German federal
+states from 1990 to 2023, and `EEG` @EEG_dataset, a long-format data set
+containing EEG measurements in 40 dimensions.
+
+```{r example-hdrm-single, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+library(hdrm)
+
+### One-group test for data in wide format
+
+data("birthrates", package = "hdrm")
+
+hdrm_single(
+  data = as.matrix(birthrates),
+  hypothesis = "flat"
+)
+
+### One-group test for data in long-table format using the built-in EEG data set
+
+data("EEG", package = "hdrm")
+
+# The EEG data contain observations from multiple groups.
+# For a one-group test, select the first group.
+eeg_single <- droplevels(
+  EEG[EEG$group == levels(EEG$group)[1], ]
+)
+
+# Sort the observations by subject and dimension so that the measurements
+# occur in the same dimensional order for every subject.
+eeg_single <- eeg_single[
+  order(eeg_single$subject, eeg_single$dimension),
+]
+
+# A hypothesis can also be specified through a matrix.
+# This matrix is equivalent to the predefined hypothesis "flat".
+d <- nlevels(eeg_single$dimension)
+hypothesis <- diag(d) - matrix(1 / d, nrow = d, ncol = d)
+
+# For long-format data, pass the numeric measurements as a vector and
+# provide the corresponding subject identifiers separately.
+hdrm_single(
+  data = eeg_single$value,
+  hypothesis = hypothesis,
+  subject = eeg_single$subject
+)
+```
+
+## Multiple-Group Test
+
+A multiple-group test can be performed using `hdrm_grouped()`. The
+function accepts either a numeric matrix with dimensions in rows and
+subjects in columns, or a numeric vector together with subject and group
+identifiers.
+
+The test uses subsampling-based estimators for computationally demanding
+quantities. The number of subsamples can be controlled through the
+argument `B`. Setting `subsampling = TRUE` additionally uses the
+subsampling versions for the other estimators.
+
+```{r example-hdrm-grouped, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+library(hdrm)
+
+### Multiple-group test for data in wide-table format using the built-in birthrates data set
+
+data("birthrates", package = "hdrm")
+
+# A group vector with one entry for each subject, here each federal state,
+# is required. The states are divided into western and eastern states.
+group <- factor(
+  c(1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2),
+  labels = c("west", "east")
+)
+
+# For matrix data, dimensions are stored in rows and subjects in columns.
+hdrm_grouped(
+  data = as.matrix(birthrates),
+  hypothesis = "interaction",
+  group = group
+)
+
+### Multiple-group test for data in long-table format using the built-in EEG data set
+
+data("EEG", package = "hdrm")
+
+# Construct subject identifiers that are unique across groups.
+eeg_grouped <- EEG
+eeg_grouped$subject_id <- interaction(
+  eeg_grouped$group,
+  eeg_grouped$subject,
+  drop = TRUE
+)
+
+# Sort the observations so that the dimensions occur in a consistent order
+# for every subject.
+eeg_grouped <- eeg_grouped[
+  order(
+    eeg_grouped$group,
+    eeg_grouped$subject_id,
+    eeg_grouped$dimension
+  ),
+]
+
+# For long-format data, pass the measurements, group identifiers,
+# and subject identifiers as separate vectors.
+hdrm_grouped(
+  data = eeg_grouped$value,
+  hypothesis = "whole",
+  group = eeg_grouped$group,
+  subject = eeg_grouped$subject_id
+)
+```
+
+## References

@@ -1,0 +1,16 @@
+citHeader("To cite hdrm in publications, please use:")
+
+bibentry(
+  bibtype = "Article",
+  title = "Inference for high dimensional repeated measure designs with the R package hdrm",
+  author = c(
+    person("Paavo", "Sattler"),
+    person("Nils", "Hichert")
+  ),
+  year = "2025",
+  journal = "arXiv",
+  note = "arXiv:2512.17478",
+  doi = "10.48550/arXiv.2512.17478",
+  url = "https://arxiv.org/abs/2512.17478",
+  key = "SattlerHichert2025hdrm"
+)

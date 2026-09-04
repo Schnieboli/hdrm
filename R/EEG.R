@@ -1,0 +1,29 @@
+#' EEG measurements from 160 subjects
+#'
+#' A data frame containing four quantitative EEG variables measured at ten
+#' scalp regions for each of 160 subjects. The resulting 40 repeated-measurement
+#' dimensions are stored in long format. The data originate from the study of
+#' \insertCite{EEG_dataset;textual}{hdrm} and were distributed with the `HRM`
+#' package described by \insertCite{HRM_RJournal;textual}{hdrm}.
+#'
+#' @format A data frame with 6,400 rows and 7 variables:
+#' \describe{
+#'   \item{group}{Diagnostic group with levels `"SCC+"`, `"SCC-"`, `"MCI"`,
+#'   and `"AD"`.}
+#'   \item{value}{Numeric EEG-derived measurement.}
+#'   \item{sex}{Recorded sex, encoded as `"M"` or `"W"`.}
+#'   \item{subject}{Subject identifier.}
+#'   \item{variable}{EEG variable coded from 1 to 4: activity, complexity,
+#'   mobility, and brain rate.}
+#'   \item{region}{Scalp region coded from 1 to 10: frontal, central,
+#'   temporal, occipital, and parietal, each measured on the left and right.}
+#'   \item{dimension}{Combined variable-region dimension coded from 1 to 40.}
+#' }
+#'
+#' @source The archived `HRM` package and the studies cited above.
+#' @references \insertAllCited
+#' @docType data
+#' @keywords datasets
+#' @name EEG
+#' @usage EEG
+"EEG"

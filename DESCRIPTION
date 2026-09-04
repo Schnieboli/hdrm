@@ -1,0 +1,42 @@
+Package: hdrm
+Title: Inference for High-Dimensional Repeated Measures
+Version: 1.0.0
+Authors@R: c(
+    person(
+      "Nils", "Hichert",
+      email = "nils.hichert@tu-dortmund.de",
+      role = c("aut", "cre")
+    ),
+    person(
+      "Paavo", "Sattler",
+      email = "paavo.sattler@tu-dortmund.de",
+      role = "aut",
+      comment = c(ORCID = "0000-0001-8731-0893")
+    ),
+    person("Markus", "Pauly", role = "ctb"),
+    person("Edgar", "Brunner", role = "ctb"),
+    person("David", "Ellenberger", role = "ctb")
+    )
+Description: Provides one-group and multiple-group tests for expectation
+    vectors in high-dimensional repeated-measures designs. Hypotheses can
+    be specified through projection matrices or by selecting predefined
+    effects. The multiple-group procedures cover heterogeneous and equal
+    covariance matrices. Centered and standardized chi-square approximations
+    are combined with exact or subsampling-based trace estimators. The
+    functions return p-values, test statistics, estimated degrees of freedom,
+    and convergence parameters. For further details, see Sattler and Hichert
+    (2025) <doi:10.48550/arXiv.2512.17478>.
+URL: https://github.com/Schnieboli/hdrm
+BugReports: https://github.com/Schnieboli/hdrm/issues
+License: GPL (>= 3)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Suggests: testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: R (>= 3.5.0)
+LazyData: true
+Imports: Rcpp, stats, Rdpack, withr
+LinkingTo: Rcpp, RcppArmadillo
+RdMacros: Rdpack
+Config/roxygen2/version: 8.0.0
+NeedsCompilation: yes
