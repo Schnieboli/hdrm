@@ -17,7 +17,7 @@ double B0_cpp(arma::mat& mat){
     }
     out += c;
   }
-  return out/N;
+  return out;
 }
 
 
@@ -45,7 +45,7 @@ double B2_cpp(arma::mat& mat) {
       }
     }
   }
-  return out / (N*(N-1));
+  return out;
 }
 
 
