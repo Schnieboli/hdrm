@@ -22,22 +22,17 @@ double A1_cpp(arma::mat& mat){
   return out / (N * (N - 1));
 }
 
-
 // [[Rcpp::export]]
 double A3_cpp(arma::mat& mat){
-  
   int n = mat.n_cols;
-  int d = mat.n_rows;
   double out;
   double Part1 = 0.0, Part2 = 0.0, Part3 = 0.0, Part4 = 0.0, Part5 = 0.0, Part7 = 0.0;
   double Part6 = n * n * arma::accu(arma::square(arma::mean(mat, 1)));
   double a12 = 0.0, a22 = 0.0, a13 = 0.0, a23 = 0.0;
   
-  
   for(int l2 = 0; l2 < n; ++l2){
     a22 = arma::dot(mat.col(l2), mat.col(l2));
     Part7 += a22;
-    
     for(int l1 = 0; l1 < n; ++l1){
       a12 = arma::dot(mat.col(l1), mat.col(l2));
       Part1 += a12*a12 * (l1!=l2);
@@ -45,10 +40,10 @@ double A3_cpp(arma::mat& mat){
         a23 = arma::dot(mat.col(l2), mat.col(l3));
         a13 = arma::dot(mat.col(l1), mat.col(l3));
         
-        Part5 += a12 * a23 * (l1!=l2);
         Part2 += a12 * a13 * (l1 != l2) * (l2!=l3) * (l1!=l3);
         Part3 += a13 * (a23 + a12) * (l2!=l3) * (l1!=l3);
         Part4 += a13 * a22 * (l1 != l2) *(l2!=l3) * (l1!=l3);
+        Part5 += a12 * a23 * (l1!=l2);
       }
     }
   }
@@ -62,7 +57,7 @@ double A3_cpp(arma::mat& mat){
   return(out);
 }
 
-// bootstrap versions -------------------------------------------------------
+// subsampling versions -------------------------------------------------------
 
 // [[Rcpp::export]]
 double A1star_cpp(const arma::mat& X, int& B){
