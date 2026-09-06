@@ -23,25 +23,16 @@ double B0_cpp(arma::mat& mat){
 
 // [[Rcpp::export]]
 double B2_cpp(arma::mat& mat) {
-  int d = mat.n_rows;
   int N = mat.n_cols;
 
   double out = 0.0;
-  double temp = 0.0;
+  double tmp = 0.0;
 
-  double c1 = 0.0;
-  double c2 = 0.0;
-
-  for (int i = 0; i < N; ++i) {
-    for (int j = 0; j < N; ++j) {
-      temp = 0.0;
-      if(i != j){
-        for(int k = 0; k < d; ++k){
-          c1 = mat(k,i);
-          c2 = mat(k,j);
-          temp += c1 * c2;
-        }
-        out += pow(temp, 2);
+  for (int k = 0; k < N; ++k) {
+    for (int l = 0; l < N; ++l) {
+      if(k != l){
+        tmp = arma::dot(mat.col(k), mat.col(l));
+        out += pow(tmp, 2);
       }
     }
   }
@@ -54,32 +45,19 @@ double B3_cpp(arma::mat& mat) {
   int d = mat.n_rows;
   int N = mat.n_cols;
   double out = 0.0;
-  double dot_product12 = 0.0;
-  double dot_product23 = 0.0;
-  double dot_product31 = 0.0;
-  arma::vec vec1(d);
-  arma::vec vec2(d);
-  arma::vec vec3(d);
+  arma::vec vec_k(d), vec_l(d), vec_r(d);
 
-  for (int i = 0; i < N - 2; ++i) {
-    for (int j = i + 1; j < N - 1; ++j) {
-      for (int k = j + 1; k < N; ++k) {
-        dot_product12 = 0.0;
-        dot_product23 = 0.0;
-        dot_product31 = 0.0;
-
-        vec1 = mat.col(i);
-        vec2 = mat.col(j);
-        vec3 = mat.col(k);
-
-        for (int r = 0; r < d; ++r) {
-
-          dot_product12 += vec1(r) * vec2(r);
-          dot_product23 += vec2(r) * vec3(r);
-          dot_product31 += vec3(r) * vec1(r);
-        }
-
-        out += dot_product12 * dot_product23 * dot_product31;
+  for (int k = 0; k < N - 2; ++k) {
+    for (int l = k + 1; l < N - 1; ++l) {
+      for (int r = l + 1; r < N; ++r) {
+        
+        vec_k = mat.col(k);
+        vec_l = mat.col(l);
+        vec_r = mat.col(r);
+        
+        out += arma::dot(vec_k, vec_l) * 
+          arma::dot(vec_l, vec_r) * 
+          arma::dot(vec_r, vec_k);
       }
     }
   }
