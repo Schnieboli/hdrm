@@ -21,8 +21,8 @@ A1_cpp <- function(mat) {
     .Call(`_hdrm_A1_cpp`, mat)
 }
 
-A3_cpp <- function(mat, Part6) {
-    .Call(`_hdrm_A3_cpp`, mat, Part6)
+A3_cpp <- function(mat) {
+    .Call(`_hdrm_A3_cpp`, mat)
 }
 
 A1star_cpp <- function(X, B) {
