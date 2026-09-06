@@ -7,58 +7,39 @@ using namespace Rcpp;
 double A1_cpp(arma::mat& mat){
   int N = mat.n_cols;
   int d = mat.n_rows;
-  arma::colvec col1(d), col2(d);
-
-  double out = 0.0;
-  double diff = 0.0;
-
-  // Fall 1: Wenn die Matrix mehr als eine Zeile hat, wie im Originalcode
-  if(d > 1){
-    for(int i = 0; i < N - 1; ++i){
-      col1 = mat.col(i);
-      for(int j = i + 1; j < N; ++j){
-        col2 = mat.col(j);
-        for(int k = 0; k < d; ++k){
-          diff = col1(k) - col2(k);
-          out += diff * diff;
-        }
-      }
-    }
-    return out / (N * (N - 1));
-  }
+  arma::vec vec_l1(d), vec_l2(d), diff (d);
   
-  // Fall 2: Wenn die Matrix nur eine Zeile hat
-  else {
-    for(int i = 0; i < N - 1; ++i){
-      col1 = mat.col(i);
-      for(int j = i + 1; j < N; ++j){
-        col2 = mat.col(j);
-        diff = col1(0) - col2(0); // Nur die Werte der ersten (und einzigen) Zeile vergleichen
-        out += diff * diff;
-      }
+  double out = 0.0;
+  
+  for(int l2 = 0; l2 < N-1; ++l2){
+    vec_l2 = mat.col(l2);
+    for(int l1 = l2+1; l1 < N; ++l1){
+      vec_l1 = mat.col(l1);
+      diff = vec_l1 - vec_l2;
+      out += arma::dot(diff, diff);
     }
-    return out / (N * (N - 1));
   }
+  return out / (N * (N - 1));
 }
 
 
 // [[Rcpp::export]]
 double A3_cpp(arma::mat& mat, double Part6){ // Part6 = sum(rowMeans(mat)^2) in R
-
+  
   int n = mat.n_cols;
   int d = mat.n_rows;
   double out;
   double Part1 = 0.0, Part2 = 0.0, Part3 = 0.0, Part4 = 0.0, Part5 = 0.0, Part7 = 0.0;
   double a12 = 0.0, a22 = 0.0, a13 = 0.0, a23 = 0.0;
-
-
+  
+  
   for(int l2 = 0; l2 < n; ++l2){
     a22 = 0;
     for(int i = 0; i< d; ++i){
       a22 += pow(mat(i,l2), 2);
     }
     Part7 += a22;
-
+    
     for(int l1 = 0; l1 < n; ++l1){
       a12 = 0;
       for(int i = 0; i < d; ++i){
@@ -79,14 +60,14 @@ double A3_cpp(arma::mat& mat, double Part6){ // Part6 = sum(rowMeans(mat)^2) in 
       }
     }
   }
-
+  
   Part1 *= (n-2) * (n-3);
   Part2 *= (2*n) - 5;
   Part6 *= n*n;
-
+  
   out = (Part1 - Part2 - Part3 - Part4 - Part5 + (Part6 * (Part6 - Part7)));
   out /= n * (n-1) * (n-2) * (n-3);
-
+  
   return(out);
 }
 
@@ -100,7 +81,7 @@ double A1star_cpp(const arma::mat& X, int& B){
   arma::uvec ind(2);
   double out = 0.0;
   double temp = 0.0;
-
+  
   for(int b = 0; b < B; ++b){
     temp = 0.0;
     ind = arma::randperm(n).head(2);
@@ -124,7 +105,7 @@ double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
   arma::uvec indX(2), indY(2);
   double out = 0.0;
   double temp = 0.0;
-
+  
   for(int b = 0; b < B; ++b){
     temp = 0.0;
     indX = arma::randperm(nX).head(2);
@@ -151,7 +132,7 @@ double A3star_cpp(const arma::mat& X, int& B){
   arma::uvec ind(2);
   double out = 0.0;
   double temp = 0.0;
-
+  
   for(int b = 0; b < B; ++b){
     temp = 0.0;
     ind = arma::randperm(n).head(4);
@@ -177,7 +158,7 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
   arma::mat sigma(m, 6*a);
   arma::uvec indizes(6);
   int ind = 0;
-
+  
   for(int b = 0; b < B; ++b){
     Z12.zeros();
     Z34.zeros();
