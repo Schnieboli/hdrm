@@ -77,12 +77,12 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   for (i in 1:a) {
     if(subsampling){
       # Use bootstrap sampling if subsampling is true
-      A1[i] <- A1star_cpp(X = X_TS[, group == i,drop=FALSE], B)
-      A3[i] <- A3star_cpp(X = X_TS[, group == i,drop=FALSE], B)
+      A1[i] <- A1star_cpp(mat = X_TS[, group == i,drop=FALSE], B)
+      A3[i] <- A3star_cpp(mat = X_TS[, group == i,drop=FALSE], B)
     } else {
       # Use the original method without subsampling
       A1[i] <- A1_cpp(mat = X_TS[, group == i,drop=FALSE])
-      A3[i] <- A3_cpp(mat = X_TS[, group == i,drop=FALSE], Part6 = sum(rowMeans(X_TS[, group == i,drop=FALSE])^2))
+      A3[i] <- A3_cpp(mat = X_TS[, group == i,drop=FALSE])
     }
   }
 
@@ -90,7 +90,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   for (i in 1:(a-1)) {
     for(r in (i+1):a){
       if(subsampling){
-        A2[i, r] <- A2star_cpp(X = X_TS[, group == i,drop=FALSE], Y = X_TS[, group == r,drop=FALSE], B)
+        A2[i, r] <- A2star_cpp(mat1 = X_TS[, group == i,drop=FALSE], mat2 = X_TS[, group == r,drop=FALSE], B)
       } else {
         A2[i, r] <- A2(X = X_TS[, group == i,drop=FALSE], Y = X_TS[, group == r,drop=FALSE])
       }

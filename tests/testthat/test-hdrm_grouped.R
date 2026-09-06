@@ -2687,8 +2687,7 @@ test_that("exact grouped C++ estimators agree with R references", {
 
   expect_equal(
     hdrm:::A3_cpp(
-      X_fixed,
-      sum(rowMeans(X_fixed)^2)
+      X_fixed
     ),
     1579.5,
     tolerance = 1e-12
@@ -2709,8 +2708,7 @@ test_that("exact grouped C++ estimators agree with R references", {
 
     expect_equal(
       hdrm:::A3_cpp(
-        current_matrix,
-        sum(rowMeans(current_matrix)^2)
+        current_matrix
       ),
       A3_R(current_matrix),
       tolerance = 1e-10

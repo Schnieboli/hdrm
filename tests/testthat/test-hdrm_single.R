@@ -787,7 +787,7 @@ test_that("single-group C++ trace estimators agree with R references", {
     out / (N * (N - 1))
   }
 
-  B3_R_raw <- function(X) {
+  B3_R <- function(X) {
     triples <- combn(
       seq_len(ncol(X)),
       3L
@@ -807,7 +807,7 @@ test_that("single-group C++ trace estimators agree with R references", {
             sum(X[, k] * X[, i])
         }
       )
-    )
+    ) / choose(ncol(X), 3)
   }
 
   X_fixed <- matrix(
@@ -861,18 +861,12 @@ test_that("single-group C++ trace estimators agree with R references", {
       tolerance = 1e-12
     )
 
-    cpp_B3_raw <- hdrm:::B3_cpp(current_matrix)
-    r_B3_raw <- B3_R_raw(current_matrix)
+    cpp_B3 <- hdrm:::B3_cpp(current_matrix)
+    r_B3 <- B3_R(current_matrix)
 
     expect_equal(
-      cpp_B3_raw,
-      r_B3_raw,
-      tolerance = 1e-12
-    )
-
-    expect_equal(
-      cpp_B3_raw / choose(ncol(current_matrix), 3L),
-      r_B3_raw / choose(ncol(current_matrix), 3L),
+      cpp_B3,
+      r_B3,
       tolerance = 1e-12
     )
   }
