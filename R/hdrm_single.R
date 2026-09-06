@@ -348,9 +348,9 @@ hdrm_single <- function(
   transformed_mean <- rowMeans(XT)
   Qn <- N * sum(transformed_mean^2)
 
-  traceNormal <- B0_cpp(XT) / N
-  traceSquare <- B2_cpp(XT) / (N*(N-1))
-  traceCubic <- B3_cpp(XT) / choose(N, 3)
+  traceNormal <- B0_cpp(XT)
+  traceSquare <- B2_cpp(XT)
+  traceCubic <- B3_cpp(XT)
 
   if (
     !is.finite(Qn) ||

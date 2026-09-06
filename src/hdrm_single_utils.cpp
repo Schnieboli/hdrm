@@ -9,15 +9,10 @@ double B0_cpp(arma::mat& mat){
   double c = 0;
   arma::vec col(d);
 
-  for(int i = 0; i < N; ++i){
-    c = 0;
-    col = mat.col(i);
-    for(int j = 0; j < d; ++j){
-      c += pow(col(j), 2);
-    }
-    out += c;
+  for(int k = 0; k < N; ++k){
+    out += arma::dot(mat.col(k), mat.col(k));
   }
-  return out;
+  return out / N;
 }
 
 
@@ -36,7 +31,7 @@ double B2_cpp(arma::mat& mat) {
       }
     }
   }
-  return out;
+  return out / (N * (N-1));
 }
 
 
@@ -61,5 +56,5 @@ double B3_cpp(arma::mat& mat) {
       }
     }
   }
-  return out;
+  return out / R::choose(N, 3);
 }
