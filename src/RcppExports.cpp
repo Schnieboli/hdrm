@@ -79,39 +79,39 @@ BEGIN_RCPP
 END_RCPP
 }
 // A1star_cpp
-double A1star_cpp(const arma::mat& X, int& B);
-RcppExport SEXP _hdrm_A1star_cpp(SEXP XSEXP, SEXP BSEXP) {
+double A1star_cpp(const arma::mat& mat, int& B);
+RcppExport SEXP _hdrm_A1star_cpp(SEXP matSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< int& >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A1star_cpp(X, B));
+    rcpp_result_gen = Rcpp::wrap(A1star_cpp(mat, B));
     return rcpp_result_gen;
 END_RCPP
 }
 // A2star_cpp
-double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B);
-RcppExport SEXP _hdrm_A2star_cpp(SEXP XSEXP, SEXP YSEXP, SEXP BSEXP) {
+double A2star_cpp(const arma::mat& mat1, arma::mat& mat2, int& B);
+RcppExport SEXP _hdrm_A2star_cpp(SEXP mat1SEXP, SEXP mat2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mat1(mat1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type mat2(mat2SEXP);
     Rcpp::traits::input_parameter< int& >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A2star_cpp(X, Y, B));
+    rcpp_result_gen = Rcpp::wrap(A2star_cpp(mat1, mat2, B));
     return rcpp_result_gen;
 END_RCPP
 }
 // A3star_cpp
-double A3star_cpp(const arma::mat& X, int& B);
-RcppExport SEXP _hdrm_A3star_cpp(SEXP XSEXP, SEXP BSEXP) {
+double A3star_cpp(const arma::mat& mat, int& B);
+RcppExport SEXP _hdrm_A3star_cpp(SEXP matSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< int& >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A3star_cpp(X, B));
+    rcpp_result_gen = Rcpp::wrap(A3star_cpp(mat, B));
     return rcpp_result_gen;
 END_RCPP
 }

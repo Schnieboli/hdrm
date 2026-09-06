@@ -25,16 +25,16 @@ A3_cpp <- function(mat) {
     .Call(`_hdrm_A3_cpp`, mat)
 }
 
-A1star_cpp <- function(X, B) {
-    .Call(`_hdrm_A1star_cpp`, X, B)
+A1star_cpp <- function(mat, B) {
+    .Call(`_hdrm_A1star_cpp`, mat, B)
 }
 
-A2star_cpp <- function(X, Y, B) {
-    .Call(`_hdrm_A2star_cpp`, X, Y, B)
+A2star_cpp <- function(mat1, mat2, B) {
+    .Call(`_hdrm_A2star_cpp`, mat1, mat2, B)
 }
 
-A3star_cpp <- function(X, B) {
-    .Call(`_hdrm_A3star_cpp`, X, B)
+A3star_cpp <- function(mat, B) {
+    .Call(`_hdrm_A3star_cpp`, mat, B)
 }
 
 C5star_cpp_internal <- function(X, group, B, n) {

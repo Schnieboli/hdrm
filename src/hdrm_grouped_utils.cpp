@@ -60,76 +60,51 @@ double A3_cpp(arma::mat& mat){
 // subsampling versions -------------------------------------------------------
 
 // [[Rcpp::export]]
-double A1star_cpp(const arma::mat& X, int& B){
-  int n = X.n_cols;
-  int d = X.n_rows;
-  arma::vec v1(d), v2(d);
+double A1star_cpp(const arma::mat& mat, int& B){
+  int n = mat.n_cols;
   arma::uvec ind(2);
   double out = 0.0;
-  double temp = 0.0;
   
   for(int b = 0; b < B; ++b){
-    temp = 0.0;
     ind = arma::randperm(n).head(2);
-    v1 = X.col(ind(0));
-    v2 = X.col(ind(1));
-    for(int j = 0; j < d; ++j){
-      temp += pow((v1(j) - v2(j)), 2);
-    }
-    out += temp;
+    out += arma::dot(mat.col(ind(0)) - mat.col(ind(1)),
+                     mat.col(ind(0)) - mat.col(ind(1)));
   }
   return(out/(2*B));
 }
 
 
 // [[Rcpp::export]]
-double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
-  int nX = X.n_cols;
-  int nY = Y.n_cols;
-  int d = X.n_rows;
-  arma::vec v1(d), v2(d), v3(d), v4(d);
-  arma::uvec indX(2), indY(2);
-  double out = 0.0;
-  double temp = 0.0;
+double A2star_cpp(const arma::mat& mat1, arma::mat& mat2, int& B){
+  int n1 = mat1.n_cols;
+  int n2 = mat2.n_cols;
+  arma::uvec ind1(2), ind2(2);
+  double out = 0.0, tmp;
   
   for(int b = 0; b < B; ++b){
-    temp = 0.0;
-    indX = arma::randperm(nX).head(2);
-    indY = arma::randperm(nY).head(2);
-    v1 = X.col(indX(0));
-    v2 = X.col(indX(1));
-    v3 = Y.col(indY(0));
-    v4 = Y.col(indY(1));
-    for(int j = 0; j < d; ++j){
-      temp += (v1(j) - v2(j)) * (v3(j) - v4(j));
-    }
-    out += pow(temp, 2);
+    ind1 = arma::randperm(n1).head(2);
+    ind2 = arma::randperm(n2).head(2);
+    
+    tmp = arma::dot(mat1.col(ind1(0)) - mat1.col(ind1(1)),
+                    mat2.col(ind2(0)) - mat2.col(ind2(1)));
+    out += pow(tmp, 2);
   }
   return(out/(4*B));
 }
 
 
-
 // [[Rcpp::export]]
-double A3star_cpp(const arma::mat& X, int& B){
-  int n = X.n_cols;
-  int d = X.n_rows;
-  arma::colvec v1(d), v2(d), v3(d), v4(d);
-  arma::uvec ind(2);
-  double out = 0.0;
-  double temp = 0.0;
+double A3star_cpp(const arma::mat& mat, int& B){
+  int n = mat.n_cols;
+  int d = mat.n_rows;
+  arma::uvec ind(4);
+  double out = 0.0, tmp;
   
   for(int b = 0; b < B; ++b){
-    temp = 0.0;
     ind = arma::randperm(n).head(4);
-    v1 = X.col(ind(0));
-    v2 = X.col(ind(1));
-    v3 = X.col(ind(2));
-    v4 = X.col(ind(3));
-    for(int j = 0; j < d; ++j){
-      temp += (v1(j) - v2(j)) * (v3(j) - v4(j));
-    }
-    out += pow(temp, 2);
+    tmp = arma::dot(mat.col(ind(0)) - mat.col(ind(1)),
+                    mat.col(ind(2)) - mat.col(ind(3)));
+    out += pow(tmp, 2);
   }
   return(out/(4*B));
 }
