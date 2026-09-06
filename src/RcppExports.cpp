@@ -129,6 +129,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// C5star_cpp_internal_list
+double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B);
+RcppExport SEXP _hdrm_C5star_cpp_internal_list(SEXP X_listSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type X_list(X_listSEXP);
+    Rcpp::traits::input_parameter< const int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(C5star_cpp_internal_list(X_list, B));
+    return rcpp_result_gen;
+END_RCPP
+}
 // B0_cpp
 double B0_cpp(arma::mat& mat);
 RcppExport SEXP _hdrm_B0_cpp(SEXP matSEXP) {
@@ -174,6 +186,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hdrm_A2star_cpp", (DL_FUNC) &_hdrm_A2star_cpp, 3},
     {"_hdrm_A3star_cpp", (DL_FUNC) &_hdrm_A3star_cpp, 2},
     {"_hdrm_C5star_cpp_internal", (DL_FUNC) &_hdrm_C5star_cpp_internal, 4},
+    {"_hdrm_C5star_cpp_internal_list", (DL_FUNC) &_hdrm_C5star_cpp_internal_list, 2},
     {"_hdrm_B0_cpp", (DL_FUNC) &_hdrm_B0_cpp, 1},
     {"_hdrm_B2_cpp", (DL_FUNC) &_hdrm_B2_cpp, 1},
     {"_hdrm_B3_cpp", (DL_FUNC) &_hdrm_B3_cpp, 1},

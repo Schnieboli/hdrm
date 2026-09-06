@@ -96,7 +96,6 @@ double A2star_cpp(const arma::mat& mat1, arma::mat& mat2, int& B){
 // [[Rcpp::export]]
 double A3star_cpp(const arma::mat& mat, int& B){
   int n = mat.n_cols;
-  int d = mat.n_rows;
   arma::uvec ind(4);
   double out = 0.0, tmp;
   
@@ -113,10 +112,10 @@ double A3star_cpp(const arma::mat& mat, int& B){
 double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n){ // Matrix X ist schon mit TM multipliziert und schon mit sqrt(N/n) multipliziert
   // ausserdem muss X nach Gruppen sortiert sein!!!
   int a = unique(group).index_max() + 1;
-  int m = X.n_rows;
+  int d = X.n_rows;
   double cout = 0.0;
-  arma::vec Z12(m), Z34(m), Z56(m);
-  arma::mat sigma(m, 6*a);
+  arma::vec Z12(d), Z34(d), Z56(d);
+  arma::mat sigma(d, 6*a);
   arma::uvec indizes(6);
   int ind = 0;
   
@@ -136,7 +135,58 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
       Z34 += sigma.col(2 + 6*i) - sigma.col(3 + 6*i);
       Z56 += sigma.col(4 + 6*i) - sigma.col(5 + 6*i);
     }
-    cout += arma::accu(Z12.t() * Z34) * arma::accu(Z34.t() * Z56) * arma::accu(Z56.t() * Z12);
+    cout += arma::dot(Z12, Z34) * arma::dot(Z34, Z56) * arma::dot(Z56, Z12);
   }
   return cout/(8*B);
+}
+
+
+// [[Rcpp::export]]
+double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B) {
+  int a = X_list.size();
+  
+  // Dimension d aus der ersten Gruppenmatrix extrahieren
+  arma::mat X0 = Rcpp::as<arma::mat>(X_list[0]);
+  int d = X0.n_rows; 
+  
+  double out = 0.0;
+  arma::vec Z12(d), Z34(d), Z56(d);
+  arma::mat sigma(d, 6 * a);
+  arma::uvec ind(6);
+  
+  for (int b = 0; b < B; ++b) {
+    Z12.zeros();
+    Z34.zeros();
+    Z56.zeros();
+    
+    for (int i = 0; i < a; ++i) {
+      // 1. Als Rcpp::NumericMatrix wrappen (keine Kopie)
+      Rcpp::NumericMatrix Xi_rcpp = X_list[i];
+      
+      // 2. Armadillo-Matrix ohne Speicher-Kopie auf den Pointer ansetzen
+      arma::mat Xi(Xi_rcpp.begin(), Xi_rcpp.nrow(), Xi_rcpp.ncol(), false, true);
+      
+      int n_i = Xi.n_cols;
+      
+      // 6 zufällige Spaltenindizes aus Gruppe i ziehen
+      ind = arma::randperm(n_i, 6);
+      
+      for (int j = 0; j < 6; ++j) {
+        sigma.col(6 * i + j) = Xi.col(ind(j));
+      }
+      
+      Z12 += sigma.col(0 + 6 * i) - sigma.col(1 + 6 * i);
+      Z34 += sigma.col(2 + 6 * i) - sigma.col(3 + 6 * i);
+      Z56 += sigma.col(4 + 6 * i) - sigma.col(5 + 6 * i);
+    }
+    
+    // Skalarprodukte (dot) sind performanter als matrix multiply + accu
+    double dot_12_34 = arma::dot(Z12, Z34);
+    double dot_34_56 = arma::dot(Z34, Z56);
+    double dot_56_12 = arma::dot(Z56, Z12);
+    
+    out += dot_12_34 * dot_34_56 * dot_56_12;
+  }
+  
+  return out / (8 * B);
 }
