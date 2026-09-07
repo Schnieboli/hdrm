@@ -29,6 +29,10 @@ A3_cpp <- function(mat) {
     .Call(`_hdrm_A3_cpp`, mat)
 }
 
+A4_cpp <- function(X_list, TW) {
+    .Call(`_hdrm_A4_cpp`, X_list, TW)
+}
+
 A1star_cpp <- function(mat, B) {
     .Call(`_hdrm_A1star_cpp`, mat, B)
 }
@@ -39,6 +43,10 @@ A2star_cpp <- function(mat1, mat2, B) {
 
 A3star_cpp <- function(mat, B) {
     .Call(`_hdrm_A3star_cpp`, mat, B)
+}
+
+A4star_cpp <- function(X_list, TW, B) {
+    .Call(`_hdrm_A4star_cpp`, X_list, TW, B)
 }
 
 C5star_cpp_internal <- function(X, group, B, n) {

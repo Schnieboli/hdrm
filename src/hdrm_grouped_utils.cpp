@@ -27,16 +27,17 @@ double A1_cpp(arma::mat& mat){
 double A2_cpp(arma::mat& mat1, arma::mat& mat2){
   int n1 = mat1.n_cols, n2 = mat2.n_cols, d = mat1.n_rows;
   double out = 0.0;
-  arma::vec col_l2(d), diff_12(d), col_k2(d);
+  arma::vec col_l2(d), diff_l(d), col_k2(d), diff_k(d);
   
   for(int l2 = 0; l2 < n1-1; ++l2){
     col_l2 = mat1.col(l2);
     for(int l1 = l2+1; l1 < n1; ++l1){
-      diff_12 = mat1.col(l1) - col_l2;
+      diff_l = mat1.col(l1) - col_l2;
       for(int k2 = 0; k2 < n2-1; ++k2){
         col_k2= mat2.col(k2);
         for(int k1 = k2+1; k1 < n2; ++k1){
-          out += pow(arma::dot(diff_12, mat2.col(k1) - col_k2), 2);
+          diff_k = mat2.col(k1) - col_k2;
+          out += pow(arma::dot(diff_l, diff_k), 2);
         }
       }
     }
@@ -78,6 +79,38 @@ double A3_cpp(arma::mat& mat){
   
   return(out);
 }
+
+// [[Rcpp::export]]
+double A4_cpp(const Rcpp::List& X_list, arma::mat& TW){
+  
+  int a = X_list.size();
+  double sum1 = 0.0, sum2 = 0.0;
+  double N = 0, n_i, n_r;
+  for(int i = 0; i < a; ++i){
+    N += Rcpp::as<arma::mat>(X_list[i]).n_cols;
+  }
+  
+  for(int i = 0; i < a; ++i){
+    arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+    n_i = Xi.n_cols;
+    sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3_cpp(Xi);
+  }
+  
+  for(int i = 0; i < a-1; ++i){
+    arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+    n_i = Xi.n_cols;
+    for(int r = i+1; r < a; ++r){
+      arma::mat Xr = Rcpp::as<arma::mat>(X_list[r]);
+      n_r = Xr.n_cols;
+      
+      sum2 += (pow(N, 2) / (n_i * n_r)) * pow(TW(i,r), 2) * A2_cpp(Xi, Xr);
+    }
+  }
+  return sum1 + 2 * sum2;
+}
+
+
+
 
 // subsampling versions -------------------------------------------------------
 
@@ -129,6 +162,37 @@ double A3star_cpp(const arma::mat& mat, int& B){
   }
   return(out/(4*B));
 }
+
+
+// [[Rcpp::export]]
+double A4star_cpp(const Rcpp::List& X_list, arma::mat& TW, int B){
+  
+  int a = X_list.size();
+  double sum1 = 0.0, sum2 = 0.0;
+  double N = 0, n_i, n_r;
+  for(int i = 0; i < a; ++i){
+    N += Rcpp::as<arma::mat>(X_list[i]).n_cols;
+  }
+  
+  for(int i = 0; i < a; ++i){
+    arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+    n_i = Xi.n_cols;
+    sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3star_cpp(Xi, B);
+  }
+  
+  for(int i = 0; i < a-1; ++i){
+    arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+    n_i = Xi.n_cols;
+    for(int r = i+1; r < a; ++r){
+      arma::mat Xr = Rcpp::as<arma::mat>(X_list[r]);
+      n_r = Xr.n_cols;
+      
+      sum2 += (pow(N, 2) / (n_i * n_r)) * pow(TW(i,r), 2) * A2star_cpp(Xi, Xr, B);
+    }
+  }
+  return sum1 + 2 * sum2;
+}
+
 
 // [[Rcpp::export]]
 double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n){ // Matrix X ist schon mit TM multipliziert und schon mit sqrt(N/n) multipliziert

@@ -90,6 +90,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// A4_cpp
+double A4_cpp(const Rcpp::List& X_list, arma::mat& TW);
+RcppExport SEXP _hdrm_A4_cpp(SEXP X_listSEXP, SEXP TWSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type X_list(X_listSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type TW(TWSEXP);
+    rcpp_result_gen = Rcpp::wrap(A4_cpp(X_list, TW));
+    return rcpp_result_gen;
+END_RCPP
+}
 // A1star_cpp
 double A1star_cpp(const arma::mat& mat, int& B);
 RcppExport SEXP _hdrm_A1star_cpp(SEXP matSEXP, SEXP BSEXP) {
@@ -124,6 +136,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< int& >::type B(BSEXP);
     rcpp_result_gen = Rcpp::wrap(A3star_cpp(mat, B));
+    return rcpp_result_gen;
+END_RCPP
+}
+// A4star_cpp
+double A4star_cpp(const Rcpp::List& X_list, arma::mat& TW, int B);
+RcppExport SEXP _hdrm_A4star_cpp(SEXP X_listSEXP, SEXP TWSEXP, SEXP BSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::List& >::type X_list(X_listSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type TW(TWSEXP);
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(A4star_cpp(X_list, TW, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -195,9 +220,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hdrm_A1_cpp", (DL_FUNC) &_hdrm_A1_cpp, 1},
     {"_hdrm_A2_cpp", (DL_FUNC) &_hdrm_A2_cpp, 2},
     {"_hdrm_A3_cpp", (DL_FUNC) &_hdrm_A3_cpp, 1},
+    {"_hdrm_A4_cpp", (DL_FUNC) &_hdrm_A4_cpp, 2},
     {"_hdrm_A1star_cpp", (DL_FUNC) &_hdrm_A1star_cpp, 2},
     {"_hdrm_A2star_cpp", (DL_FUNC) &_hdrm_A2star_cpp, 3},
     {"_hdrm_A3star_cpp", (DL_FUNC) &_hdrm_A3star_cpp, 2},
+    {"_hdrm_A4star_cpp", (DL_FUNC) &_hdrm_A4star_cpp, 3},
     {"_hdrm_C5star_cpp_internal", (DL_FUNC) &_hdrm_C5star_cpp_internal, 4},
     {"_hdrm_C5star_cpp_internal_list", (DL_FUNC) &_hdrm_C5star_cpp_internal_list, 2},
     {"_hdrm_B0_cpp", (DL_FUNC) &_hdrm_B0_cpp, 1},
