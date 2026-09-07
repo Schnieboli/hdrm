@@ -22,6 +22,28 @@ double A1_cpp(arma::mat& mat){
   return out / (N * (N - 1));
 }
 
+
+//[[Rcpp::export]]
+double A2_cpp(arma::mat& mat1, arma::mat& mat2){
+  int n1 = mat1.n_cols, n2 = mat2.n_cols, d = mat1.n_rows;
+  double out = 0.0;
+  arma::vec col_l2(d), diff_12(d), col_k2(d);
+  
+  for(int l2 = 0; l2 < n1-1; ++l2){
+    col_l2 = mat1.col(l2);
+    for(int l1 = 0; l1 < n1; ++l1){
+      diff_12 = mat1.col(l1) - col_l2;
+      for(int k2 = 0; k2 < n2-1; ++k2){
+        col_k2= mat2.col(k2);
+        for(int k1 = k2+1; k1 < n2; ++k1){
+          out += arma::dot(diff_12, mat2.col(k1) - col_k2);
+        }
+      }
+    }
+  }
+  return out / (4 * R::choose(n1, 2) * R::choose(n2, 2));
+}
+
 // [[Rcpp::export]]
 double A3_cpp(arma::mat& mat){
   int n = mat.n_cols;

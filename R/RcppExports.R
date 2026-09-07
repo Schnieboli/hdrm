@@ -21,6 +21,10 @@ A1_cpp <- function(mat) {
     .Call(`_hdrm_A1_cpp`, mat)
 }
 
+A2_cpp <- function(mat1, mat2) {
+    .Call(`_hdrm_A2_cpp`, mat1, mat2)
+}
+
 A3_cpp <- function(mat) {
     .Call(`_hdrm_A3_cpp`, mat)
 }
