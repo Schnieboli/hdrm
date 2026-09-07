@@ -2979,19 +2979,19 @@ test_that("equal-covariance exact C++ estimators agree with R references", {
 
   # Independently calculated values for the fixed matrix
   expect_equal(
-    hdrm:::A1_eq_cpp(X_fixed),
+    hdrm:::A1_i_eq_cpp(X_fixed),
     73,
     tolerance = 1e-12
   )
 
   expect_equal(
-    hdrm:::A2_eq_cpp(X_fixed),
+    hdrm:::A2_i_eq_cpp(X_fixed),
     844,
     tolerance = 1e-12
   )
 
   expect_equal(
-    hdrm:::C1_eq_cpp(X_fixed),
+    hdrm:::C1_i_eq_cpp(X_fixed),
     12960,
     tolerance = 1e-12
   )
@@ -3003,19 +3003,19 @@ test_that("equal-covariance exact C++ estimators agree with R references", {
 
   for (current_matrix in matrices) {
     expect_equal(
-      hdrm:::A1_eq_cpp(current_matrix),
+      hdrm:::A1_i_eq_cpp(current_matrix),
       A1_eq_R_raw(current_matrix),
       tolerance = 1e-12
     )
 
     expect_equal(
-      hdrm:::A2_eq_cpp(current_matrix),
+      hdrm:::A2_i_eq_cpp(current_matrix),
       A2_eq_R_raw(current_matrix),
       tolerance = 1e-12
     )
 
     expect_equal(
-      hdrm:::C1_eq_cpp(current_matrix),
+      hdrm:::C1_i_eq_cpp(current_matrix),
       C1_eq_R_raw(current_matrix),
       tolerance = 1e-10
     )
@@ -3112,14 +3112,14 @@ test_that("equal-covariance C1 subsampling has the intended kernel", {
 
   withr::local_seed(3141)
 
-  raw_estimate_1 <- hdrm:::C1_star_eq_cpp(
+  raw_estimate_1 <- hdrm:::C1star_i_eq_cpp(
     X_fixed,
     B_subsampling
   )
 
   set.seed(3141)
 
-  raw_estimate_2 <- hdrm:::C1_star_eq_cpp(
+  raw_estimate_2 <- hdrm:::C1star_i_eq_cpp(
     X_fixed,
     B_subsampling
   )
@@ -3432,7 +3432,7 @@ test_that("A2 agrees with independent covariance-trace references", {
   # Independently calculated value:
   # tr(cov(t(X_fixed)) %*% cov(t(Y_fixed))) = 71 / 4.
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_fixed,
       Y_fixed
     ),
@@ -3441,7 +3441,7 @@ test_that("A2 agrees with independent covariance-trace references", {
   )
 
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_fixed,
       Y_fixed
     ),
@@ -3453,7 +3453,7 @@ test_that("A2 agrees with independent covariance-trace references", {
   )
 
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_fixed,
       Y_fixed
     ),
@@ -3479,7 +3479,7 @@ test_that("A2 agrees with independent covariance-trace references", {
   )
 
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_random,
       Y_random
     ),
@@ -3491,7 +3491,7 @@ test_that("A2 agrees with independent covariance-trace references", {
   )
 
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_random,
       Y_random
     ),
@@ -3524,7 +3524,7 @@ test_that("A2 agrees with independent covariance-trace references", {
   )
 
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_one_dimension,
       Y_one_dimension
     ),
@@ -3535,11 +3535,11 @@ test_that("A2 agrees with independent covariance-trace references", {
 
   # The trace product is symmetric in the two samples.
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_random,
       Y_random
     ),
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       Y_random,
       X_random
     ),
@@ -3563,11 +3563,11 @@ test_that("A2 agrees with independent covariance-trace references", {
   )
 
   expect_equal(
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_translated,
       Y_translated
     ),
-    hdrm:::A2(
+    hdrm:::A2_cpp(
       X_random,
       Y_random
     ),

@@ -3,7 +3,7 @@ using namespace Rcpp;
 
 
 // [[Rcpp::export()]]
-double A1_eq_cpp(arma::mat &mat){
+double A1_i_eq_cpp(arma::mat &mat){
   int d = mat.n_rows;
   int n = mat.n_cols;
   double out = 0.0;
@@ -19,7 +19,7 @@ double A1_eq_cpp(arma::mat &mat){
 }
 
 // [[Rcpp::export()]]
-double A2_eq_cpp(arma::mat &mat){
+double A2_i_eq_cpp(arma::mat &mat){
   int d = mat.n_rows;
   int n = mat.n_cols;
   double out = 0.0;
@@ -50,7 +50,7 @@ double A2_eq_cpp(arma::mat &mat){
 
 
 // [[Rcpp::export()]]
-double C1_eq_cpp(arma::mat &mat){
+double C1_i_eq_cpp(arma::mat &mat){
   int n = mat.n_cols;
   int d = mat.n_rows;
   double out = 0.0;
@@ -89,7 +89,7 @@ double C1_eq_cpp(arma::mat &mat){
 }
 
 // [[Rcpp::export()]]
-double C1_star_eq_cpp(arma::mat &mat, int B){
+double C1star_i_eq_cpp(arma::mat &mat, int B){
   int n = mat.n_cols;
   int d = mat.n_rows;
   double out = 0.0;
@@ -108,3 +108,82 @@ double C1_star_eq_cpp(arma::mat &mat, int B){
   }
   return out;
 }
+
+
+// // complete estimators ---------------------------------------------------------
+// 
+// // [[Rcpp::export()]]
+// double A1_eq_cpp(const Rcpp::List& X_list){
+//   int a = X_list.size();
+//   double N = 0, n_i = 0;
+//   double A1 = 0.0, denominator = 0.0;
+//   
+//   for(int i = 0; i < a; ++i){
+//     arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+//     n_i = Xi.n_cols;
+//     N += n_i;
+//     denominator += n_i * (n_i - 1);
+//     A1 += A1_i_eq_cpp(Xi);
+//   }
+//   
+//   A1 /= denominator;
+//   return A1;
+// }
+// 
+// 
+// // [[Rcpp::export()]]
+// double A2_eq_cpp(const Rcpp::List& X_list){
+//   int a = X_list.size();
+//   double N = 0, n_i = 0;
+//   double A2 = 0.0, denominator = 0.0;
+//   std::vector <arma::mat> mats(a);
+//   for(int i = 0; i < a; ++i){
+//     mats[i] = Rcpp::as<arma::mat>(X_list[i]);
+//   }
+// 
+//   for(int i = 0; i < a; ++i){
+//     arma::mat Xi = mats[i];
+//     n_i = Xi.n_cols;
+//     N += n_i;
+//     denominator += R::choose(n_i, 4);
+//     A2 += A2_i_eq_cpp(Xi);
+//   }
+//   
+//   A2 /= 24 * denominator;
+//   return A2;
+// }
+// 
+// 
+// // [[Rcpp::export()]]
+// double C1_eq_cpp(const Rcpp::List& X_list){
+//   int a = X_list.size();
+//   int n_i = 0;
+//   double C1 = 0.0, denominator = 0.0;
+//   
+//   for(int i = 0; i < a; ++i){
+//     arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+//     n_i = Xi.n_cols;
+//     denominator += R::choose(n_i, 6);
+//     C1 += C1_i_eq_cpp(Xi);
+//   }
+//   
+//   C1 /= 720 * denominator;
+//   return C1;
+// }
+// 
+// // [[Rcpp::export()]]
+// double C1star_eq_cpp(const Rcpp::List& X_list, int B){
+//   int a = X_list.size();
+//   int n_i = 0;
+//   double C1 = 0.0, denominator = 0.0;
+//   
+//   for(int i = 0; i < a; ++i){
+//     arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+//     n_i = Xi.n_cols;
+//     denominator += R::choose(n_i, 6);
+//     C1 += C1star_i_eq_cpp(Xi, B);
+//   }
+//   
+//   C1 /= 8 * a * B;
+//   return C1;
+// }
