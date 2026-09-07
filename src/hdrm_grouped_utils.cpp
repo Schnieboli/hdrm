@@ -246,15 +246,8 @@ double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B) {
     Z56.zeros();
     
     for (int i = 0; i < a; ++i) {
-      // 1. Als Rcpp::NumericMatrix wrappen (keine Kopie)
-      Rcpp::NumericMatrix Xi_rcpp = X_list[i];
-      
-      // 2. Armadillo-Matrix ohne Speicher-Kopie auf den Pointer ansetzen
-      arma::mat Xi(Xi_rcpp.begin(), Xi_rcpp.nrow(), Xi_rcpp.ncol(), false, true);
-      
+      arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
       int n_i = Xi.n_cols;
-      
-      // 6 zufällige Spaltenindizes aus Gruppe i ziehen
       ind = arma::randperm(n_i, 6);
       
       for (int j = 0; j < 6; ++j) {
@@ -265,8 +258,7 @@ double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B) {
       Z34 += sigma.col(2 + 6 * i) - sigma.col(3 + 6 * i);
       Z56 += sigma.col(4 + 6 * i) - sigma.col(5 + 6 * i);
     }
-    
-    // Skalarprodukte (dot) sind performanter als matrix multiply + accu
+
     double dot_12_34 = arma::dot(Z12, Z34);
     double dot_34_56 = arma::dot(Z34, Z56);
     double dot_56_12 = arma::dot(Z56, Z12);
