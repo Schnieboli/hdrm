@@ -6,7 +6,6 @@ double B0_cpp(arma::mat& mat){
   int d = mat.n_rows;
   int N = mat.n_cols;
   double out = 0;
-  double c = 0;
   arma::vec col(d);
 
   for(int k = 0; k < N; ++k){
