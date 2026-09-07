@@ -31,12 +31,12 @@ double A2_cpp(arma::mat& mat1, arma::mat& mat2){
   
   for(int l2 = 0; l2 < n1-1; ++l2){
     col_l2 = mat1.col(l2);
-    for(int l1 = 0; l1 < n1; ++l1){
+    for(int l1 = l2+1; l1 < n1; ++l1){
       diff_12 = mat1.col(l1) - col_l2;
       for(int k2 = 0; k2 < n2-1; ++k2){
         col_k2= mat2.col(k2);
         for(int k1 = k2+1; k1 < n2; ++k1){
-          out += arma::dot(diff_12, mat2.col(k1) - col_k2);
+          out += pow(arma::dot(diff_12, mat2.col(k1) - col_k2), 2);
         }
       }
     }
