@@ -92,7 +92,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
       if(subsampling){
         A2[i, r] <- A2star_cpp(mat1 = X_TS[, group == i,drop=FALSE], mat2 = X_TS[, group == r,drop=FALSE], B)
       } else {
-        A2[i, r] <- A2(X = X_TS[, group == i,drop=FALSE], Y = X_TS[, group == r,drop=FALSE])
+        A2[i, r] <- A2_cpp(mat1 = X_TS[, group == i,drop=FALSE], mat2 = X_TS[, group == r,drop=FALSE])
       }
     }
   }
