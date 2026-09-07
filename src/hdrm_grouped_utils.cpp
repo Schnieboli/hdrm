@@ -89,13 +89,12 @@ double A4_cpp(const Rcpp::List& X_list, arma::mat& TW){
   std::vector <arma::mat> mats(a);
   for(int i = 0; i < a; ++i){
     mats[i] = Rcpp::as<arma::mat>(X_list[i]);
-    n_i = mats[i].n_cols;
-    N += n_i;
   }
   
   for(int i = 0; i < a; ++i){
     arma::mat Xi = mats[i];
     n_i = Xi.n_cols;
+    N += n_i;
     sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3_cpp(Xi);
   }
   
@@ -111,10 +110,6 @@ double A4_cpp(const Rcpp::List& X_list, arma::mat& TW){
   }
   return sum1 + 2 * sum2;
 }
-
-
-
-
 
 // subsampling versions -------------------------------------------------------
 
@@ -177,24 +172,23 @@ double A4star_cpp(const Rcpp::List& X_list, arma::mat& TW, int B){
   std::vector <arma::mat> mats(a);
   for(int i = 0; i < a; ++i){
     mats[i] = Rcpp::as<arma::mat>(X_list[i]);
-    n_i = mats[i].n_cols;
-    N += n_i;
   }
   
   for(int i = 0; i < a; ++i){
     arma::mat Xi = mats[i];
     n_i = Xi.n_cols;
+    N += n_i;
     sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3star_cpp(Xi, B);
   }
-  
   for(int i = 0; i < a-1; ++i){
     arma::mat Xi = mats[i];
     n_i = Xi.n_cols;
     for(int r = i+1; r < a; ++r){
       arma::mat Xr = mats[r];
       n_r = Xr.n_cols;
-      
-      sum2 += (pow(N, 2) / (n_i * n_r)) * pow(TW(i,r), 2) * A2star_cpp(Xi, Xr, B);
+      sum2 += (pow(N, 2) / (n_i * n_r)) *
+        pow(TW(i,r), 2) *
+        A2star_cpp(Xi, Xr, B);
     }
   }
   return sum1 + 2 * sum2;
