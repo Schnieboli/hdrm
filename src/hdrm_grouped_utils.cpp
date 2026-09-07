@@ -232,9 +232,11 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
 double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B) {
   int a = X_list.size();
   
-  // Dimension d aus der ersten Gruppenmatrix extrahieren
-  arma::mat X0 = Rcpp::as<arma::mat>(X_list[0]);
-  int d = X0.n_rows; 
+  std::vector <arma::mat> mats(a);
+  for(int i = 0; i < a; ++i){
+    mats[i] = Rcpp::as<arma::mat>(X_list[i]);
+  }
+  int d = mats[0].n_rows; 
   
   double out = 0.0;
   arma::vec Z12(d), Z34(d), Z56(d);
@@ -247,7 +249,7 @@ double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B) {
     Z56.zeros();
     
     for (int i = 0; i < a; ++i) {
-      arma::mat Xi = Rcpp::as<arma::mat>(X_list[i]);
+      arma::mat Xi = mats[i];
       int n_i = Xi.n_cols;
       ind = arma::randperm(n_i, 6);
       
