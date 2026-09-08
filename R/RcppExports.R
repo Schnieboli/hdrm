@@ -17,36 +17,28 @@ C1star_i_eq_cpp <- function(mat, B) {
     .Call(`_hdrm_C1star_i_eq_cpp`, mat, B)
 }
 
-A1_cpp <- function(mat) {
-    .Call(`_hdrm_A1_cpp`, mat)
+A1_i_cpp <- function(mat) {
+    .Call(`_hdrm_A1_i_cpp`, mat)
 }
 
-A2_cpp <- function(mat1, mat2) {
-    .Call(`_hdrm_A2_cpp`, mat1, mat2)
+A2_ir_cpp <- function(mat1, mat2) {
+    .Call(`_hdrm_A2_ir_cpp`, mat1, mat2)
 }
 
-A3_cpp <- function(mat) {
-    .Call(`_hdrm_A3_cpp`, mat)
+A3_i_cpp <- function(mat) {
+    .Call(`_hdrm_A3_i_cpp`, mat)
 }
 
-A4_cpp <- function(X_list, TW) {
-    .Call(`_hdrm_A4_cpp`, X_list, TW)
+A1star_i_cpp <- function(mat, B) {
+    .Call(`_hdrm_A1star_i_cpp`, mat, B)
 }
 
-A1star_cpp <- function(mat, B) {
-    .Call(`_hdrm_A1star_cpp`, mat, B)
+A2star_ir_cpp <- function(mat1, mat2, B) {
+    .Call(`_hdrm_A2star_ir_cpp`, mat1, mat2, B)
 }
 
-A2star_cpp <- function(mat1, mat2, B) {
-    .Call(`_hdrm_A2star_cpp`, mat1, mat2, B)
-}
-
-A3star_cpp <- function(mat, B) {
-    .Call(`_hdrm_A3star_cpp`, mat, B)
-}
-
-A4star_cpp <- function(X_list, TW, B) {
-    .Call(`_hdrm_A4star_cpp`, X_list, TW, B)
+A3star_i_cpp <- function(mat, B) {
+    .Call(`_hdrm_A3star_i_cpp`, mat, B)
 }
 
 C5star_cpp_internal <- function(X, group, B, n) {

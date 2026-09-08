@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 // exact versions -----------------------------------------------------------
 // [[Rcpp::export]]
-double A1_cpp(arma::mat& mat){
+double A1_i_cpp(arma::mat& mat){
   int N = mat.n_cols;
   int d = mat.n_rows;
   arma::vec vec_l1(d), vec_l2(d), diff (d);
@@ -24,7 +24,7 @@ double A1_cpp(arma::mat& mat){
 
 
 //[[Rcpp::export]]
-double A2_cpp(arma::mat& mat1, arma::mat& mat2){
+double A2_ir_cpp(arma::mat& mat1, arma::mat& mat2){
   int n1 = mat1.n_cols, n2 = mat2.n_cols, d = mat1.n_rows;
   double out = 0.0;
   arma::vec col_l2(d), diff_l(d), col_k2(d), diff_k(d);
@@ -46,7 +46,7 @@ double A2_cpp(arma::mat& mat1, arma::mat& mat2){
 }
 
 // [[Rcpp::export]]
-double A3_cpp(arma::mat& mat){
+double A3_i_cpp(arma::mat& mat){
   int n = mat.n_cols;
   double out;
   double Part1 = 0.0, Part2 = 0.0, Part3 = 0.0, Part4 = 0.0, Part5 = 0.0, Part7 = 0.0;
@@ -80,41 +80,10 @@ double A3_cpp(arma::mat& mat){
   return(out);
 }
 
-// [[Rcpp::export]]
-double A4_cpp(const Rcpp::List& X_list, arma::mat& TW){
-  
-  int a = X_list.size();
-  double sum1 = 0.0, sum2 = 0.0;
-  double N = 0, n_i, n_r;
-  std::vector <arma::mat> mats(a);
-  for(int i = 0; i < a; ++i){
-    mats[i] = Rcpp::as<arma::mat>(X_list[i]);
-  }
-  
-  for(int i = 0; i < a; ++i){
-    arma::mat Xi = mats[i];
-    n_i = Xi.n_cols;
-    N += n_i;
-    sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3_cpp(Xi);
-  }
-  
-  for(int i = 0; i < a-1; ++i){
-    arma::mat Xi = mats[i];
-    n_i = Xi.n_cols;
-    for(int r = i+1; r < a; ++r){
-      arma::mat Xr = mats[r];
-      n_r = Xr.n_cols;
-      
-      sum2 += (pow(N, 2) / (n_i * n_r)) * pow(TW(i,r), 2) * A2_cpp(Xi, Xr);
-    }
-  }
-  return sum1 + 2 * sum2;
-}
-
 // subsampling versions -------------------------------------------------------
 
 // [[Rcpp::export]]
-double A1star_cpp(const arma::mat& mat, int& B){
+double A1star_i_cpp(const arma::mat& mat, int& B){
   int n = mat.n_cols;
   arma::uvec ind(2);
   double out = 0.0;
@@ -129,7 +98,7 @@ double A1star_cpp(const arma::mat& mat, int& B){
 
 
 // [[Rcpp::export]]
-double A2star_cpp(const arma::mat& mat1, arma::mat& mat2, int& B){
+double A2star_ir_cpp(const arma::mat& mat1, arma::mat& mat2, int B){
   int n1 = mat1.n_cols;
   int n2 = mat2.n_cols;
   arma::uvec ind1(2), ind2(2);
@@ -148,7 +117,7 @@ double A2star_cpp(const arma::mat& mat1, arma::mat& mat2, int& B){
 
 
 // [[Rcpp::export]]
-double A3star_cpp(const arma::mat& mat, int& B){
+double A3star_i_cpp(const arma::mat& mat, int& B){
   int n = mat.n_cols;
   arma::uvec ind(4);
   double out = 0.0, tmp;
@@ -205,7 +174,7 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
   arma::mat sigma(d, 6*a);
   arma::uvec indizes(6);
   int ind = 0;
-  
+
   for(int b = 0; b < B; ++b){
     Z12.zeros();
     Z34.zeros();
@@ -229,7 +198,7 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
 
 
 // [[Rcpp::export]]
-double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B) {
+double C5star_cpp(const Rcpp::List& X_list, const int B) {
   int a = X_list.size();
   
   std::vector <arma::mat> mats(a);

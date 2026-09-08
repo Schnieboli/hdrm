@@ -56,99 +56,74 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// A1_cpp
-double A1_cpp(arma::mat& mat);
-RcppExport SEXP _hdrm_A1_cpp(SEXP matSEXP) {
+// A1_i_cpp
+double A1_i_cpp(arma::mat& mat);
+RcppExport SEXP _hdrm_A1_i_cpp(SEXP matSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type mat(matSEXP);
-    rcpp_result_gen = Rcpp::wrap(A1_cpp(mat));
+    rcpp_result_gen = Rcpp::wrap(A1_i_cpp(mat));
     return rcpp_result_gen;
 END_RCPP
 }
-// A2_cpp
-double A2_cpp(arma::mat& mat1, arma::mat& mat2);
-RcppExport SEXP _hdrm_A2_cpp(SEXP mat1SEXP, SEXP mat2SEXP) {
+// A2_ir_cpp
+double A2_ir_cpp(arma::mat& mat1, arma::mat& mat2);
+RcppExport SEXP _hdrm_A2_ir_cpp(SEXP mat1SEXP, SEXP mat2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type mat1(mat1SEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type mat2(mat2SEXP);
-    rcpp_result_gen = Rcpp::wrap(A2_cpp(mat1, mat2));
+    rcpp_result_gen = Rcpp::wrap(A2_ir_cpp(mat1, mat2));
     return rcpp_result_gen;
 END_RCPP
 }
-// A3_cpp
-double A3_cpp(arma::mat& mat);
-RcppExport SEXP _hdrm_A3_cpp(SEXP matSEXP) {
+// A3_i_cpp
+double A3_i_cpp(arma::mat& mat);
+RcppExport SEXP _hdrm_A3_i_cpp(SEXP matSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat& >::type mat(matSEXP);
-    rcpp_result_gen = Rcpp::wrap(A3_cpp(mat));
+    rcpp_result_gen = Rcpp::wrap(A3_i_cpp(mat));
     return rcpp_result_gen;
 END_RCPP
 }
-// A4_cpp
-double A4_cpp(const Rcpp::List& X_list, arma::mat& TW);
-RcppExport SEXP _hdrm_A4_cpp(SEXP X_listSEXP, SEXP TWSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::List& >::type X_list(X_listSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type TW(TWSEXP);
-    rcpp_result_gen = Rcpp::wrap(A4_cpp(X_list, TW));
-    return rcpp_result_gen;
-END_RCPP
-}
-// A1star_cpp
-double A1star_cpp(const arma::mat& mat, int& B);
-RcppExport SEXP _hdrm_A1star_cpp(SEXP matSEXP, SEXP BSEXP) {
+// A1star_i_cpp
+double A1star_i_cpp(const arma::mat& mat, int& B);
+RcppExport SEXP _hdrm_A1star_i_cpp(SEXP matSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< int& >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A1star_cpp(mat, B));
+    rcpp_result_gen = Rcpp::wrap(A1star_i_cpp(mat, B));
     return rcpp_result_gen;
 END_RCPP
 }
-// A2star_cpp
-double A2star_cpp(const arma::mat& mat1, arma::mat& mat2, int& B);
-RcppExport SEXP _hdrm_A2star_cpp(SEXP mat1SEXP, SEXP mat2SEXP, SEXP BSEXP) {
+// A2star_ir_cpp
+double A2star_ir_cpp(const arma::mat& mat1, arma::mat& mat2, int B);
+RcppExport SEXP _hdrm_A2star_ir_cpp(SEXP mat1SEXP, SEXP mat2SEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type mat1(mat1SEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type mat2(mat2SEXP);
-    Rcpp::traits::input_parameter< int& >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A2star_cpp(mat1, mat2, B));
+    Rcpp::traits::input_parameter< int >::type B(BSEXP);
+    rcpp_result_gen = Rcpp::wrap(A2star_ir_cpp(mat1, mat2, B));
     return rcpp_result_gen;
 END_RCPP
 }
-// A3star_cpp
-double A3star_cpp(const arma::mat& mat, int& B);
-RcppExport SEXP _hdrm_A3star_cpp(SEXP matSEXP, SEXP BSEXP) {
+// A3star_i_cpp
+double A3star_i_cpp(const arma::mat& mat, int& B);
+RcppExport SEXP _hdrm_A3star_i_cpp(SEXP matSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::mat& >::type mat(matSEXP);
     Rcpp::traits::input_parameter< int& >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A3star_cpp(mat, B));
-    return rcpp_result_gen;
-END_RCPP
-}
-// A4star_cpp
-double A4star_cpp(const Rcpp::List& X_list, arma::mat& TW, int B);
-RcppExport SEXP _hdrm_A4star_cpp(SEXP X_listSEXP, SEXP TWSEXP, SEXP BSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::List& >::type X_list(X_listSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type TW(TWSEXP);
-    Rcpp::traits::input_parameter< int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(A4star_cpp(X_list, TW, B));
+    rcpp_result_gen = Rcpp::wrap(A3star_i_cpp(mat, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -166,15 +141,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// C5star_cpp_internal_list
-double C5star_cpp_internal_list(const Rcpp::List& X_list, const int B);
-RcppExport SEXP _hdrm_C5star_cpp_internal_list(SEXP X_listSEXP, SEXP BSEXP) {
+// C5star_cpp
+double C5star_cpp(const Rcpp::List& X_list, const int B);
+RcppExport SEXP _hdrm_C5star_cpp(SEXP X_listSEXP, SEXP BSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const Rcpp::List& >::type X_list(X_listSEXP);
     Rcpp::traits::input_parameter< const int >::type B(BSEXP);
-    rcpp_result_gen = Rcpp::wrap(C5star_cpp_internal_list(X_list, B));
+    rcpp_result_gen = Rcpp::wrap(C5star_cpp(X_list, B));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -217,16 +192,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hdrm_A2_i_eq_cpp", (DL_FUNC) &_hdrm_A2_i_eq_cpp, 1},
     {"_hdrm_C1_i_eq_cpp", (DL_FUNC) &_hdrm_C1_i_eq_cpp, 1},
     {"_hdrm_C1star_i_eq_cpp", (DL_FUNC) &_hdrm_C1star_i_eq_cpp, 2},
-    {"_hdrm_A1_cpp", (DL_FUNC) &_hdrm_A1_cpp, 1},
-    {"_hdrm_A2_cpp", (DL_FUNC) &_hdrm_A2_cpp, 2},
-    {"_hdrm_A3_cpp", (DL_FUNC) &_hdrm_A3_cpp, 1},
-    {"_hdrm_A4_cpp", (DL_FUNC) &_hdrm_A4_cpp, 2},
-    {"_hdrm_A1star_cpp", (DL_FUNC) &_hdrm_A1star_cpp, 2},
-    {"_hdrm_A2star_cpp", (DL_FUNC) &_hdrm_A2star_cpp, 3},
-    {"_hdrm_A3star_cpp", (DL_FUNC) &_hdrm_A3star_cpp, 2},
-    {"_hdrm_A4star_cpp", (DL_FUNC) &_hdrm_A4star_cpp, 3},
+    {"_hdrm_A1_i_cpp", (DL_FUNC) &_hdrm_A1_i_cpp, 1},
+    {"_hdrm_A2_ir_cpp", (DL_FUNC) &_hdrm_A2_ir_cpp, 2},
+    {"_hdrm_A3_i_cpp", (DL_FUNC) &_hdrm_A3_i_cpp, 1},
+    {"_hdrm_A1star_i_cpp", (DL_FUNC) &_hdrm_A1star_i_cpp, 2},
+    {"_hdrm_A2star_ir_cpp", (DL_FUNC) &_hdrm_A2star_ir_cpp, 3},
+    {"_hdrm_A3star_i_cpp", (DL_FUNC) &_hdrm_A3star_i_cpp, 2},
     {"_hdrm_C5star_cpp_internal", (DL_FUNC) &_hdrm_C5star_cpp_internal, 4},
-    {"_hdrm_C5star_cpp_internal_list", (DL_FUNC) &_hdrm_C5star_cpp_internal_list, 2},
+    {"_hdrm_C5star_cpp", (DL_FUNC) &_hdrm_C5star_cpp, 2},
     {"_hdrm_B0_cpp", (DL_FUNC) &_hdrm_B0_cpp, 1},
     {"_hdrm_B2_cpp", (DL_FUNC) &_hdrm_B2_cpp, 1},
     {"_hdrm_B3_cpp", (DL_FUNC) &_hdrm_B3_cpp, 1},
