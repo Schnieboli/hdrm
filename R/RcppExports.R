@@ -45,8 +45,8 @@ C5star_cpp_internal <- function(X, group, B, n) {
     .Call(`_hdrm_C5star_cpp_internal`, X, group, B, n)
 }
 
-C5star_cpp_internal_list <- function(X_list, B) {
-    .Call(`_hdrm_C5star_cpp_internal_list`, X_list, B)
+C5star_cpp <- function(X_list, B) {
+    .Call(`_hdrm_C5star_cpp`, X_list, B)
 }
 
 B0_cpp <- function(mat) {
