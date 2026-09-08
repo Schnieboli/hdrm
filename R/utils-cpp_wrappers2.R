@@ -41,14 +41,14 @@ A4 <- function(X_list, TW, subsampling, B){
 }
 
 
-C5star <- function(X_list, TW, TS, B){
-  a <- length(X_list)
-  n <- sapply(X_list, ncol)
+C5star <- function(data_list, TW, TS, B){
+  a <- length(data_list)
+  n <- sapply(data_list, ncol)
   N <- sum(n)
 
   Y_list = list()
   for(i in 1:a){
-    Y_list[[i]] <- kronecker(TW[, i], TS %*% X_list[[i]]) * sqrt(N / n[i])
+    Y_list[[i]] <- kronecker(TW[, i], TS %*% data_list[[i]]) * sqrt(N / n[i])
   }
   
   joint_B <- expand_subsample_budget(
@@ -56,6 +56,6 @@ C5star <- function(X_list, TW, TS, B){
     multiplier = a
   )
   
-  C5star_cpp(Y_list, joint_B)
+  C5star_cpp(Y_list, B = joint_B)
 }
 
