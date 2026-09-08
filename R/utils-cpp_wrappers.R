@@ -1,7 +1,7 @@
 # All trace estimators expect subjects in columns and dimensions in rows.
 
 #' @keywords internal
-C5star_cpp <- function(X, group, TW, TS, B) {
+C5star_old <- function(X, group, TW, TS, B) {
   # if (length(group) != ncol(X)) {
   #   stop(
   #     "The length of 'group' must equal the number of columns of 'X'.",
