@@ -214,7 +214,7 @@ double C5star_cpp(const Rcpp::List& X_list, const int B) {
   for(int i = 0; i < a; ++i){
     mats[i] = Rcpp::as<arma::mat>(X_list[i]);
   }
-  int d = mats[0].n_rows; 
+  int d = mats[0].n_rows;
   
   double out = 0.0;
   arma::vec Z12(d), Z34(d), Z56(d);
@@ -229,7 +229,7 @@ double C5star_cpp(const Rcpp::List& X_list, const int B) {
     for (int i = 0; i < a; ++i) {
       arma::mat Xi = mats[i];
       int n_i = Xi.n_cols;
-      ind = arma::randperm(n_i, 6);
+      ind = arma::randperm(n_i).head(6);
       
       for (int j = 0; j < 6; ++j) {
         sigma.col(6 * i + j) = Xi.col(ind(j));
