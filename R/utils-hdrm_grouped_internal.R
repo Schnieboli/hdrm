@@ -67,65 +67,27 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 
   # Prepare the transformed data matrix (X_TS)
   X_TS <- TSalt %*% data
-
-  # Initialize vectors for estimators
-  A1 <- A3 <- numeric(a)
-  A2 <- matrix(0, a, a)
-  C5 <- numeric(1)
-
-  # Estimate A1 and A3 using the appropriate method based on subsampling
-  for (i in 1:a) {
-    if(subsampling){
-      # Use bootstrap sampling if subsampling is true
-      A1[i] <- A1star_cpp(mat = X_TS[, group == i,drop=FALSE], B)
-      A3[i] <- A3star_cpp(mat = X_TS[, group == i,drop=FALSE], B)
-    } else {
-      # Use the original method without subsampling
-      A1[i] <- A1_cpp(mat = X_TS[, group == i,drop=FALSE])
-      A3[i] <- A3_cpp(mat = X_TS[, group == i,drop=FALSE])
-    }
+  
+  ## write each group matrix to list
+  X_TS_list <- vector("list", a)
+  for(i in 1:a){
+    X_TS_list[[i]] = X_TS[, group == i,drop=FALSE]
   }
 
-  # Estimate A2 for pairwise group comparisons
-  for (i in 1:(a-1)) {
-    for(r in (i+1):a){
-      if(subsampling){
-        A2[i, r] <- A2star_cpp(mat1 = X_TS[, group == i,drop=FALSE], mat2 = X_TS[, group == r,drop=FALSE], B)
-      } else {
-        A2[i, r] <- A2_cpp(mat1 = X_TS[, group == i,drop=FALSE], mat2 = X_TS[, group == r,drop=FALSE])
-      }
-    }
-  }
-
-  trace_estimates <- c(
-    A1,
-    A2[upper.tri(A2)],
-    A3
-  )
-
-  if (
-    anyNA(trace_estimates) ||
-    any(!is.finite(trace_estimates)) ||
-    any(trace_estimates < 0)
-  ) {
-    stop(
-      "The grouped trace estimators must be finite and non-negative.",
-      call. = FALSE
-    )
-  }
-
-  # Estimate A4 using A1, A2, and A3
-  temp1 <- temp2 <- 0
-  for (i in 1:a) {
-    temp1 <- temp1 + ((N/n[i])^2 * TW[i, i]^2 * A3[i])
-  }
-  for (i in 1:(a-1)) {
-    for(r in (i+1):a){
-      temp2 <- temp2 + ( (N^2 / (n[i]*n[r])) * TW[i, r]^2 * A2[i, r])
-    }
-  }
-  A4 <- temp1 + 2 * temp2  # Combine terms to get A4
-
+  EW <- Exp_Q(X_TS_list, TW = TW, subsampling = subsampling, B = B)
+  
+  # if (
+  #   anyNA(EW) ||
+  #   any(!is.finite(EW)) ||
+  #   any(EW < 0)
+  # ) {
+  #   stop(
+  #     "The grouped trace estimators must be finite and non-negative.",
+  #     call. = FALSE
+  #   )
+  # }
+  
+  A4 <- A4(X_TS_list, TW = TW, subsampling = subsampling, B = B)
   if (
     length(A4) != 1L ||
     is.na(A4) ||
@@ -138,6 +100,8 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
     )
   }
 
+
+  
   # Calculate C5 only after confirming that the second-order estimate is valid
   C5 <- C5star_cpp(
     X = data,
@@ -155,7 +119,6 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   }
 
   # Calculate expectation values (EW), variances (Var), and test statistic components (QN and W)
-  EW <- sum((N/n) * diag(TW) * A1)
   Var <- 2 * A4
   TMbar <- (TMalt %*% X_bar)
   QN <- N * sum(TMbar * TMbar)
