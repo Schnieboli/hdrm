@@ -100,16 +100,14 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
     )
   }
 
-
+  data_list <- list()
+  for(i in 1:a){
+    data_list[[i]] = data[, group == i,drop=FALSE]
+  }
+  
   
   # Calculate C5 only after confirming that the second-order estimate is valid
-  C5 <- C5star_cpp(
-    X = data,
-    group = group,
-    TW = TWalt,
-    TS = TSalt,
-    B = B
-  )
+  C5 <- C5star(data_list, TW = TWalt, TS = TSalt, B = B)
 
   ### Calculate test statistic
   X_bar <- numeric(a * d)

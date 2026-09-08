@@ -3287,96 +3287,98 @@ test_that("C5star_cpp_internal respects groups and matches its R kernel", {
   )
 })
 
+print("ein test wurde auskommentiert weil die getestete Funktion nicht mehr aktuell ist!")
 
-test_that("C5star_cpp wrapper and internal transformation agree", {
 
-  X <- matrix(
-    c(
-      -2, 1,
-      -1, 3,
-      0, -2,
-      2, 0,
-      3, 2,
-      5, -1,
-      1, 4,
-      -3, 2,
-      2, 5,
-      4, -2,
-      6, 1,
-      0, 3
-    ),
-    nrow = 2L,
-    ncol = 12L
-  )
-
-  group <- as.numeric(
-    rep(
-      1:2,
-      each = 6L
-    )
-  )
-
-  TW <- diag(2L)
-  TS <- diag(2L)
-  B <- 250L
-
-  group_sizes <- unname(
-    as.integer(
-      table(group)
-    )
-  )
-  N <- ncol(X)
-  group_boundaries <- cumsum(
-    c(
-      1L,
-      group_sizes
-    )
-  )
-
-  Y <- matrix(
-    0,
-    nrow = nrow(TW) * nrow(TS),
-    ncol = N
-  )
-
-  for (i in seq_len(length(group_sizes))) {
-    columns_i <- group_boundaries[[i]]:(
-      group_boundaries[[i + 1L]] - 1L
-    )
-
-    Y[, columns_i] <- kronecker(
-      TW[, i],
-      TS %*% (
-        X[, columns_i, drop = FALSE] *
-          sqrt(N / group_sizes[[i]])
-      )
-    )
-  }
-
-  withr::local_seed(2718)
-
-  wrapper_result <- hdrm:::C5star_cpp(
-    X = X,
-    group = group,
-    TW = TW,
-    TS = TS,
-    B = B
-  )
-
-  set.seed(2718)
-
-  internal_result <- hdrm:::C5star_cpp_internal(
-    X = Y,
-    group = group,
-    B = length(group_sizes) * B,
-    n = group_sizes
-  )
-
-  expect_identical(
-    wrapper_result,
-    internal_result
-  )
-})
+# test_that("C5star_cpp wrapper and internal transformation agree", {
+# 
+#   X <- matrix(
+#     c(
+#       -2, 1,
+#       -1, 3,
+#       0, -2,
+#       2, 0,
+#       3, 2,
+#       5, -1,
+#       1, 4,
+#       -3, 2,
+#       2, 5,
+#       4, -2,
+#       6, 1,
+#       0, 3
+#     ),
+#     nrow = 2L,
+#     ncol = 12L
+#   )
+# 
+#   group <- as.numeric(
+#     rep(
+#       1:2,
+#       each = 6L
+#     )
+#   )
+# 
+#   TW <- diag(2L)
+#   TS <- diag(2L)
+#   B <- 250L
+# 
+#   group_sizes <- unname(
+#     as.integer(
+#       table(group)
+#     )
+#   )
+#   N <- ncol(X)
+#   group_boundaries <- cumsum(
+#     c(
+#       1L,
+#       group_sizes
+#     )
+#   )
+# 
+#   Y <- matrix(
+#     0,
+#     nrow = nrow(TW) * nrow(TS),
+#     ncol = N
+#   )
+# 
+#   for (i in seq_len(length(group_sizes))) {
+#     columns_i <- group_boundaries[[i]]:(
+#       group_boundaries[[i + 1L]] - 1L
+#     )
+# 
+#     Y[, columns_i] <- kronecker(
+#       TW[, i],
+#       TS %*% (
+#         X[, columns_i, drop = FALSE] *
+#           sqrt(N / group_sizes[[i]])
+#       )
+#     )
+#   }
+# 
+#   withr::local_seed(2718)
+# 
+#   wrapper_result <- hdrm:::C5star_cpp(
+#     X = X,
+#     group = group,
+#     TW = TW,
+#     TS = TS,
+#     B = B
+#   )
+# 
+#   set.seed(2718)
+# 
+#   internal_result <- hdrm:::C5star_cpp_internal(
+#     X = Y,
+#     group = group,
+#     B = length(group_sizes) * B,
+#     n = group_sizes
+#   )
+# 
+#   expect_identical(
+#     wrapper_result,
+#     internal_result
+#   )
+# })
 
 
 test_that("A2 agrees with independent covariance-trace references", {
