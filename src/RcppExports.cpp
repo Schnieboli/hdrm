@@ -127,20 +127,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// C5star_cpp_internal
-double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n);
-RcppExport SEXP _hdrm_C5star_cpp_internal(SEXP XSEXP, SEXP groupSEXP, SEXP BSEXP, SEXP nSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type group(groupSEXP);
-    Rcpp::traits::input_parameter< const int& >::type B(BSEXP);
-    Rcpp::traits::input_parameter< arma::uvec& >::type n(nSEXP);
-    rcpp_result_gen = Rcpp::wrap(C5star_cpp_internal(X, group, B, n));
-    return rcpp_result_gen;
-END_RCPP
-}
 // C5star_cpp
 double C5star_cpp(const Rcpp::List& X_list, const int B);
 RcppExport SEXP _hdrm_C5star_cpp(SEXP X_listSEXP, SEXP BSEXP) {
@@ -198,7 +184,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_hdrm_A1star_i_cpp", (DL_FUNC) &_hdrm_A1star_i_cpp, 2},
     {"_hdrm_A2star_ir_cpp", (DL_FUNC) &_hdrm_A2star_ir_cpp, 3},
     {"_hdrm_A3star_i_cpp", (DL_FUNC) &_hdrm_A3star_i_cpp, 2},
-    {"_hdrm_C5star_cpp_internal", (DL_FUNC) &_hdrm_C5star_cpp_internal, 4},
     {"_hdrm_C5star_cpp", (DL_FUNC) &_hdrm_C5star_cpp, 2},
     {"_hdrm_B0_cpp", (DL_FUNC) &_hdrm_B0_cpp, 1},
     {"_hdrm_B2_cpp", (DL_FUNC) &_hdrm_B2_cpp, 1},
