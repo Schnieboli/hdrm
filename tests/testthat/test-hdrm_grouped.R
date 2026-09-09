@@ -3179,14 +3179,7 @@ test_that("C5star_cpp_internal respects groups and matches its R kernel", {
     )
   }
 
-  second_group_values <- c(
-    -3,
-    -1,
-    0,
-    2,
-    4,
-    7
-  )
+  second_group_values <- c(-3, -1, 0, 2, 4, 7)
 
   permutations <- all_permutations(
     seq_along(second_group_values)
@@ -3222,24 +3215,9 @@ test_that("C5star_cpp_internal respects groups and matches its R kernel", {
 
   # The first group is identically zero. A nonzero result can therefore only
   # arise when the C++ routine applies the correct offset to the second group.
-  X_internal <- matrix(
-    c(
-      rep(0, 6L),
-      second_group_values
-    ),
-    nrow = 1L,
-    ncol = 12L
-  )
-
-  group_internal <- as.numeric(
-    rep(
-      1:2,
-      each = 6L
-    )
-  )
-  group_sizes <- c(
-    6L,
-    6L
+  X_internal <- list(
+      matrix(0, ncol = 6),
+      matrix(second_group_values, ncol = 6)
   )
 
   B_internal <- 20000L
@@ -3249,21 +3227,11 @@ test_that("C5star_cpp_internal respects groups and matches its R kernel", {
 
   withr::local_seed(3141)
 
-  estimate_1 <- hdrm:::C5star_cpp_internal(
-    X = X_internal,
-    group = group_internal,
-    B = B_internal,
-    n = group_sizes
-  )
+  estimate_1 <- hdrm:::C5star_cpp(X = X_internal, B = B_internal)
 
   set.seed(3141)
 
-  estimate_2 <- hdrm:::C5star_cpp_internal(
-    X = X_internal,
-    group = group_internal,
-    B = B_internal,
-    n = group_sizes
-  )
+  estimate_2 <- hdrm:::C5star_cpp(X = X_internal, B = B_internal)
 
   expect_identical(
     estimate_1,
