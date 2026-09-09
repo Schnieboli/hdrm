@@ -1,6 +1,7 @@
 #' @keywords internal
 hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, B, seed){
   
+  
   # Temporarily set the seed and restore the previous RNG state on exit
   if (!is.null(seed)) {
     withr::local_seed(seed)
@@ -11,6 +12,12 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   d <- nrow(data)  # Number of dimensions (rows in the data)
   a <- length(table(group))  # Number of groups
   n <- as.integer(table(group))  # Size of each group
+  
+  ## write each group matrix to list
+  data_list <- vector("list", a)
+  for(i in 1:a){
+    data_list[[i]] = data[, group == i,drop=FALSE]
+  }
   
   # Determine the hypothesis matrices based on the hypothesis parameter
   H <- get_hypothesis_mult(hypothesis, a, d)
@@ -32,9 +39,11 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   # Prepare the X_TS matrix by multiplying TSalt with the data matrix
   X_TS <- TSalt %*% data
   
+  
+  X_TS_list <- lapply(data_list, function(X) TSalt %*% X)
   # Calculate the first- and second-order trace estimators
-  A1 <- make_A1_eq(X = X_TS, group = group)
-  A2 <- make_A2_eq(X = X_TS, group = group)
+  A1 <- A1_eq(X_TS_list)
+  A2 <- A2_eq(X_TS_list)
   
   if (
     anyNA(c(A1, A2)) ||
@@ -78,11 +87,7 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   }
   
   # Calculate C1 only after confirming that the second-order estimate is valid
-  C1 <- make_C1_star_eq(
-    X = X_TS,
-    group = group,
-    B = B
-  )
+  C1 <- C1star_eq(X_TS_list, B = B)
   
   TMbar <- TMalt %*% X_bar  # Calculate the transformed means using the alternative matrices
   QN <- N * sum(TMbar * TMbar)  # Sum of squared values for QN
