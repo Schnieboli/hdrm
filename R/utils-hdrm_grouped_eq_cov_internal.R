@@ -52,13 +52,13 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   
   # Calculate the expectation values (EW), variance (Var), and the test statistic components
   EW <- sum((N / n) * diag(H$TW)) * A1  # Expectation values
-  tmp = 0
-  for (i in 1:a) {
-    for(r in 1:a){
-      tmp = tmp + (H$TW[i, r]^2 * (N^2 / (n[i] * n[r])))  # Accumulate variance terms
-    }
-  }
-  Var <- 2 * A2 * tmp  # Variance calculation
+  # tmp = 0
+  # for (i in 1:a) {
+  #   for(r in 1:a){
+  #     tmp = tmp + (H$TW[i, r]^2 * (N^2 / (n[i] * n[r])))  # Accumulate variance terms
+  #   }
+  # }
+  Var <- 2 * A2 * sum((H$TW)^2 * (N^2 / outer(n, n)))  # Variance calculation
   
   if (
     length(Var) != 1L ||
