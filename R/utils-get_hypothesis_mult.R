@@ -6,13 +6,15 @@
 #'
 #' @param hypothesis Either one of `"whole"`, `"sub"`, `"interaction"`,
 #' `"identical"`, or `"flat"`, or a named list containing `TW` and `TS`.
+#' @param AM logical. specifying whether the compact representation of the 
+#' hypothesis matrices should be used
 #' @param a A positive integer giving the number of groups.
 #' @param d A positive integer giving the repeated-measurement dimension.
 #'
 #' @returns A named list with components `TW` and `TS`.
 #'
 #' @noRd
-get_hypothesis_mult <- function(hypothesis, a, d) {
+get_hypothesis_mult <- function(hypothesis, AM, a, d) {
   if (!is.list(hypothesis) && !is.character(hypothesis)) {
     stop(
       "'hypothesis' must be a character value or a list.",
@@ -209,5 +211,17 @@ get_hypothesis_mult <- function(hypothesis, a, d) {
     }
   }
   
-  list(TW = TW, TS = TS)
+  ## use compact representation if necessary
+  if(AM){
+    TSalt <- MSrootcompact(TS)
+    TWalt <- MSrootcompact(TW)
+  } else{
+    TSalt <- TS
+    TWalt <- TW
+  }
+  ## build full hypothesis matrix
+  TM <- kronecker(TW, TS)
+  TMalt <- kronecker(TWalt, TSalt)
+  
+  list(TW = TW, TS = TS, TM = TM, TWalt = TWalt, TSalt = TSalt, TMalt = TMalt)
 }

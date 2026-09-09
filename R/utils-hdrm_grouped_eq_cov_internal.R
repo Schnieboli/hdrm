@@ -20,27 +20,13 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   }
   
   # Determine the hypothesis matrices based on the hypothesis parameter
-  H <- get_hypothesis_mult(hypothesis, a, d)
-  TW <- H$TW  # Matrix TW from the hypothesis
-  TS <- H$TS  # Matrix TS from the hypothesis
-  
-  # Modify TW and TS if AM is set to 1 (apply root compact transformation)
-  TWalt <- TW
-  TSalt <- TS
-  if(AM == 1){
-    TWalt <- MSrootcompact(TW)
-    TSalt <- MSrootcompact(TS)
-  }
-  
-  # Create the Kronecker product of TW and TS, and their alternative versions if AM = 1
-  TM <- kronecker(TW, TS)
-  TMalt <- kronecker(TWalt, TSalt)
+  H <- get_hypothesis_mult(hypothesis, AM, a, d)
   
   # Prepare the X_TS matrix by multiplying TSalt with the data matrix
-  X_TS <- TSalt %*% data
+  X_TS <- H$TSalt %*% data
   
   
-  X_TS_list <- lapply(data_list, function(X) TSalt %*% X)
+  X_TS_list <- lapply(data_list, function(X) H$TSalt %*% X)
   # Calculate the first- and second-order trace estimators
   A1 <- A1_eq(X_TS_list)
   A2 <- A2_eq(X_TS_list)
@@ -65,11 +51,11 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   }
   
   # Calculate the expectation values (EW), variance (Var), and the test statistic components
-  EW <- sum((N / n) * diag(TW)) * A1  # Expectation values
+  EW <- sum((N / n) * diag(H$TW)) * A1  # Expectation values
   tmp = 0
   for (i in 1:a) {
     for(r in 1:a){
-      tmp = tmp + (TW[i, r]^2 * (N^2 / (n[i] * n[r])))  # Accumulate variance terms
+      tmp = tmp + (H$TW[i, r]^2 * (N^2 / (n[i] * n[r])))  # Accumulate variance terms
     }
   }
   Var <- 2 * A2 * tmp  # Variance calculation
@@ -89,7 +75,7 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   # Calculate C1 only after confirming that the second-order estimate is valid
   C1 <- C1star_eq(X_TS_list, B = B)
   
-  TMbar <- TMalt %*% X_bar  # Calculate the transformed means using the alternative matrices
+  TMbar <- H$TMalt %*% X_bar  # Calculate the transformed means using the alternative matrices
   QN <- N * sum(TMbar * TMbar)  # Sum of squared values for QN
   W <- compute_grouped_statistic(
     QN = QN,
@@ -99,7 +85,7 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
   
   # Calculate the known whole-plot factor eta_{N,a}
   eta_Na <- compute_eta_Na(
-    TW = TW,
+    TW = H$TW,
     group_sizes = n
   )
   
@@ -120,7 +106,7 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
       f = f,  # The scale factor f
       statistic = W,  # The test statistic W
       tau = 1 / f,  # The tau value (inverse of f)
-      H = H,  # The hypothesis matrices (TW and TS)
+      H = list(H$TW, H$TS),  # The hypothesis matrices (TW and TS)
       hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom"),  # Description of the hypothesis
       p.value = p.value,  # The computed p-value
       dim = list(d = d, N = N),  # Dimensions of the data (d: number of dimensions, N: number of samples)

@@ -48,25 +48,10 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   n <- as.integer(table(group))  # Number of samples in each group
 
   # Get the hypothesis matrices based on the provided hypothesis
-  H <- get_hypothesis_mult(hypothesis, a, d)
-  TW <- H$TW
-  TS <- H$TS
-
-  # Alternative matrices for the setting when AM = TRUE
-  TWalt <- TW
-  TSalt <- TS
-  if(AM == 1) {
-    TWalt <- MSrootcompact(TW)   # Apply a transformation to TW if AM = 1
-    TSalt <- MSrootcompact(TS)  # Apply a transformation to TS if AM = 1
-  }
-
-
-  # Kronecker product of hypothesis matrices
-  TM <- kronecker(TW, TS)
-  TMalt <- kronecker(TWalt, TSalt)
-
+  H <- get_hypothesis_mult(hypothesis, AM, a, d)
+  
   # Prepare the transformed data matrix (X_TS)
-  X_TS <- TSalt %*% data
+  X_TS <- H$TSalt %*% data
   
   ## write each group matrix to list
   X_TS_list <- vector("list", a)
@@ -74,7 +59,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
     X_TS_list[[i]] = X_TS[, group == i,drop=FALSE]
   }
 
-  EW <- Exp_Q(X_TS_list, TW = TW, subsampling = subsampling, B = B)
+  EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
   
   # if (
   #   anyNA(EW) ||
@@ -87,7 +72,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   #   )
   # }
   
-  A4 <- A4(X_TS_list, TW = TW, subsampling = subsampling, B = B)
+  A4 <- A4(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
   if (
     length(A4) != 1L ||
     is.na(A4) ||
@@ -107,7 +92,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   
   
   # Calculate C5 only after confirming that the second-order estimate is valid
-  C5 <- C5star(data_list, TW = TWalt, TS = TSalt, B = B)
+  C5 <- C5star(data_list, TW = H$TWalt, TS = H$TSalt, B = B)
 
   ### Calculate test statistic
   X_bar <- numeric(a * d)
@@ -118,7 +103,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 
   # Calculate expectation values (EW), variances (Var), and test statistic components (QN and W)
   Var <- 2 * A4
-  TMbar <- (TMalt %*% X_bar)
+  TMbar <- (H$TMalt %*% X_bar)
   QN <- N * sum(TMbar * TMbar)
   W <- compute_grouped_statistic(
     QN = QN,
@@ -141,7 +126,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
     f = f,
     statistic = W,
     tau = 1 / f,  # Inverse of f
-    H = H,  # Hypothesis matrices (TW and TS)
+    H = list(H$TW, H$TS),  # Hypothesis matrices (TW and TS)
     hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom"),  # Description of the hypothesis
     p.value = p.value,
     dim = list(d = d, N = N),  # Dimensions of the input data
