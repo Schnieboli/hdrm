@@ -139,7 +139,7 @@
 #'
 #' @export
 hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject = NULL, cov.equal = FALSE, subsampling = FALSE, B = "1000*N", seed = NULL) {
-
+  ## checks for hypothesis
   if (is.character(hypothesis)) {
     hypothesis <- match.arg(
       hypothesis,
@@ -159,7 +159,7 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
       call. = FALSE
     )
   }
-
+  ## checks for AM
   if (
     !(is.logical(AM) || is.numeric(AM)) ||
     length(AM) != 1L ||
@@ -174,7 +174,8 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
   }
 
   AM <- as.logical(AM)
-
+  
+  ## checks for cov.equal
   if (
     !is.logical(cov.equal) ||
     length(cov.equal) != 1L ||
@@ -185,7 +186,7 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
       call. = FALSE
     )
   }
-
+  ## checks for subsampling
   if (
     !is.logical(subsampling) ||
     length(subsampling) != 1L ||
@@ -197,6 +198,7 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
     )
   }
 
+  ## checks for seed
   if (!is.null(seed)) {
     if (
       !is.numeric(seed) ||
@@ -493,13 +495,16 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
     B = B,
     N = N
   )
-
+  ## reps <- eval(parse(text = B))
+  ## if(!is.finite(reps) && reps < .Machine$integer.max)
+  
+  
   # The grouped third-trace estimators use a * B draws. Validate the
   # effective budget before any stochastic estimator is evaluated.
   expand_subsample_budget(
     B = reps,
     multiplier = a
-  )
+  ) # TODO kann das weg oder wurde hier vergessen, etwas zuzuweisen?
 
   # Check the grouping criteria
   check_criteria_grouped(X = X, group = group, hypothesis = hypothesis, reps = reps, subsampling = subsampling)
