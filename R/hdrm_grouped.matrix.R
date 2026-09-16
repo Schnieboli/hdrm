@@ -37,7 +37,7 @@ hdrm_grouped.matrix <- function(data,
   
   ## initialize output object
   # Store the processed data in the public N x d orientation while the
-  # internal calculations continue to use subjects in columns.
+  # internal calculations use subjects in columns.
   out <- list(data = data)
   
   ## do all matrix related checks
@@ -57,18 +57,12 @@ hdrm_grouped.matrix <- function(data,
   N <- ncol(data)
   data_list <- lapply(split(seq_len(N), group), function(cols) data[, cols, drop = FALSE])
   
-  
   ## check mathematical requirements
   a <- length(data_list)
   n <- sapply(data_list, ncol)
   if(a < 2) stop("there must be at least two groups", call. = FALSE)
   if(d < 2) stop("there must be at least two observations per subject", call. = FALSE)
   if(any(n < 6)) stop("there must be at least six subjects per group", call. = FALSE)
-  
-  # The grouped third-trace estimators use a * B draws. Validate the
-  # effective budget before any stochastic estimator is evaluated.
-  ### expand_subsample_budget(B = reps, multiplier = a) 
-  # TODO kann das weg oder wurde hier vergessen, etwas zuzuweisen?
   
   out <- c(
     out,
