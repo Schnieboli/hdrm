@@ -169,18 +169,13 @@ hdrm_grouped <- function(data,
 
   ## checks for seed
   if (!is.null(seed)) {
-    if (
-      !is.numeric(seed) ||
-      length(seed) != 1L ||
-      is.na(seed) ||
-      !is.finite(seed) ||
-      seed != floor(seed) ||
-      abs(seed) > .Machine$integer.max
-    ) {
-      stop(
-        "'seed' must be NULL or a single finite integer-valued number.",
-        call. = FALSE
-      )
+    if (!is.numeric(seed) ||
+        length(seed) != 1L ||
+        is.na(seed) ||
+        seed != floor(seed) ||
+        abs(seed) > .Machine$integer.max) {
+      stop("'seed' must be NULL or a single finite integer-valued number.",
+           call. = FALSE)
     }
 
     seed <- as.integer(seed)
