@@ -147,18 +147,18 @@ hdrm_grouped <- function(data,
   ## checks for AM
   AM <- as.logical(AM)
   if (length(AM) != 1L || is.na(AM)) {
-    stop("'AM' must be a single logical value or 0/1.", call. = FALSE)
+    stop("'AM' must be a single logical value.", call. = FALSE)
   }
   ## checks for cov.equal
   cov.equal <- as.logical(cov.equal)
   if (length(cov.equal) != 1L || is.na(cov.equal)) {
-    stop("'cov.equal' must be a single non-missing logical value.", 
+    stop("'cov.equal' must be a single logical value.", 
          call. = FALSE)
   }
   ## checks for subsampling
   subsampling <- as.logical(subsampling)
   if (length(subsampling) != 1L || is.na(subsampling)) {
-    stop("'subsampling' must be a single non-missing logical value.",
+    stop("'subsampling' must be a single logical value.",
          call. = FALSE)
   }
 
@@ -195,6 +195,9 @@ hdrm_grouped <- function(data,
     if(any(dim(data) == 0)){
       stop("'data' must not be empty.")
     }
+    if(any(is.na(data))){
+      stop("'data' must not contain any missing values.", call. = FALSE)
+    }
     # Check that 'group' is a one-dimensional atomic vector
     if (!is.atomic(group) || length(group) != ncol(data) || !is.null(dim(group))) {
       stop("'group' must be a one-dimensional vector or factor of length nrow(data).",
@@ -207,7 +210,7 @@ hdrm_grouped <- function(data,
   
   if(data_is_df){
     if(is.null(data$value) || is.null(data$subject) || is.null(data$time)){
-      stop("data must contain columns 'value', 'subject' and 'time'", 
+      stop("'data' must contain columns 'value', 'subject' and 'time'", 
            call. = FALSE)
     }
     
@@ -215,6 +218,9 @@ hdrm_grouped <- function(data,
     
     if(nrow(data) < 1){
       stop("'data' must not be empty.", call. = FALSE)
+    }
+    if(any(is.na(data))){
+      stop("'data' must not contain any missing values.", call. = FALSE)
     }
     if(!is.numeric(data$value) || any(!is.finite(data$value))){
       stop("data$value must be numeric and finite", call. = FALSE)
