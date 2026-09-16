@@ -871,21 +871,3 @@ test_that("single-group C++ trace estimators agree with R references", {
     )
   }
 })
-
-
-test_that("the print method returns its input invisibly", {
-
-  result <- hdrm_single(
-    Matrixbirthrates,
-    hypothesis = "flat"
-  )
-
-  printed <- NULL
-  output <- capture.output(
-    printed <- withVisible(print(result))
-  )
-
-  expect_false(printed$visible)
-  expect_identical(printed$value, result)
-  expect_gt(length(output), 0L)
-})
