@@ -467,10 +467,6 @@ hdrm_grouped <- function(data,
     # Store the processed data in the output
     out <- list(data = t(X))
   }
-
-  # Warning if there were subjects with missing values
-  if(N_with_NA > N) warning("Subjects with missing values dropped", call. = FALSE)
-
   # Convert B to a positive integer without evaluating arbitrary R code
   reps <- evaluate_subsample_budget(
     B = B,
