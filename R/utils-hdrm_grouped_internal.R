@@ -43,10 +43,10 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
 
   # Determine the number of samples (N), dimensions (d), groups (a), and group sizes (n)
-  N <- ncol(data)
-  d <- nrow(data)
-  a <- length(table(group))
-  n <- as.integer(table(group))  # Number of samples in each group
+  a <- length(X_list)
+  n <- sapply(X_list, ncol)
+  d <- nrow(X_list[[1]])
+  N <- sum(N)
 
   # Get the hypothesis matrices based on the provided hypothesis
   H <- get_hypothesis_mult(hypothesis, AM, a, d)
