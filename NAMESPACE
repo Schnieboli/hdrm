@@ -2,6 +2,8 @@
 
 S3method(hdrm_grouped,data.frame)
 S3method(hdrm_grouped,matrix)
+S3method(hdrm_single,data.frame)
+S3method(hdrm_single,matrix)
 S3method(print,hdrm_grouped)
 S3method(print,hdrm_single)
 export(hdrm_grouped)
