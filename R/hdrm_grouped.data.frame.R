@@ -1,3 +1,4 @@
+#' @method hdrm_grouped data.frame
 #' @export
 hdrm_grouped.data.frame <- function(data,
                          hypothesis = "whole",

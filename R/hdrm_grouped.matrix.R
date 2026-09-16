@@ -1,3 +1,4 @@
+#' @method hdrm_grouped matrix
 #' @export
 hdrm_grouped.matrix <- function(data,
                          hypothesis = "whole",
