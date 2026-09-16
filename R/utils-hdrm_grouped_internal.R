@@ -40,6 +40,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   if (!is.null(seed)) {
     withr::local_seed(seed)
   }
+hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
 
   # Determine the number of samples (N), dimensions (d), groups (a), and group sizes (n)
   N <- ncol(data)
@@ -100,7 +101,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
   )
 
   ## Output
-  L <- list(
+  list(
     f = f,
     statistic = W,
     tau = 1 / f,  # Inverse of f
@@ -109,6 +110,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
     p.value = p.value,
     dim = list(d = d, N = N),  # Dimensions of the input data
     groups = list(a = a, table = table(group))  # Grouping information
+    dim = list(d = d, N = N)  # Dimensions of the input data
   )
 
   # Assign class 'hdrm' to the result
