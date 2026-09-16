@@ -37,13 +37,14 @@ hdrm_grouped.data.frame <- function(data,
   }
   
   
-  out <- list(data = data)
   if(is.null(data$value) || is.null(data$subject) || is.null(data$dimension)){
     stop("'data' must contain columns 'value', 'subject' and 'dimension'", 
          call. = FALSE)
   }
   
-  data <- data.frame(value = data$value, subject = data$subject, dimension = data$dimension)
+  data <- data.frame(value = data$value, 
+                     subject = as.factor(data$subject), 
+                     dimension = as.factor(data$dimension))
   
   if(nrow(data) < 1){
     stop("'data' must not be empty.", call. = FALSE)
@@ -59,7 +60,7 @@ hdrm_grouped.data.frame <- function(data,
     stop("'group' must be a one-dimensional vector or factor of length nrow(data).", call. = FALSE)
   }
   
-  data$group <- group
+  data$group <- as.factor(group)
   data <- data[order(data$subject, data$dimension, data$group), ]
   ## reshape data to widetable format
   df_wide <- stats::reshape(
@@ -81,6 +82,10 @@ hdrm_grouped.data.frame <- function(data,
   if(d < 2) stop("there must be at least two observations per subject", call. = FALSE)
   if(any(n < 6)) stop("there must be at least six subjects per group", call. = FALSE)
   
+  
+  out <- list(data = t(do.call(cbind, data_list)),
+              group = rep(1:a, sapply(data_list, ncol)))
+  levels(out$group) <- names(data_list)
   
   out <- c(
     out,
