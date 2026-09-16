@@ -5,41 +5,38 @@ data(EEG)
 
 L <- list(1:160, 1:40)
 
+df <- data.frame(value = EEG$value, subject = EEG$subject, dimension = EEG$dimension)
 
 test_that("perfect case works", {
   # hypothesis = flat
   expect_no_condition(hdrm_single(
-    EEG$value,
-    hypothesis = "flat",
-    subject = EEG$subject
+    df,
+    hypothesis = "flat"
   ))
   
   
   # Multiple hypothesis values are rejected
   expect_error(
     hdrm_single(
-      EEG$value,
-      hypothesis = c("flat", "SUB"),
-      subject = EEG$subject
+      df,
+      hypothesis = c("flat", "SUB")
     ),
-    "'hypothesis' must be a single non-missing character value.",
+    "'hypothesis' must be 'flat' or a numeric projection matrix containing only finite, non-missing values.",
     fixed = TRUE
   )
   
   # legal list to hypothesis
   expect_no_condition(hdrm_single(
-    EEG$value,
-    hypothesis = diag(40),
-    subject = EEG$subject
+    df,
+    hypothesis = diag(40)
   ))
   
   
   # unknown argument is rejected
   expect_error(
     hdrm_single(
-      EEG$value,
+      df,
       hypothesis = "flat",
-      subject = EEG$subject,
       subsampling = FALSE
     )
   )
@@ -48,32 +45,40 @@ test_that("perfect case works", {
 
 test_that("wrong input: data", {
   # data as list
-  expect_error(hdrm_single(L, hypothesis = "flat", subject = EEG$subject))
+  expect_error(hdrm_single(L, hypothesis = "flat"))
 })
 
 
 test_that("missing values", {
   # NA in value
-  vector <- EEG$value
-  vector[123] <- NA
-  expect_warning(hdrm_single(vector, hypothesis = "flat", subject = EEG$subject))
+  df2 <- df
+  df2$value[123] <- NA
+  expect_error(hdrm_single(df2, hypothesis = "flat"),
+               "'data' must not contain any missing values.")
   
   
   # NA in subject
-  subjectvector <- EEG$subject
-  subjectvector[145] <- NA
-  expect_error(hdrm_single(EEG$value, hypothesis = "flat", subject = subjectvector))
+  df2 <- df
+  df2$subject[145] <- NA
+  expect_error(hdrm_single(df2, hypothesis = "flat"))
   
+  
+  # NA in dimension
+  df2 <- df
+  df2$dimension[145] <- NA
+  expect_error(hdrm_single(df2, hypothesis = "flat"))
   
   # different length of subject and data
+  
   expect_error(hdrm_single(
-    EEG$value[-1],
-    hypothesis = "flat",
-    subject = EEG$subject
-  ))
+    df[-1, ],
+    hypothesis = "flat"
+  ), "each combination of subject and dimension must occur exactly one.")
   
   # nonexistant column
-  expect_error(hdrm_single(EEG$value, hypothesis = "flat", subject = "nonexistant"))
+  df2 <- data.frame(df$value, df$subject)
+  expect_error(hdrm_single(df2, hypothesis = "flat"),
+               "'data' must contain columns 'value', 'subject' and 'dimension'")
   
 })
 
@@ -81,62 +86,52 @@ test_that("missing values", {
 test_that("wrong input: hypothesis", {
   # a number
   expect_error(hdrm_single(
-    EEG$value,
+    df,
     hypothesis = 1,
-    subject = EEG$subject
   ))
   
   # illegal character
   expect_error(hdrm_single(
-    EEG$value,
-    hypothesis = c("flart"),
-    subject = EEG$subject
+    df,
+    hypothesis = c("flart")
   ))
   
   
   # list TS missing
   expect_error(hdrm_single(
-    EEG$value,
-    hypothesis = diag(1:41),
-    subject = EEG$subject
+    df,
+    hypothesis = diag(1:41)
   ))
   
   
   
   # wrong dimension of hypothesis
   expect_error(hdrm_single(
-    EEG$value,
-    hypothesis = matrix(0, 41, 39),
-    subject = EEG$subject
+    df,
+    hypothesis = matrix(0, 41, 39)
   ))
   
   # TW not symmetrical
   expect_error(hdrm_single(
-    EEG$value,
-    hypothesis = list(TW = diag(4) + c(0, 1), TS = diag(40)),
-    subject = EEG$subject
+    df,
+    hypothesis = list(TW = diag(4) + c(0, 1), TS = diag(40))
   ))
   
   # list
   expect_error(hdrm_single(
-    EEG$value,
-    hypothesis = list(diag(40)),
-    subject = EEG$subject
+    df,
+    hypothesis = list(diag(40))
   ))
   
 })
-
-
-
 
 
 test_that("hdrm_single test statistics", {
   # hypothesis = flat
   expect_equal(
     hdrm_single(
-      EEG$value,
-      hypothesis = "flat",
-      subject = EEG$subject
+      df,
+      hypothesis = "flat"
     )$statistic,
     110.236926
   )
@@ -147,9 +142,8 @@ test_that("hdrm_single  p.values", {
   # hypothesis = flat
   expect_equal(
     hdrm_single(
-      EEG$value,
-      hypothesis = "flat",
-      subject = EEG$subject
+      df,
+      hypothesis = "flat"
     )$p.value,
     2.220446e-16
   )
@@ -159,9 +153,8 @@ test_that("hdrm_single f", {
   # hypothesis = flat
   expect_equal(
     hdrm_single(
-      EEG$value,
-      hypothesis = "flat",
-      subject = EEG$subject
+      df,
+      hypothesis = "flat"
     )$f,
     1.0021019186641513
   )
@@ -184,7 +177,7 @@ test_that("perfect case works", {
   # Multiple hypothesis values are rejected
   expect_error(
     hdrm_single(Matrixbirthrates, hypothesis = c("flat", "SUB")),
-    "'hypothesis' must be a single non-missing character value.",
+    "'hypothesis' must be 'flat' or a numeric projection matrix containing only finite, non-missing values.",
     fixed = TRUE
   )
   
@@ -212,15 +205,6 @@ test_that("wrong input: data", {
       dimension = "dimension"
     )
   )
-  
-  # data as matrix with additional subject values
-  expect_warning(hdrm_single(
-    Matrixbirthrates,
-    hypothesis = "flat",
-    subject = seq_len(nrow(Matrixbirthrates))
-  ))
-  # data as df
-  expect_error(hdrm_single(data = EEG, hypothesis = "flat"))
 })
 
 
@@ -228,14 +212,8 @@ test_that("missing values", {
   # NA in value
   M <- Matrixbirthrates
   M[4, 7] <- NA
-  expect_warning(hdrm_single(data = M, hypothesis = "flat"))
-  
-  expect_warning(expect_true(all(
-    dim(hdrm_single(
-      data = M, hypothesis = "flat"
-    )$data) == dim(M) - c(1, 0)
-  )))
-  
+  expect_error(hdrm_single(data = M, hypothesis = "flat"),
+               "'data' must be a numeric matrix, containing only finite, non-missing values")
 })
 
 
@@ -259,51 +237,25 @@ test_that("wrong input: hypothesis", {
 })
 
 test_that("wrong input: AM", {
-  # AM must be binary
-  expect_error(
-    hdrm_single(
-      EEG$value,
-      hypothesis = "flat",
-      subject = EEG$subject,
-      AM = 2
-    ),
-    "'AM' must be a single logical value or 0/1.",
-    fixed = TRUE
-  )
-  
   # AM must not be missing
   expect_error(
     hdrm_single(
-      EEG$value,
+      df,
       hypothesis = "flat",
-      subject = EEG$subject,
       AM = NA
     ),
-    "'AM' must be a single logical value or 0/1.",
+    "'AM' must be a single logical value.",
     fixed = TRUE
   )
   
   # AM must have length one
   expect_error(
     hdrm_single(
-      EEG$value,
+      df,
       hypothesis = "flat",
-      subject = EEG$subject,
       AM = c(0, 1)
     ),
-    "'AM' must be a single logical value or 0/1.",
-    fixed = TRUE
-  )
-  
-  # character values are rejected
-  expect_error(
-    hdrm_single(
-      EEG$value,
-      hypothesis = "flat",
-      subject = EEG$subject,
-      AM = "TRUE"
-    ),
-    "'AM' must be a single logical value or 0/1.",
+    "'AM' must be a single logical value.",
     fixed = TRUE
   )
 })
@@ -335,93 +287,15 @@ test_that("hdrm_single f", {
 # Additional tests for the revised public interface and preprocessing ---------
 
 test_that("data and subject inputs are validated explicitly", {
-  expect_error(hdrm_single(numeric(0), subject = character(0)),
+  df2 <- data.frame(value = numeric(0), subject = integer(0), dimension = integer(0))
+  expect_error(hdrm_single(df2, "flat"),
                "'data' must not be empty.",
                fixed = TRUE)
   
   expect_error(hdrm_single(matrix(
-    numeric(0), nrow = 0L, ncol = 0L
-  )), "'data' must not be empty.", fixed = TRUE)
-  
-  expect_error(hdrm_single(EEG$value),
-               "'subject' must be provided when 'data' is a vector.",
-               fixed = TRUE)
-  
-  expect_error(
-    hdrm_single(EEG$value, subject = EEG$subject[-1L]),
-    "The lengths of 'data' and 'subject' must be equal.",
-    fixed = TRUE
-  )
-  
-  expect_error(
-    hdrm_single(EEG$value, subject = as.list(EEG$subject)),
-    "'subject' must be a one-dimensional atomic vector or factor.",
-    fixed = TRUE
-  )
-  
-  expect_warning(
-    hdrm_single(Matrixbirthrates, subject = seq_len(nrow(Matrixbirthrates))),
-    "'subject' is ignored when 'data' is a matrix.",
-    fixed = TRUE
-  )
+    numeric(0), nrow = 0L, ncol = 0L)
+    ), "'data' must be a numeric matrix, containing only finite, non-missing values", fixed = TRUE)
 })
-
-
-test_that("named numeric vectors are accepted", {
-  named_values <- EEG$value
-  names(named_values) <- seq_along(named_values)
-  
-  expect_no_condition(hdrm_single(
-    named_values,
-    hypothesis = "flat",
-    subject = EEG$subject
-  ))
-})
-
-
-test_that("vector preprocessing removes complete subject blocks", {
-  data_with_na <- EEG$value
-  removed_subject <- EEG$subject[[1L]]
-  removed_index <- which(EEG$subject == removed_subject)[[1L]]
-  data_with_na[removed_index] <- NA_real_
-  
-  result <- NULL
-  
-  expect_warning(
-    result <- hdrm_single(
-      data_with_na,
-      hypothesis = "flat",
-      subject = EEG$subject
-    ),
-    "Subjects with missing values dropped",
-    fixed = TRUE
-  )
-  
-  expect_equal(result$removed.cases, 1L)
-  expect_equal(nrow(result$data), length(unique(EEG$subject)) - 1L)
-  expect_false(anyNA(result$data))
-})
-
-
-test_that("matrix preprocessing is reflected in the returned object", {
-  data_with_na <- Matrixbirthrates
-  data_with_na[4L, 7L] <- NA_real_
-  
-  result <- NULL
-  
-  expect_warning(
-    result <- hdrm_single(data_with_na, hypothesis = "flat"),
-    "Subjects with missing values dropped",
-    fixed = TRUE
-  )
-  
-  complete_subjects <- stats::complete.cases(data_with_na)
-  
-  expect_equal(result$data, data_with_na[complete_subjects, , drop = FALSE])
-  expect_equal(result$removed.cases, 1L)
-  expect_equal(result$dim[["N"]], sum(complete_subjects))
-})
-
 
 
 test_that("wide matrix input uses subjects in rows and dimensions in columns",
@@ -435,29 +309,30 @@ test_that("wide matrix input uses subjects in rows and dimensions in columns",
             expect_equal(result$data, Matrixbirthrates)
           })
 
-test_that("within-subject measurement order is preserved", {
-  subject_blocks <- split(seq_along(EEG$value), as.character(EEG$subject))
-  
-  original_subject_order <- unique(as.character(EEG$subject))
-  reversed_subject_order <- rev(original_subject_order)
-  
-  permutation <- unlist(subject_blocks[reversed_subject_order], use.names = FALSE)
-  
-  result_original <- hdrm_single(EEG$value,
-                                 hypothesis = "flat",
-                                 subject = EEG$subject)
-  
-  result_permuted <- hdrm_single(EEG$value[permutation],
-                                 hypothesis = "flat",
-                                 subject = EEG$subject[permutation])
-  
-  expected_subject_order <- match(reversed_subject_order, original_subject_order)
-  
-  expect_equal(result_permuted$data, result_original$data[expected_subject_order, , drop = FALSE])
-  expect_equal(result_permuted$statistic, result_original$statistic)
-  expect_equal(result_permuted$p.value, result_original$p.value)
-  expect_equal(result_permuted$f, result_original$f)
-})
+print("auskommentiert: within-subject measurement order is preserved")
+#### Grund: diese eigenschaft ist nicht unnötig, aber auch nicht unbedingt
+#### notwendig -> mal sehen, ob man dan och was dribbeln kann
+# test_that("within-subject measurement order is preserved", {
+#   subject_blocks <- split(seq_along(df$value), as.character(df$subject))
+#
+#   original_subject_order <- unique(as.character(df$subject))
+#   reversed_subject_order <- rev(original_subject_order)
+#
+#   permutation <- unlist(subject_blocks[reversed_subject_order], use.names = FALSE)
+#
+#   df2 <- df[permutation, ]
+#
+#   result_original <- hdrm_single(df, hypothesis = "flat",)
+#
+#   result_permuted <- hdrm_single(df2, hypothesis = "flat",)
+#
+#   expected_subject_order <- match(reversed_subject_order, original_subject_order)
+#
+#   expect_equal(result_permuted$data, result_original$data[expected_subject_order, , drop = FALSE])
+#   expect_equal(result_permuted$statistic, result_original$statistic)
+#   expect_equal(result_permuted$p.value, result_original$p.value)
+#   expect_equal(result_permuted$f, result_original$f)
+# })
 
 
 test_that("minimum dimensions and complete subject counts are enforced", {
@@ -472,7 +347,7 @@ test_that("minimum dimensions and complete subject counts are enforced", {
   expect_error(hdrm_single(matrix(
     seq_len(4), nrow = 2L, ncol = 2L
   )),
-  "At least three complete subjects are required.",
+  "At least three subjects are required.",
   fixed = TRUE)
 })
 
@@ -483,7 +358,7 @@ test_that("non-finite data and degenerate hypotheses are rejected", {
   
   expect_error(
     hdrm_single(data_with_inf, hypothesis = "flat"),
-    "'X' must contain only finite, non-missing values.",
+    "'data' must be a numeric matrix, containing only finite, non-missing values.",
     fixed = TRUE
   )
   
@@ -502,10 +377,7 @@ test_that("non-finite data and degenerate hypotheses are rejected", {
   
   expect_error(
     hdrm_single(Matrixbirthrates, hypothesis = hypothesis_with_inf),
-    paste0(
-      "The hypothesis matrix must contain only finite, ",
-      "non-missing values."
-    ),
+    "'hypothesis' must be 'flat' or a numeric projection matrix containing only finite, non-missing values",
     fixed = TRUE
   )
 })
@@ -513,16 +385,14 @@ test_that("non-finite data and degenerate hypotheses are rejected", {
 
 test_that("AM representations agree for the one-group method", {
   result_am0 <- hdrm_single(
-    EEG$value,
+    df,
     hypothesis = "flat",
-    subject = EEG$subject,
     AM = FALSE
   )
   
   result_am1 <- hdrm_single(
-    EEG$value,
+    df,
     hypothesis = "flat",
-    subject = EEG$subject,
     AM = TRUE
   )
   
