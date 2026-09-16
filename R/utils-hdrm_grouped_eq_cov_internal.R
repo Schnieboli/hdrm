@@ -32,22 +32,12 @@ hdrm_grouped_eq_cov_internal <- function(X_list, H, B, seed){
   A1 <- A1_eq(X_TS_list)
   A2 <- A2_eq(X_TS_list)
   
-  if (anyNA(c(A1, A2)) || any(!is.finite(c(A1, A2))) || A1 < 0 || A2 < 0){
-    stop("The equal-covariance trace estimators must be finite and non-negative.",
-      call. = FALSE)
-  }
-  
   ### Compute the test statistic
   X_bar <- c(sapply(X_list, rowMeans))
   
   # Calculate the expectation values (EW), variance (Var), and the test statistic components
   EW <- sum((N / n) * diag(H$TW)) * A1  # Expectation values
   Var <- 2 * A2 * sum((H$TW)^2 * (N^2 / outer(n, n)))  # Variance calculation
-  
-  if (length(Var) != 1L || is.na(Var) || !is.finite(Var) || Var <= 0){
-    stop("The estimated variance of the test statistic must be finite and positive.",
-      call. = FALSE)
-  }
   
   # Calculate C1 only after confirming that the second-order estimate is valid
   C1 <- C1star_eq(X_TS_list, B = B)
