@@ -17,9 +17,13 @@
 get_hypothesis_mult <- function(hypothesis, AM, a, d) {
   if (!is.character(hypothesis) && !is.list(hypothesis)) {
     stop("'hypothesis' must be one of the predefined character values or a named list containing 'TW' and 'TS'.",
-      call. = FALSE)
+         call. = FALSE)
   }
   if (is.character(hypothesis)) {
+    if(length(hypothesis) != 1){
+      stop("'hypothesis' must be one of the predefined character values or a named list containing 'TW' and 'TS'.",
+           call. = FALSE)
+    }
     hypothesis <- match.arg(hypothesis, choices = c("whole", "sub", "interaction", "identical", "flat"))
   }
   
@@ -72,38 +76,26 @@ get_hypothesis_mult <- function(hypothesis, AM, a, d) {
     
     if (TW_symmetry_error > tol) {
       stop(paste0(
-        "'TW' must be symmetric. Maximum deviation: ",
-        signif(TW_symmetry_error, 4),
-        "."
-      ),
-      call. = FALSE)
+        "'TW' must be symmetric. Maximum deviation: ", signif(TW_symmetry_error, 4), "."),
+        call. = FALSE)
     }
     
     if (TW_idempotence_error > tol) {
       stop(paste0(
-        "'TW' must be idempotent. Maximum deviation: ",
-        signif(TW_idempotence_error, 4),
-        "."
-      ),
-      call. = FALSE)
+        "'TW' must be idempotent. Maximum deviation: ", signif(TW_idempotence_error, 4), "."),
+        call. = FALSE)
     }
     
     if (TS_symmetry_error > tol) {
       stop(paste0(
-        "'TS' must be symmetric. Maximum deviation: ",
-        signif(TS_symmetry_error, 4),
-        "."
-      ),
-      call. = FALSE)
+        "'TS' must be symmetric. Maximum deviation: ", signif(TS_symmetry_error, 4), "."),
+        call. = FALSE)
     }
     
     if (TS_idempotence_error > tol) {
       stop(paste0(
-        "'TS' must be idempotent. Maximum deviation: ",
-        signif(TS_idempotence_error, 4),
-        "."
-      ),
-      call. = FALSE)
+        "'TS' must be idempotent. Maximum deviation: ", signif(TS_idempotence_error, 4), "."),
+        call. = FALSE)
     }
     
     if (qr(TW, tol = tol)$rank == 0L) {
@@ -119,40 +111,30 @@ get_hypothesis_mult <- function(hypothesis, AM, a, d) {
       stop("'hypothesis' must be a single non-missing character value.",
            call. = FALSE)
     }
-    
-    if (!hypothesis %in%
-        c("whole", "sub", "interaction", "identical", "flat")) {
-      stop(
-        paste0(
-          "'hypothesis' must be one of 'whole', 'sub', 'interaction', ",
-          "'identical', or 'flat', or a list containing 'TW' and 'TS'."
-        ),
-        call. = FALSE
-      )
-    }
-    
-    P_a <- diag(a) - matrix(1 / a, nrow = a, ncol = a)
-    P_d <- diag(d) - matrix(1 / d, nrow = d, ncol = d)
-    J_a <- matrix(1 / a, nrow = a, ncol = a)
-    J_d <- matrix(1 / d, nrow = d, ncol = d)
-    
-    if (hypothesis == "whole") {
-      TW <- P_a
-      TS <- J_d
-    } else if (hypothesis == "sub") {
-      TW <- J_a
-      TS <- P_d
-    } else if (hypothesis == "interaction") {
-      TW <- P_a
-      TS <- P_d
-    } else if (hypothesis == "identical") {
-      TW <- P_a
-      TS <- diag(d)
-    } else {
-      TW <- diag(a)
-      TS <- P_d
-    }
   }
+  
+  P_a <- diag(a) - matrix(1 / a, nrow = a, ncol = a)
+  P_d <- diag(d) - matrix(1 / d, nrow = d, ncol = d)
+  J_a <- matrix(1 / a, nrow = a, ncol = a)
+  J_d <- matrix(1 / d, nrow = d, ncol = d)
+  
+  if (hypothesis == "whole") {
+    TW <- P_a
+    TS <- J_d
+  } else if (hypothesis == "sub") {
+    TW <- J_a
+    TS <- P_d
+  } else if (hypothesis == "interaction") {
+    TW <- P_a
+    TS <- P_d
+  } else if (hypothesis == "identical") {
+    TW <- P_a
+    TS <- diag(d)
+  } else {
+    TW <- diag(a)
+    TS <- P_d
+  }
+  
   
   ## use compact representation if necessary
   if (AM) {

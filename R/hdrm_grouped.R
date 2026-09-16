@@ -7,8 +7,8 @@
 #'
 #' @param data A numeric vector or matrix. For matrix input, subjects are
 #'   represented by rows and repeated-measurement dimensions by columns. For
-#'   data.frame input, colums `subject` and `time` must identify the subject and
-#'   time associated with every measurement.
+#'   data.frame input, colums `subject` and `dimension` must identify the subject and
+#'   dimension associated with every measurement.
 #' @param hypothesis Either one of `"whole"`, `"sub"`, `"interaction"`,
 #'   `"identical"`, or `"flat"`, or a named list containing the projection
 #'   matrices `TW` and `TS`; see Details.
@@ -205,12 +205,12 @@ hdrm_grouped <- function(data,
   }
   
   if(data_is_df){
-    if(is.null(data$value) || is.null(data$subject) || is.null(data$time)){
-      stop("'data' must contain columns 'value', 'subject' and 'time'", 
+    if(is.null(data$value) || is.null(data$subject) || is.null(data$dimension)){
+      stop("'data' must contain columns 'value', 'subject' and 'dimension'", 
            call. = FALSE)
     }
     
-    data <- data.frame(value = data$value, subject = data$subject, time = data$time)
+    data <- data.frame(value = data$value, subject = data$subject, dimension = data$dimension)
     
     if(nrow(data) < 1){
       stop("'data' must not be empty.", call. = FALSE)
@@ -227,12 +227,12 @@ hdrm_grouped <- function(data,
     }
     
     data$group <- group
-    data <- data[order(data$subject, data$time, data$group), ]
+    data <- data[order(data$subject, data$dimension, data$group), ]
     ## reshape data to widetable format
     df_wide <- reshape(
       data,
       idvar = c("subject", "group"),
-      timevar = "time",
+      timevar = "dimension",
       direction = "wide"
     )
     ## split df_wide into groups, transform to matrix
@@ -291,7 +291,6 @@ hdrm_grouped <- function(data,
   }
 
   # Add further output to the result
-  out$removed.cases <- N - N
   out$subsamples <- reps
   out$groups = list(a = a, table = table(group))  # Grouping information
   # Description of the hypothesis

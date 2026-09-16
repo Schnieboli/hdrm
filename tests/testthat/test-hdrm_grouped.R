@@ -791,7 +791,7 @@ test_that("hdrm_grouped f", {
 
 # Loading the dataset
 data("EEG")
-df <- data.frame(value = EEG$value, subject = EEG$subject, time = EEG$dimension)
+df <- data.frame(value = EEG$value, subject = EEG$subject, dimension = EEG$dimension)
 
 M <- matrix(rnorm(1200), 40, 30)
 L <- list(1:160, 1:40)
@@ -1384,7 +1384,7 @@ test_that("data, group, and subject inputs are validated explicitly", {
   # Empty data.frame input
   expect_error(
     hdrm_grouped(
-      data.frame(value = numeric(0), subject = numeric(0), time = numeric(0)),
+      data.frame(value = numeric(0), subject = numeric(0), dimension = numeric(0)),
       group = character(0),
       B = 10
     ),
