@@ -49,6 +49,8 @@ hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "s
     # For each group, calculate the row means across dimensions (using rowMeans as the data is transposed)
     X_bar[1:d + ((i - 1) * d)] <- rowMeans(data[, group == i,drop=FALSE])
   }
+  # X_bar <- as.vector(sapply(data_list, rowMeans))
+  
   
   # Calculate the expectation values (EW), variance (Var), and the test statistic components
   EW <- sum((N / n) * diag(H$TW)) * A1  # Expectation values
