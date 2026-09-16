@@ -56,14 +56,6 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
   
   A4 <- A4(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
-
-  data_list <- list()
-  for(i in 1:a){
-    data_list[[i]] = data[, group == i,drop=FALSE]
-  }
-  
-  
-  # Calculate C5 only after confirming that the second-order estimate is valid
   C5 <- C5star(data_list, TW = H$TWalt, TS = H$TSalt, B = B)
 
   ### Calculate test statistic
