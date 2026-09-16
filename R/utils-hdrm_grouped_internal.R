@@ -97,9 +97,4 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
     groups = list(a = a, table = table(group))  # Grouping information
     dim = list(d = d, N = N)  # Dimensions of the input data
   )
-
-  # Assign class 'hdrm' to the result
-  class(L) <- c("hdrm")
-
-  return(L)  # Return the results as a list
 }
