@@ -181,7 +181,7 @@ hdrm_grouped <- function(data,
   data_is_matrix <- is.matrix(data) && is.numeric(data)
   
   if (!data_is_df && !data_is_matrix) {
-    stop("'data' must be a numeric vector or matrix.", call. = FALSE)
+    stop("'data' must be a data frame or matrix.", call. = FALSE)
   }
   
   if(any(is.na(data)) || any(is.na(group))){
