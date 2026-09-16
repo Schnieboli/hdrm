@@ -214,7 +214,7 @@ hdrm_grouped <- function(data,
            call. = FALSE)
     }
     if(nrow(data) < 1){
-      stop("data must not be empty", call. = FALSE)
+      stop("'data' must not be empty", call. = FALSE)
     }
     if(!is.numeric(data$value) || any(!is.finite(data$value))){
       stop("data$value must be numeric and finite", call. = FALSE)
