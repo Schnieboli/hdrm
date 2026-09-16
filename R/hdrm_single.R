@@ -75,101 +75,16 @@
 hdrm_single <- function(
     data,
     hypothesis = "flat",
-    subject = NULL,
     AM = TRUE
 ) {
-  if ( # test if AM is logical
-    !(is.logical(AM) || is.numeric(AM)) ||
-    length(AM) != 1L ||
-    is.na(AM) ||
-    !is.finite(AM) ||
-    !(AM %in% c(0, 1))
-  ) {
-    stop(
-      "'AM' must be a single logical value or 0/1.",
-      call. = FALSE
-    )
-  }
-
+  ## checks for AM
   AM <- as.logical(AM)
-
-  if (is.character(hypothesis)) { # check if hypothesis as character is correct
-    if (
-      length(hypothesis) != 1L ||
-      is.na(hypothesis)
-    ) {
-      stop(
-        "'hypothesis' must be a single non-missing character value.",
-        call. = FALSE
-      )
-    }
-
-    if (hypothesis != "flat") {
-      stop(
-        "'hypothesis' must be 'flat' or a numeric projection matrix.",
-        call. = FALSE
-      )
-    }
-  } else if (!is.matrix(hypothesis)) {
-    stop(
-      "'hypothesis' must be 'flat' or a numeric projection matrix.",
-      call. = FALSE
-    )
+  if (length(AM) != 1L || is.na(AM)) {
+    stop("'AM' must be a single logical value.", call. = FALSE)
   }
-
-  data_is_vector <- is.numeric(data) && is.null(dim(data))
-  data_is_matrix <- is.matrix(data) && is.numeric(data)
-
-  if (!data_is_vector && !data_is_matrix) {
-    stop(
-      "'data' must be a numeric vector or matrix.",
-      call. = FALSE
-    )
-  }
-
+  
   if (length(data) == 0L) {
-    stop(
-      "'data' must not be empty.",
-      call. = FALSE
-    )
-  }
-
-  if (
-    !is.null(subject) &&
-    (!is.atomic(subject) || !is.null(dim(subject)))
-  ) {
-    stop(
-      "'subject' must be a one-dimensional atomic vector or factor.",
-      call. = FALSE
-    )
-  }
-
-  if (data_is_vector && is.null(subject)) {
-    stop(
-      "'subject' must be provided when 'data' is a vector.",
-      call. = FALSE
-    )
-  }
-
-  if (data_is_vector && anyNA(subject)) {
-    stop(
-      "'subject' must not contain missing values.",
-      call. = FALSE
-    )
-  }
-
-  if (data_is_vector && length(subject) != length(data)) {
-    stop(
-      "The lengths of 'data' and 'subject' must be equal.",
-      call. = FALSE
-    )
-  }
-
-  if (data_is_matrix && !is.null(subject)) {
-    warning(
-      "'subject' is ignored when 'data' is a matrix.",
-      call. = FALSE
-    )
+    stop("'data' must not be empty.", call. = FALSE)
   }
 
   if (data_is_vector) {
@@ -178,19 +93,19 @@ hdrm_single <- function(
       subject_values,
       levels = unique(subject_values)
     )
-
+    
     dframe <- data.frame(
       value = as.numeric(data),
       subject = subject_factor,
       measurement_order = seq_along(data)
     )
-
+    
     N_with_NA <- nlevels(dframe$subject)
-
+    
     incomplete_subjects <- unique(
       dframe$subject[is.na(dframe$value)]
     )
-
+    
     if (length(incomplete_subjects) > 0L) {
       dframe <- dframe[
         !(dframe$subject %in% incomplete_subjects),
@@ -198,18 +113,11 @@ hdrm_single <- function(
         drop = FALSE
       ]
     }
-
+    
     dframe <- droplevels(dframe)
-
-    if (nrow(dframe) == 0L) {
-      stop(
-        "No complete subjects remain after removing missing values.",
-        call. = FALSE
-      )
-    }
-
+    
     subject_dimensions <- unname(table(dframe$subject))
-
+    
     if (
       length(subject_dimensions) == 0L ||
       length(unique(subject_dimensions)) != 1L
@@ -219,11 +127,11 @@ hdrm_single <- function(
         call. = FALSE
       )
     }
-
+    
     d <- as.integer(subject_dimensions[[1L]])
     subject_levels <- levels(dframe$subject)
     N <- length(subject_levels)
-
+    
     X <- vapply(
       subject_levels,
       function(current_subject) {
@@ -231,7 +139,7 @@ hdrm_single <- function(
       },
       numeric(d)
     )
-
+    
     X <- matrix(
       X,
       nrow = d,
@@ -245,113 +153,34 @@ hdrm_single <- function(
     d <- nrow(X)
     N <- ncol(X)
   }
-
+  
   if (N_with_NA > N) {
     warning(
       "Subjects with missing values dropped",
       call. = FALSE
     )
   }
-
+  
+  ## mathematical checks
+  if (d < 2L) stop("At least two repeated-measurement dimensions are required.", call. = FALSE)
+  if (N < 3L) stop("At least three subjects are required.", call. = FALSE)
+  
+  
   check_criteria_single(
     X = X,
     hypothesis = hypothesis
   )
-
-  if (is.character(hypothesis)) {
-    T_matrix <- diag(d) - matrix(
-      1 / d,
-      nrow = d,
-      ncol = d
-    )
-    hypothesis_label <- hypothesis
-  } else {
-    if (!is.numeric(hypothesis)) {
-      stop(
-        "The hypothesis matrix must be numeric.",
-        call. = FALSE
-      )
-    }
-
-    if (anyNA(hypothesis) || any(!is.finite(hypothesis))) {
-      stop(
-        "The hypothesis matrix must contain only finite, non-missing values.",
-        call. = FALSE
-      )
-    }
-
-    if (
-      length(dim(hypothesis)) != 2L ||
-      any(dim(hypothesis) != c(d, d))
-    ) {
-      stop(
-        paste0(
-          "The hypothesis matrix must be a ",
-          d,
-          " by ",
-          d,
-          " matrix."
-        ),
-        call. = FALSE
-      )
-    }
-
-    T_matrix <- hypothesis
-    hypothesis_label <- "custom"
-  }
-
-  tol <- sqrt(.Machine$double.eps)
-
-  symmetry_error <- max(
-    abs(T_matrix - t(T_matrix))
-  )
-  idempotence_error <- max(
-    abs(T_matrix %*% T_matrix - T_matrix)
-  )
-
-  if (symmetry_error > tol) {
-    stop(
-      paste0(
-        "The hypothesis matrix must be symmetric. Maximum deviation: ",
-        signif(symmetry_error, 4),
-        "."
-      ),
-      call. = FALSE
-    )
-  }
-
-  if (idempotence_error > tol) {
-    stop(
-      paste0(
-        "The hypothesis matrix must be idempotent. Maximum deviation: ",
-        signif(idempotence_error, 4),
-        "."
-      ),
-      call. = FALSE
-    )
-  }
-
-  if (qr(T_matrix, tol = tol)$rank == 0L) {
-    stop(
-      "The hypothesis matrix must have positive rank.",
-      call. = FALSE
-    )
-  }
-
-  computation_matrix <- if (AM) {
-    MSrootcompact(T_matrix)
-  } else {
-    T_matrix
-  }
-
-  XT <- computation_matrix %*% X
+  
+  H <- get_hypothesis_single(hypothesis, AM, d)
+  
+  XT <- H$TMalt %*% X
   transformed_mean <- rowMeans(XT)
   Qn <- N * sum(transformed_mean^2)
-
+  
   traceNormal <- B0_cpp(XT)
   traceSquare <- B2_cpp(XT)
   traceCubic <- B3_cpp(XT)
-
+  
   if (
     !is.finite(Qn) ||
     !is.finite(traceNormal) ||
@@ -360,53 +189,42 @@ hdrm_single <- function(
     !is.finite(traceCubic) ||
     traceCubic == 0
   ) {
-    stop(
-      "The trace estimators are numerically degenerate for these data.",
-      call. = FALSE
-    )
+    stop("The trace estimators are numerically degenerate for these data.",
+         call. = FALSE)
   }
-
+  
   W <- (Qn - traceNormal) / sqrt(2 * traceSquare)
-
+  
   if (!is.finite(W)) {
-    stop(
-      "The test statistic is numerically undefined for these data.",
-      call. = FALSE
-    )
+    stop("The test statistic is numerically undefined for these data.",
+         call. = FALSE)
   }
-
+  
   f_raw <- traceSquare^3 / traceCubic^2
-
+  
   if (!is.finite(f_raw) || f_raw <= 0) {
-    stop(
-      "The estimated degrees of freedom are numerically undefined.",
-      call. = FALSE
-    )
+    stop("The estimated degrees of freedom are numerically undefined.",
+         call. = FALSE)
   }
-
+  
   f <- max(1, f_raw)
-
+  
   p.value <- max(
-    stats::pchisq(
-      W * sqrt(2 * f) + f,
-      df = f,
-      lower.tail = FALSE
-    ),
+    stats::pchisq(W * sqrt(2 * f) + f, df = f, lower.tail = FALSE),
     .Machine$double.eps
   )
-
+  
   out <- list(
     data = t(X),
     f = f,
     statistic = W,
     tau = 1 / f,
-    H = computation_matrix,
-    hypothesis = hypothesis_label,
+    H = H$TM,
+    hypothesis = ifelse(is.charachter(hypothesis[1]), hypothesis[1], "custom"),
     p.value = p.value,
-    dim = c(d = d, N = N),
-    removed.cases = N_with_NA - N
+    dim = c(d = d, N = N)
   )
-
+  
   class(out) <- "hdrm_single"
   out
 }
