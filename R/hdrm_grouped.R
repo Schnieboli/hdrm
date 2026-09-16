@@ -12,18 +12,14 @@
 #' @param hypothesis Either one of `"whole"`, `"sub"`, `"interaction"`,
 #'   `"identical"`, or `"flat"`, or a named list containing the projection
 #'   matrices `TW` and `TS`; see Details.
+#' @param group A one-dimensional atomic vector or factor defining the group
+#'   allocation. For matrix input it must contain one entry per row. For vector
+#'   input it must contain one entry per measurement.
 #' @param AM A single logical value, or alternatively `0` or `1`, specifying
 #'   whether the compact representation of the hypothesis matrices described by
 #'   \insertCite{Sattler2025;textual}{hdrm} is used. It may reduce the number of
 #'   rows used in the calculations without changing the resulting test. The
 #'   default is `TRUE`.
-#' @param group A one-dimensional atomic vector or factor defining the group
-#'   allocation. For matrix input it must contain one entry per row. For vector
-#'   input it must contain one entry per measurement.
-#' @param subject An optional one-dimensional atomic vector identifying
-#'   subjects. It is required for vector input and ignored with a warning for
-#'   matrix input. Subject labels need only be unique within groups and may be
-#'   reused in different groups.
 #' @param cov.equal A single logical value specifying whether the group
 #'   covariance matrices are assumed to be equal. The default is `FALSE`.
 #' @param subsampling A single logical value specifying whether the subsampling
@@ -229,7 +225,7 @@ hdrm_grouped <- function(data,
     data$group <- group
     data <- data[order(data$subject, data$dimension, data$group), ]
     ## reshape data to widetable format
-    df_wide <- reshape(
+    df_wide <- stats::reshape(
       data,
       idvar = c("subject", "group"),
       timevar = "dimension",
