@@ -239,8 +239,8 @@ hdrm_grouped <- function(data,
   ## check mathematical requirements
   a <- length(data_list)
   n <- sapply(data_list, ncol)
-  if(a < 2) stop("there msut be at least two groups", call. = FALSE)
-  if(d < 2) stop("there mustb e at least two observations per subject", call. = FALSE)
+  if(a < 2) stop("there must be at least two groups", call. = FALSE)
+  if(d < 2) stop("there must be at least two observations per subject", call. = FALSE)
   if(any(n < 6)) stop("there must be at least six subjects per group", call. = FALSE)
   
   
