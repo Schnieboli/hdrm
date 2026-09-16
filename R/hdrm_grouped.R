@@ -554,6 +554,7 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
   out$groups$table <- group_table
   out$removed.cases <- N_with_NA - N
   out$subsamples <- reps
+  out$hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom")
   class(out) <- "hdrm_grouped"
   return(out)
 
