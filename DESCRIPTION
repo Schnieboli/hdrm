@@ -38,5 +38,5 @@ LazyData: true
 Imports: Rcpp, stats, Rdpack, withr
 LinkingTo: Rcpp, RcppArmadillo
 RdMacros: Rdpack
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
 NeedsCompilation: yes
