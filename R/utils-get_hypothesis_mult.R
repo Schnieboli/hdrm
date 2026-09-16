@@ -111,30 +111,29 @@ get_hypothesis_mult <- function(hypothesis, AM, a, d) {
       stop("'hypothesis' must be a single non-missing character value.",
            call. = FALSE)
     }
+    
+    P_a <- diag(a) - matrix(1 / a, nrow = a, ncol = a)
+    P_d <- diag(d) - matrix(1 / d, nrow = d, ncol = d)
+    J_a <- matrix(1 / a, nrow = a, ncol = a)
+    J_d <- matrix(1 / d, nrow = d, ncol = d)
+    
+    if (hypothesis == "whole") {
+      TW <- P_a
+      TS <- J_d
+    } else if (hypothesis == "sub") {
+      TW <- J_a
+      TS <- P_d
+    } else if (hypothesis == "interaction") {
+      TW <- P_a
+      TS <- P_d
+    } else if (hypothesis == "identical") {
+      TW <- P_a
+      TS <- diag(d)
+    } else {
+      TW <- diag(a)
+      TS <- P_d
+    }
   }
-  
-  P_a <- diag(a) - matrix(1 / a, nrow = a, ncol = a)
-  P_d <- diag(d) - matrix(1 / d, nrow = d, ncol = d)
-  J_a <- matrix(1 / a, nrow = a, ncol = a)
-  J_d <- matrix(1 / d, nrow = d, ncol = d)
-  
-  if (hypothesis == "whole") {
-    TW <- P_a
-    TS <- J_d
-  } else if (hypothesis == "sub") {
-    TW <- J_a
-    TS <- P_d
-  } else if (hypothesis == "interaction") {
-    TW <- P_a
-    TS <- P_d
-  } else if (hypothesis == "identical") {
-    TW <- P_a
-    TS <- diag(d)
-  } else {
-    TW <- diag(a)
-    TS <- P_d
-  }
-  
   
   ## use compact representation if necessary
   if (AM) {
