@@ -24,6 +24,9 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   ## multiply data with TSalt
   X_TS_list <- lapply(X_list, function(x) H$TSalt %*% x)
   
+  # Temporarily set the seed and restore the previous RNG state on exit
+  if (!is.null(seed)) {
+    withr::local_seed(seed)
   }
 
   EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
