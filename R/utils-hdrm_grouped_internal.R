@@ -54,8 +54,6 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
     tau = 1 / f,  # Inverse of f
     H = list(H$TW, H$TS),  # Hypothesis matrices (TW and TS)
     p.value = p.value,
-    dim = list(d = d, N = N),  # Dimensions of the input data
-    groups = list(a = a, table = table(group))  # Grouping information
     dim = list(d = d, N = N)  # Dimensions of the input data
   )
 }
