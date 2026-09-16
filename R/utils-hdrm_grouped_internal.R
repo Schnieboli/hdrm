@@ -32,11 +32,7 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   C5 <- C5star(data_list, TW = H$TWalt, TS = H$TSalt, B = B)
 
   ### Calculate test statistic
-  X_bar <- numeric(a * d)
-  for (i in 1:a) {
-    # Calculate row means for each group (since 'data' is not transposed)
-    X_bar[1:d + ((i - 1) * d)] <- rowMeans(X_list[[i]])
-  }
+  X_bar <- c(sapply(X_list, rowMeans))
 
   # Calculate expectation values (EW), variances (Var), and test statistic components (QN and W)
   Var <- 2 * A4
