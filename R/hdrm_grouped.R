@@ -527,10 +527,8 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
     out <- c(
       out,
       hdrm_grouped_eq_cov_internal(
-        data = X_ordered,
-        group = group_ordered,
-        hypothesis = hypothesis,
-        AM = AM,
+        X_list = data_list,
+        H = H,
         B = reps,
         seed = seed
       )
@@ -539,10 +537,8 @@ hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject =
     out <- c(
       out,
       hdrm_grouped_internal(
-        data = X_ordered,
-        group = group_ordered,
-        hypothesis = hypothesis,
-        AM = AM,
+        X_list = data_list,
+        H = H,
         subsampling = subsampling,
         B = reps,
         seed = seed
