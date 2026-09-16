@@ -1,50 +1,49 @@
 #' Multiple-group inference for high-dimensional repeated measures
 #'
-#' @description
-#' Implements the multiple-group procedure allowing heterogeneous covariance
-#' matrices of \insertCite{Sattler2018;textual}{hdrm} and the multiple-group
-#' procedure under equal covariance matrices of
+#' @description Implements the multiple-group procedure allowing heterogeneous
+#' covariance matrices of \insertCite{Sattler2018;textual}{hdrm} and the
+#' multiple-group procedure under equal covariance matrices of
 #' \insertCite{Sattler2021;textual}{hdrm}.
 #'
 #' @param data A numeric vector or matrix. For matrix input, subjects are
-#' represented by rows and repeated-measurement dimensions by columns. For
-#' vector input, `subject` and `group` must identify the subject and group
-#' associated with every measurement.
+#'   represented by rows and repeated-measurement dimensions by columns. For
+#'   data.frame input, colums `subject` and `time` must identify the subject and
+#'   time associated with every measurement.
 #' @param hypothesis Either one of `"whole"`, `"sub"`, `"interaction"`,
-#' `"identical"`, or `"flat"`, or a named list containing the projection
-#' matrices `TW` and `TS`; see Details.
+#'   `"identical"`, or `"flat"`, or a named list containing the projection
+#'   matrices `TW` and `TS`; see Details.
 #' @param AM A single logical value, or alternatively `0` or `1`, specifying
-#' whether the compact representation of the hypothesis matrices described by
-#' \insertCite{Sattler2025;textual}{hdrm} is used. It may reduce the number of
-#' rows used in the calculations without changing the resulting test. The
-#' default is `TRUE`.
+#'   whether the compact representation of the hypothesis matrices described by
+#'   \insertCite{Sattler2025;textual}{hdrm} is used. It may reduce the number of
+#'   rows used in the calculations without changing the resulting test. The
+#'   default is `TRUE`.
 #' @param group A one-dimensional atomic vector or factor defining the group
-#' allocation. For matrix input it must contain one entry per row. For
-#' vector input it must contain one entry per measurement.
+#'   allocation. For matrix input it must contain one entry per row. For vector
+#'   input it must contain one entry per measurement.
 #' @param subject An optional one-dimensional atomic vector identifying
-#' subjects. It is required for vector input and ignored with a warning for
-#' matrix input. Subject labels need only be unique within groups and may be
-#' reused in different groups.
+#'   subjects. It is required for vector input and ignored with a warning for
+#'   matrix input. Subject labels need only be unique within groups and may be
+#'   reused in different groups.
 #' @param cov.equal A single logical value specifying whether the group
-#' covariance matrices are assumed to be equal. The default is `FALSE`.
-#' @param subsampling A single logical value specifying whether the
-#' subsampling versions of all available trace estimators are used in the
-#' heterogeneous-covariance procedure. It has no effect when
-#' `cov.equal = TRUE`; see Details.
+#'   covariance matrices are assumed to be equal. The default is `FALSE`.
+#' @param subsampling A single logical value specifying whether the subsampling
+#'   versions of all available trace estimators are used in the
+#'   heterogeneous-covariance procedure. It has no effect when `cov.equal =
+#'   TRUE`; see Details.
 #' @param B A single numeric value or arithmetic character expression in `N`
-#' defining the subsampling budget. Character expressions may contain only
-#' numeric constants, `N`, parentheses, and the operators `+`, `-`, `*`, `/`,
-#' and `^`. Its interpretation depends on `cov.equal` and `subsampling`; see
-#' Details.
+#'   defining the subsampling budget. Character expressions may contain only
+#'   numeric constants, `N`, parentheses, and the operators `+`, `-`, `*`, `/`,
+#'   and `^`. Its interpretation depends on `cov.equal` and `subsampling`; see
+#'   Details.
 #' @param seed `NULL` or a single integer-valued number used to make stochastic
-#' calculations reproducible. When supplied, the seed is applied locally and
-#' the previous R random-number state is restored after the calculation.
+#'   calculations reproducible. When supplied, the seed is applied locally and
+#'   the previous R random-number state is restored after the calculation.
 #'
-#' @details
-#' For vector input, missing values in `data` cause the entire affected subject
-#' to be removed. The vectors `subject` and `group` must not contain missing
-#' values. For matrix input, every row containing at least one missing value
-#' is removed. A warning is issued whenever incomplete subjects are dropped.
+#' @details For vector input, missing values in `data` cause the entire affected
+#' subject to be removed. The vectors `subject` and `group` must not contain
+#' missing values. For matrix input, every row containing at least one missing
+#' value is removed. A warning is issued whenever incomplete subjects are
+#' dropped.
 #'
 #' For vector input, repeated measurements must occur in the same order for
 #' every subject. No separate variable identifying the repeated-measurement
@@ -55,9 +54,8 @@
 #' At least two groups and two repeated-measurement dimensions are required.
 #' Every group must contain at least six complete subjects.
 #'
-#' The tested hypothesis has the form
-#' \deqn{(\bm T_W \otimes \bm T_S)\bm\mu=\bm 0.}
-#' The predefined hypotheses are:
+#' The tested hypothesis has the form \deqn{(\bm T_W \otimes \bm T_S)\bm\mu=\bm
+#' 0.} The predefined hypotheses are:
 #' \itemize{
 #'   \item `"whole"`:
 #'   \eqn{\bm T_W=\bm P_a} and
@@ -77,10 +75,10 @@
 #' }
 #'
 #' Alternatively, `hypothesis` may be a named list containing `TW` and `TS`.
-#' Both matrices must be finite, symmetric, idempotent projection matrices
-#' with positive rank. `TW` must have one row and column per analyzed group,
-#' and `TS` must have one row and column per repeated-measurement dimension.
-#' Small numerical deviations within the implemented tolerance are accepted.
+#' Both matrices must be finite, symmetric, idempotent projection matrices with
+#' positive rank. `TW` must have one row and column per analyzed group, and `TS`
+#' must have one row and column per repeated-measurement dimension. Small
+#' numerical deviations within the implemented tolerance are accepted.
 #'
 #' When `cov.equal = FALSE`, the method of
 #' \insertCite{Sattler2018;textual}{hdrm} is used. The third-trace estimator
@@ -91,26 +89,26 @@
 #' six subjects from every group. When `subsampling = TRUE`, the remaining
 #' available trace estimators are also replaced by their subsampling versions.
 #'
-#' When `cov.equal = TRUE`, the method of
-#' \insertCite{Sattler2021;textual}{hdrm} is used and `subsampling` has no
-#' effect. The pooled third-trace estimator uses an exact total of \eqn{aB}
-#' six-subject draws across all groups. These draws are allocated
-#' approximately proportionally to \eqn{\binom{n_i}{6}} using the
-#' largest-remainder method, with every group receiving at least one draw.
+#' When `cov.equal = TRUE`, the method of \insertCite{Sattler2021;textual}{hdrm}
+#' is used and `subsampling` has no effect. The pooled third-trace estimator
+#' uses an exact total of \eqn{aB} six-subject draws across all groups. These
+#' draws are allocated approximately proportionally to \eqn{\binom{n_i}{6}}
+#' using the largest-remainder method, with every group receiving at least one
+#' draw.
 #'
 #' Even when `subsampling = FALSE`, `f`, `tau`, and `p.value` remain seed
 #' dependent because a third-trace quantity is estimated by subsampling. For
-#' heterogeneous covariance matrices with `subsampling = TRUE`, `statistic`
-#' is seed dependent as well.
+#' heterogeneous covariance matrices with `subsampling = TRUE`, `statistic` is
+#' seed dependent as well.
 #'
-#' `B` may be numeric or an arithmetic character expression involving `N`,
-#' such as `"1000*N"` or `"10*(N + 1)"`. The result is rounded up to the next
-#' integer. Functions, assignments, indexing, and additional variable names
-#' are rejected and are never evaluated.
+#' `B` may be numeric or an arithmetic character expression involving `N`, such
+#' as `"1000*N"` or `"10*(N + 1)"`. The result is rounded up to the next
+#' integer. Functions, assignments, indexing, and additional variable names are
+#' rejected and are never evaluated.
 #'
-#' Upper-tail probabilities are computed directly. Reported p-values are
-#' bounded below by `.Machine$double.eps`; a returned value at this boundary
-#' should be interpreted as no larger than the numerical reporting threshold.
+#' Upper-tail probabilities are computed directly. Reported p-values are bounded
+#' below by `.Machine$double.eps`; a returned value at this boundary should be
+#' interpreted as no larger than the numerical reporting threshold.
 #'
 #' @returns A named list of class `"hdrm_grouped"` with components:
 #' \describe{
@@ -138,27 +136,14 @@
 #' @references \insertAllCited
 #'
 #' @export
-hdrm_grouped <- function(data, hypothesis = "whole", AM = TRUE, group, subject = NULL, cov.equal = FALSE, subsampling = FALSE, B = "1000*N", seed = NULL) {
-  ## checks for hypothesis
-  if (is.character(hypothesis)) {
-    hypothesis <- match.arg(
-      hypothesis,
-      choices = c(
-        "whole",
-        "sub",
-        "interaction",
-        "identical",
-        "flat"
-      )
-    )
-  }
-
-  if (!is.character(hypothesis) && !is.list(hypothesis)) {
-    stop(
-      "'hypothesis' must be one of the predefined character values or a named list containing 'TW' and 'TS'.",
-      call. = FALSE
-    )
-  }
+hdrm_grouped <- function(data,
+                         hypothesis = "whole",
+                         group,
+                         AM = TRUE,
+                         cov.equal = FALSE,
+                         subsampling = FALSE,
+                         B = "1000*N",
+                         seed = NULL) {
   ## checks for AM
   if (
     !(is.logical(AM) || is.numeric(AM)) ||
