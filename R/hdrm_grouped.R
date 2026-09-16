@@ -288,13 +288,9 @@ hdrm_grouped <- function(data,
       call. = FALSE
     )
   }
-
-  # Check that 'group' does not contain missing values
-  if (anyNA(group)) {
-    stop(
-      "'group' must not contain missing values.",
-      call. = FALSE
-    )
+  
+  if(any(is.na(data)) || any(is.na(group))){
+    stop("'data' and 'group' must not contain missing values", call. = FALSE)
   }
 
 
