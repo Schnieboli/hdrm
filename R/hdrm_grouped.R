@@ -245,50 +245,25 @@ hdrm_grouped <- function(data,
   if(d < 2) stop("there must be at least two observations per subject", call. = FALSE)
   if(any(n < 6)) stop("there must be at least six subjects per group", call. = FALSE)
   
-  
-  
-  # Convert B to a positive integer without evaluating arbitrary R code
-  reps <- evaluate_subsample_budget(B = B, N = N)
-  ## reps <- eval(parse(text = B))
-  ## if(!is.finite(reps) && reps < .Machine$integer.max)
-  
-  
   # The grouped third-trace estimators use a * B draws. Validate the
   # effective budget before any stochastic estimator is evaluated.
-  expand_subsample_budget(B = reps, multiplier = a) # TODO kann das weg oder wurde hier vergessen, etwas zuzuweisen?
-  
+  ### expand_subsample_budget(B = reps, multiplier = a) 
+  # TODO kann das weg oder wurde hier vergessen, etwas zuzuweisen?
 
-  # Get the hypothesis matrices based on the provided hypothesis
-  H <- get_hypothesis_mult(hypothesis, AM, a, d)
-  
-  
-  ### Output
-  if (cov.equal) {
-    out <- c(
-      out,
-      hdrm_grouped_eq_cov_internal(
-        X_list = data_list,
-        H = H,
-        B = reps,
-        seed = seed
-      )
+  out <- c(
+    out,
+    hdrm_grouped_internal(
+      X_list = data_list,
+      H = get_hypothesis_mult(hypothesis, AM, a, d),
+      cov.equal = cov.equal,
+      subsampling = subsampling,
+      B = evaluate_subsample_budget(B = B, N = N),
+      seed = seed
     )
-  } else {
-    out <- c(
-      out,
-      hdrm_grouped_internal(
-        X_list = data_list,
-        H = H,
-        subsampling = subsampling,
-        B = reps,
-        seed = seed
-      )
-    )
-  }
-
+  )
+  
   # Add further output to the result
-  out$subsamples <- reps
-  out$groups = list(a = a, table = table(group))  # Grouping information
+  out$groups = list(a = a, table = table(group) / d)  # Grouping information
   # Description of the hypothesis
   out$hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom")
   class(out) <- "hdrm_grouped"

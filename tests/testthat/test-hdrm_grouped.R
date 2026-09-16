@@ -2785,23 +2785,20 @@ test_that("degenerate grouped data produce informative errors", {
   
   # In the heterogeneous procedure, validation of the individual trace
   # estimators is reached before the derived variance is calculated.
-  # expect_error(
-  #   hdrm_grouped(
-  #     constant_data,
-  #     hypothesis = "whole",
-  #     group = constant_group,
-  #     cov.equal = FALSE,
-  #     subsampling = FALSE,
-  #     B = 100,
-  #     seed = 3141
-  #   ),
-  #   "The grouped trace estimators must be finite and non-negative.",
-  #   fixed = TRUE
-  # )
-  
-  print(
-    "ein test wurde auskommentiert weil der resultierende fehler in anderer form deutlich eher passieren sollte!"
+  expect_error(
+    hdrm_grouped(
+      constant_data,
+      hypothesis = "whole",
+      group = constant_group,
+      cov.equal = FALSE,
+      subsampling = FALSE,
+      B = 100,
+      seed = 3141
+    ),
+    "The estimated variance of the test statistic must be finite and positive.",
+    fixed = TRUE
   )
+  
   
   expect_error(
     hdrm_grouped(
@@ -2813,7 +2810,7 @@ test_that("degenerate grouped data produce informative errors", {
       B = 100,
       seed = 3141
     ),
-    "The estimated variance of the test statistic must be finite and positive.",
+    "The estimated variance of the test statistic must be positive.",
     fixed = TRUE
   )
 })
