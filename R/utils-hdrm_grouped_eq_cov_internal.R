@@ -32,16 +32,9 @@ hdrm_grouped_eq_cov_internal <- function(X_list, H, B, seed){
   A1 <- A1_eq(X_TS_list)
   A2 <- A2_eq(X_TS_list)
   
-  if (
-    anyNA(c(A1, A2)) ||
-    any(!is.finite(c(A1, A2))) ||
-    A1 < 0 ||
-    A2 < 0
-  ) {
-    stop(
-      "The equal-covariance trace estimators must be finite and non-negative.",
-      call. = FALSE
-    )
+  if (anyNA(c(A1, A2)) || any(!is.finite(c(A1, A2))) || A1 < 0 || A2 < 0){
+    stop("The equal-covariance trace estimators must be finite and non-negative.",
+      call. = FALSE)
   }
   
   ### Compute the test statistic
