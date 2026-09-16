@@ -42,21 +42,11 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   Var <- 2 * A4
   TMbar <- (H$TMalt %*% X_bar)
   QN <- N * sum(TMbar * TMbar)
-  W <- compute_grouped_statistic(
-    QN = QN,
-    EW = EW,
-    variance = Var
-  )
+  W <- compute_grouped_statistic(QN = QN, EW = EW, variance = Var)
 
   # Calculate f and the p-value based on the test statistic
-  f <- compute_grouped_df(
-    second_order = A4,
-    third_order = C5
-  )
-  p.value <- compute_grouped_p_value(
-    statistic = W,
-    degrees_of_freedom = f
-  )
+  f <- compute_grouped_df(second_order = A4, third_order = C5)
+  p.value <- compute_grouped_p_value(statistic = W, degrees_of_freedom = f)
 
   ## Output
   list(
