@@ -145,21 +145,10 @@ hdrm_grouped <- function(data,
                          B = "1000*N",
                          seed = NULL) {
   ## checks for AM
-  if (
-    !(is.logical(AM) || is.numeric(AM)) ||
-    length(AM) != 1L ||
-    is.na(AM) ||
-    !is.finite(AM) ||
-    !(AM %in% c(0, 1))
-  ) {
-    stop(
-      "'AM' must be a single logical value or 0/1.",
-      call. = FALSE
-    )
-  }
-
   AM <- as.logical(AM)
-  
+  if (length(AM) != 1L || is.na(AM)) {
+    stop("'AM' must be a single logical value or 0/1.", call. = FALSE)
+  }
   ## checks for cov.equal
   if (
     !is.logical(cov.equal) ||
