@@ -62,7 +62,7 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   X_bar <- numeric(a * d)
   for (i in 1:a) {
     # Calculate row means for each group (since 'data' is not transposed)
-    X_bar[1:d + ((i - 1) * d)] <- rowMeans(data[, group == i,drop=FALSE])
+    X_bar[1:d + ((i - 1) * d)] <- rowMeans(X_list[[i]])
   }
 
   # Calculate expectation values (EW), variances (Var), and test statistic components (QN and W)
