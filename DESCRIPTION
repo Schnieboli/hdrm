@@ -35,8 +35,7 @@ Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: R (>= 3.5.0)
 LazyData: true
-Imports: Rcpp, stats, Rdpack, withr
+Imports: Rcpp, stats, withr
 LinkingTo: Rcpp, RcppArmadillo
-RdMacros: Rdpack
 Config/roxygen2/version: 8.1.0
 NeedsCompilation: yes
