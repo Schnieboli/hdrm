@@ -485,6 +485,10 @@ hdrm_grouped <- function(data,
 
 
 
+  # Get the hypothesis matrices based on the provided hypothesis
+  H <- get_hypothesis_mult(hypothesis, AM, a, d)
+  
+  
   ### Output
 
   # Sort subjects by group while preserving the correspondence
