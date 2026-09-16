@@ -28,26 +28,6 @@ hdrm_grouped_eq_cov_internal <- function(X_list, H, B, seed){
     withr::local_seed(seed)
   }
   
-  # Determine key variables: N (number of samples), d (dimension), a (number of groups), and n (group sizes)
-  N <- ncol(data)  # Number of samples (columns in the data)
-  d <- nrow(data)  # Number of dimensions (rows in the data)
-  a <- length(table(group))  # Number of groups
-  n <- as.integer(table(group))  # Size of each group
-  
-  ## write each group matrix to list
-  data_list <- vector("list", a)
-  for(i in 1:a){
-    data_list[[i]] = data[, group == i,drop=FALSE]
-  }
-  
-  # Determine the hypothesis matrices based on the hypothesis parameter
-  H <- get_hypothesis_mult(hypothesis, AM, a, d)
-  
-  # Prepare the X_TS matrix by multiplying TSalt with the data matrix
-  X_TS <- H$TSalt %*% data
-  
-  
-  X_TS_list <- lapply(data_list, function(X) H$TSalt %*% X)
   # Calculate the first- and second-order trace estimators
   A1 <- A1_eq(X_TS_list)
   A2 <- A2_eq(X_TS_list)
