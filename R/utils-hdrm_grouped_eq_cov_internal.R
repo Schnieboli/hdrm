@@ -1,6 +1,27 @@
-#' @keywords internal
-hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, B, seed){
-  
+#'@title Internal function to conduct the grouped test with equal covariance
+#'
+#'@description If all parameter and options are suitable  when execute the
+#'  function hdrm_grouped and after preparing the arguments, this function
+#'  conducts the test.
+#'@param data a list of matrices, each matrix representing a group with subjects
+#'  in columns and observations in rows
+#'@param H a list containing TW, TS, TM, TWalt, TSalt and TMalt
+#'@param subsampling logical value specifying whether the subsampling versions
+#'  of all trace estimators should be used
+#'@param B a character or numeric value determining the base subsampling budget.
+#'  The grouped third-trace estimator uses `a * B` draws.
+#'@param seed optional value used to set the random seed for reproducible
+#'  computations.
+#'@noRd
+hdrm_grouped_eq_cov_internal <- function(X_list, H, B, seed){
+  # Determine the number of samples (N), dimensions (d), groups (a), and group sizes (n)
+  a <- length(X_list)
+  n <- sapply(X_list, ncol)
+  d <- nrow(X_list[[1]])
+  N <- sum(N)
+
+  ## multiply data with TSalt
+  X_TS_list <- lapply(X_list, function(x) H$TSalt %*% x)
   
   # Temporarily set the seed and restore the previous RNG state on exit
   if (!is.null(seed)) {
