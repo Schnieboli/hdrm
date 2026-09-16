@@ -206,7 +206,7 @@ hdrm_grouped <- function(data,
   }
   
   if(data_is_df){
-    if(is.null(data$value) || is.null(data$subject) || is.na(data$time)){
+    if(is.null(data$value) || is.null(data$subject) || is.null(data$time)){
       stop("data must contain columns 'value', 'subject' and 'time'", 
            call. = FALSE)
     }
