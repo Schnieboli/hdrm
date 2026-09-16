@@ -145,7 +145,7 @@ test_that("missing values", {
     group = group,
     subsampling = FALSE,
     B = "10*N"
-  ), "'data' must not contain any missing values.")
+  ), "'data' must be a numeric matrix without missing values.")
   
   
 })
@@ -1399,7 +1399,7 @@ test_that("data, group, and subject inputs are validated explicitly", {
     group = character(0),
     B = 10
   ),
-  "'data' must not be empty.",
+  "'data' must be a numeric matrix without missing values.",
   fixed = TRUE)
   
   # Group and data lengths must agree for vector input
