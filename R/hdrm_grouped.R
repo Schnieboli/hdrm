@@ -213,11 +213,18 @@ hdrm_grouped <- function(data,
       stop("data must contain columns 'value', 'subject' and 'time'", 
            call. = FALSE)
     }
+    
+    data <- data.frame(value = data$value, subject = data$subject, time = data$time)
+    
     if(nrow(data) < 1){
       stop("'data' must not be empty", call. = FALSE)
     }
     if(!is.numeric(data$value) || any(!is.finite(data$value))){
       stop("data$value must be numeric and finite", call. = FALSE)
+    }
+    
+    if(!is.atomic(group) || !is.null(dim(group)) || length(group) != nrow(data)){
+      stop("'group' must be a vector of length nrow(data)", call. = FALSE)
     }
     
     data$group <- group
