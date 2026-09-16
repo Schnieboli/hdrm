@@ -192,6 +192,9 @@ hdrm_grouped <- function(data,
   ## do all matrix related checks
   if(data_is_matrix){
     data <- t(data)
+    if(any(dim(data) == 0)){
+      stop("'data' must not be empty.")
+    }
     # Check that 'group' is a one-dimensional atomic vector
     if (!is.atomic(group) || length(group) != ncol(data) || !is.null(dim(group))) {
       stop("'group' must be a one-dimensional atomic vector or factor.",
@@ -211,7 +214,7 @@ hdrm_grouped <- function(data,
     data <- data.frame(value = data$value, subject = data$subject, time = data$time)
     
     if(nrow(data) < 1){
-      stop("'data' must not be empty", call. = FALSE)
+      stop("'data' must not be empty.", call. = FALSE)
     }
     if(!is.numeric(data$value) || any(!is.finite(data$value))){
       stop("data$value must be numeric and finite", call. = FALSE)
