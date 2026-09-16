@@ -194,17 +194,14 @@ hdrm_grouped <- function(data,
   
   ## do all matrix related checks
   if(data_is_matrix){
+    data <- t(data)
     # Check that 'group' is a one-dimensional atomic vector
-    if (!is.atomic(group) || !is.null(dim(group))) {
+    if (!is.atomic(group) || length(group) != ncol(data) || !is.null(dim(group))) {
       stop("'group' must be a one-dimensional atomic vector or factor.",
            call. = FALSE)
     }
-    data <- t(data)
     d <- nrow(data)
     N <- ncol(data)
-    if(length(group) != N){
-      stop("group must be of length ncol(data)", call. = FALSE)
-    }
     data_list <- lapply(split(seq_len(N), group), function(cols) data[, cols, drop = FALSE])
   }
   
