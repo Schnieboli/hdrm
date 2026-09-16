@@ -61,29 +61,7 @@ hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "i
 
   EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
   
-  # if (
-  #   anyNA(EW) ||
-  #   any(!is.finite(EW)) ||
-  #   any(EW < 0)
-  # ) {
-  #   stop(
-  #     "The grouped trace estimators must be finite and non-negative.",
-  #     call. = FALSE
-  #   )
-  # }
-  
   A4 <- A4(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
-  if (
-    length(A4) != 1L ||
-    is.na(A4) ||
-    !is.finite(A4) ||
-    A4 <= 0
-  ) {
-    stop(
-      "The estimated variance of the test statistic must be finite and positive.",
-      call. = FALSE
-    )
-  }
 
   data_list <- list()
   for(i in 1:a){

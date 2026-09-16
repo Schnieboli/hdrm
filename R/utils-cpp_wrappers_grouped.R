@@ -5,6 +5,11 @@ Exp_Q <- function(X_list, TW, subsampling, B){
   }else{
     A1 <- sapply(X_list, A1_i_cpp)
   }
+  if (any(is.na(A1)) || any(!is.finite(A1)) || any(A1 < 0)) {
+    stop("The grouped trace estimators must be finite and non-negative.",
+         call. = FALSE)
+  }
+  
   n <- sapply(X_list, ncol)
   N <- sum(n)
   sum(N/n * diag(TW) * A1)
@@ -37,7 +42,14 @@ A4 <- function(X_list, TW, subsampling, B){
       }
     }
   }
-  part1 + 2 * part2
+  A4 <- part1 + 2 * part2
+  
+  if (is.na(A4) || !is.finite(A4) || A4 <= 0) {
+    stop("The estimated variance of the test statistic must be finite and positive.",
+         call. = FALSE)
+  }
+  
+  A4
 }
 
 
