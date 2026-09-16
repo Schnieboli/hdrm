@@ -197,7 +197,7 @@ hdrm_grouped <- function(data,
     }
     # Check that 'group' is a one-dimensional atomic vector
     if (!is.atomic(group) || length(group) != ncol(data) || !is.null(dim(group))) {
-      stop("'group' must be a one-dimensional atomic vector or factor.",
+      stop("'group' must be a one-dimensional vector or factor of length nrow(data).",
            call. = FALSE)
     }
     d <- nrow(data)
@@ -221,7 +221,7 @@ hdrm_grouped <- function(data,
     }
     
     if(!is.atomic(group) || !is.null(dim(group)) || length(group) != nrow(data)){
-      stop("'group' must be a vector of length nrow(data)", call. = FALSE)
+      stop("'group' must be a one-dimensional vector or factor of length nrow(data).", call. = FALSE)
     }
     
     data$group <- group
