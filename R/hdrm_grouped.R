@@ -184,9 +184,6 @@ hdrm_grouped <- function(data,
     stop("'data' must be a data frame or matrix.", call. = FALSE)
   }
   
-  if(any(is.na(data)) || any(is.na(group))){
-    stop("'data' and 'group' must not contain missing values", call. = FALSE)
-  }
   ## initialize output object
   # Store the processed data in the public N x d orientation while the
   # internal calculations continue to use subjects in columns.
