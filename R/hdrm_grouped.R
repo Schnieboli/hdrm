@@ -187,7 +187,7 @@ hdrm_grouped <- function(data,
   }
 
   # Identify the two supported data formats
-  data_is_vector <- is.numeric(data) && is.null(dim(data))
+  data_is_df <- is.data.frame(data)
   data_is_matrix <- is.matrix(data) && is.numeric(data)
 
   if (!data_is_vector && !data_is_matrix) {
