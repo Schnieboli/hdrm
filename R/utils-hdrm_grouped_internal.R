@@ -48,16 +48,9 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   d <- nrow(X_list[[1]])
   N <- sum(N)
 
-  # Get the hypothesis matrices based on the provided hypothesis
-  H <- get_hypothesis_mult(hypothesis, AM, a, d)
+  ## multiply data with TSalt
+  X_TS_list <- lapply(X_list, function(x) H$TSalt %*% x)
   
-  # Prepare the transformed data matrix (X_TS)
-  X_TS <- H$TSalt %*% data
-  
-  ## write each group matrix to list
-  X_TS_list <- vector("list", a)
-  for(i in 1:a){
-    X_TS_list[[i]] = X_TS[, group == i,drop=FALSE]
   }
 
   EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
