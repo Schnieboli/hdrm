@@ -156,15 +156,10 @@ hdrm_grouped <- function(data,
          call. = FALSE)
   }
   ## checks for subsampling
-  if (
-    !is.logical(subsampling) ||
-    length(subsampling) != 1L ||
-    is.na(subsampling)
-  ) {
-    stop(
-      "'subsampling' must be a single non-missing logical value.",
-      call. = FALSE
-    )
+  subsampling <- as.logical(subsampling)
+  if (length(subsampling) != 1L || is.na(subsampling)) {
+    stop("'subsampling' must be a single non-missing logical value.",
+         call. = FALSE)
   }
 
   ## checks for seed
