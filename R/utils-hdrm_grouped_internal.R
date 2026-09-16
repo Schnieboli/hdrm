@@ -29,7 +29,7 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
   
   A4 <- A4(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
-  C5 <- C5star(data_list, TW = H$TWalt, TS = H$TSalt, B = B)
+  C5 <- C5star(X_list, TW = H$TWalt, TS = H$TSalt, B = B)
 
   ### Calculate test statistic
   X_bar <- c(sapply(X_list, rowMeans))
