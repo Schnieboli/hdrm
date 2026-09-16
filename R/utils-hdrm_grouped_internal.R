@@ -1,45 +1,18 @@
-#' @title Intern function to conduct the grouped test
+#'@title Intern function to conduct the grouped test
 #'
-#' @description If all parameter and options are suitable  when execute the
-#' function hdrm_grouped and after preparing the arguments, this function
-#' conducts the test.
-#' @param data the data for which the test is applied. Subjects are represented
-#' by columns of the numeric matrix.
-#' @param group a vector specifying the group allocation of the subjects.
-#' @param hypothesis either one of `"whole"`, `"sub"`, `"interaction"`,
-#' `"identical"`, or `"flat"`, or a named list containing the quadratic
-#' matrices `TW` and `TS` (see Details).
-#' @param AM binary variable specifying whether an alternative hypothesis
-#' matrix based on \insertCite{Sattler2025;textual}{hdrm} should be used.
-#' This matrix has fewer rows but does not affect the resulting test statistic.
-#' @param subsampling logical value specifying whether the subsampling versions
-#' of all trace estimators should be used (see Details).
-#' @param B a character or numeric value determining the base subsampling
-#' budget. The grouped third-trace estimator uses `a * B` draws.
-#' @param seed optional value used to set the random seed for reproducible
-#' computations.
-#'@return a named list of class "hdrm_grouped" with the components
-#'@returns \item{data}{the input data used.}
-#'@returns \item{f}{the degrees of freedom \eqn{f}.}
-#'@returns \item{tau}{the convergence parameter \eqn{\tau}.}
-#'@returns \item{H}{a named list with components `TW` and `TS` that give the
-#'  components of the hypothesis matrix.}
-#'@returns \item{hypothesis}{a character. Will be "custom" if `hypothesis` is a
-#'  list, otherwise `hypothesis[1]`.}
-#'@returns \item{p.value}{the \eqn{p}-value of the test statistic.}
-#'@returns \item{dim}{a named list with with number of factor levels \eqn{d} and
-#'  number of subjects \eqn{N} of `data`.}
-#'@returns \item{groups}{a named list with components number of groups `a` and
-#'  distribution of groups `table`.}
-#'@returns \item{removed.cases}{number of incomplete subjects removed.}
-#'@returns \item{subsamples}{evaluated base subsampling budget `B`.}
-#' @noRd
-hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, subsampling, B, seed){
-
-  # Temporarily set the seed and restore the previous RNG state on exit
-  if (!is.null(seed)) {
-    withr::local_seed(seed)
-  }
+#'@description If all parameter and options are suitable  when execute the
+#'  function hdrm_grouped and after preparing the arguments, this function
+#'  conducts the test.
+#'@param data a list of matrices, each matrix representing a group with subjects
+#'  in columns and observations in rows
+#'@param H a list containing TW, TS, TM, TWalt, TSalt and TMalt
+#'@param subsampling logical value specifying whether the subsampling versions
+#'  of all trace estimators should be used
+#'@param B a character or numeric value determining the base subsampling budget.
+#'  The grouped third-trace estimator uses `a * B` draws.
+#'@param seed optional value used to set the random seed for reproducible
+#'  computations.
+#'@noRd
 hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
 
   # Determine the number of samples (N), dimensions (d), groups (a), and group sizes (n)
