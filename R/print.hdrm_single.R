@@ -26,5 +26,5 @@ print.hdrm_single <- function(x, digits = 4, ...) {
     sep = ""
   )
   
-  invisible(x)
+  invisible(NULL)
 }

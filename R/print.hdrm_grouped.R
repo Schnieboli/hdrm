@@ -36,5 +36,5 @@ print.hdrm_grouped <- function(x, digits = 4, ...) {
     sep = ""
   )
   
-  invisible(x)
+  invisible(NULL)
 }
