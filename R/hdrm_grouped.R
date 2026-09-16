@@ -150,15 +150,10 @@ hdrm_grouped <- function(data,
     stop("'AM' must be a single logical value or 0/1.", call. = FALSE)
   }
   ## checks for cov.equal
-  if (
-    !is.logical(cov.equal) ||
-    length(cov.equal) != 1L ||
-    is.na(cov.equal)
-  ) {
-    stop(
-      "'cov.equal' must be a single non-missing logical value.",
-      call. = FALSE
-    )
+  cov.equal <- as.logical(cov.equal)
+  if (length(cov.equal) != 1L || is.na(cov.equal)) {
+    stop("'cov.equal' must be a single non-missing logical value.", 
+         call. = FALSE)
   }
   ## checks for subsampling
   if (
