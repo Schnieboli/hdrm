@@ -179,268 +179,72 @@ hdrm_grouped <- function(data,
   # Identify the two supported data formats
   data_is_df <- is.data.frame(data)
   data_is_matrix <- is.matrix(data) && is.numeric(data)
-
-  if (!data_is_vector && !data_is_matrix) {
-    stop(
-      "'data' must be a numeric vector or matrix.",
-      call. = FALSE
-    )
-  }
-
-  # Check that the data contain at least one observation
-  if (length(data) == 0L) {
-    stop(
-      "'data' must not be empty.",
-      call. = FALSE
-    )
-  }
-
-  # Check that 'group' is a one-dimensional atomic vector
-  if (!is.atomic(group) || !is.null(dim(group))) {
-    stop(
-      "'group' must be a one-dimensional atomic vector or factor.",
-      call. = FALSE
-    )
-  }
-
-  # Check that a supplied 'subject' is a one-dimensional atomic vector
-  if (
-    !is.null(subject) &&
-    (!is.atomic(subject) || !is.null(dim(subject)))
-  ) {
-    stop(
-      "'subject' must be a one-dimensional atomic vector or factor.",
-      call. = FALSE
-    )
-  }
-
-  # A subject identifier is required for vector input
-  if (data_is_vector && is.null(subject)) {
-    stop(
-      "'subject' must be provided when 'data' is a vector.",
-      call. = FALSE
-    )
-  }
-
-  # Subject identifiers must be complete
-  if (data_is_vector && anyNA(subject)) {
-    stop(
-      "'subject' must not contain missing values.",
-      call. = FALSE
-    )
-  }
-
-  # Check that the length of 'subject' and 'data' match for vector input
-  if (data_is_vector && length(subject) != length(data)) {
-    stop(
-      "The lengths of 'data' and 'subject' must be equal.",
-      call. = FALSE
-    )
-  }
-
-
-  # Check that the length of 'group' and 'data' match for vector input
-  if (data_is_vector && length(group) != length(data)) {
-    stop(
-      "The lengths of 'data' and 'group' must be equal.",
-      call. = FALSE
-    )
-  }
-
-  # For matrix input, one group label is required for each subject
-  if (data_is_matrix && nrow(data) != length(group)) {
-    stop(
-      "The length of 'group' must equal the number of rows of 'data' (one group label per subject).",
-      call. = FALSE
-    )
-  }
-
-  # Warn if 'subject' is unnecessarily supplied for matrix input
-  if (data_is_matrix && !is.null(subject)) {
-    warning(
-      "'subject' is ignored when 'data' is a matrix.",
-      call. = FALSE
-    )
+  
+  if (!data_is_df && !data_is_matrix) {
+    stop("'data' must be a numeric vector or matrix.", call. = FALSE)
   }
   
   if(any(is.na(data)) || any(is.na(group))){
     stop("'data' and 'group' must not contain missing values", call. = FALSE)
   }
-
-
-
-  if (data_is_vector) {  # If 'data' is a vector
-
-    # Create a data frame with 'data', 'subject', and 'group'
-    dframe <- data.frame(
-      value = data,
-      subject = subject,
-      whole = group,
-      measurement_order = seq_along(data)
-    )
-
-
-
-    # Convert group labels to a factor
-    dframe$whole <- droplevels(as.factor(dframe$whole))
-
-    # Construct subject identifiers that are unique within the full data set.
-    # This permits the same subject labels to be reused in different groups.
-    dframe$subject <- interaction(
-      dframe$whole,
-      as.factor(dframe$subject),
-      drop = TRUE,
-      lex.order = TRUE
-    )
-
-    dframe <- dframe[
-      order(
-        dframe$whole,
-        dframe$subject,
-        dframe$measurement_order
-      ),
-      ,
-      drop = FALSE
-    ]
-
-    ## Store the number of subjects before removing incomplete cases
-    N_with_NA <- nlevels(dframe$subject)
-
-    # Identify subjects with at least one missing measurement
-    incomplete_subjects <- unique(
-      dframe$subject[is.na(dframe$value)]
-    )
-
-    # Mark all measurements of incomplete subjects as missing
-    if (length(incomplete_subjects) > 0L) {
-      dframe$value[
-        dframe$subject %in% incomplete_subjects
-      ] <- NA_real_
+  ## initialize output object
+  # Store the processed data in the public N x d orientation while the
+  # internal calculations continue to use subjects in columns.
+  out <- list(data = data)
+  
+  ## do all matrix related checks
+  if(data_is_matrix){
+    # Check that 'group' is a one-dimensional atomic vector
+    if (!is.atomic(group) || !is.null(dim(group))) {
+      stop("'group' must be a one-dimensional atomic vector or factor.",
+           call. = FALSE)
     }
-
-    # Filter out rows with missing values (NA) and remove unnecessary levels
-    dframe <- dframe[stats::complete.cases(dframe), ]
-    dframe <- droplevels(dframe)
-
-    subject_groups <- unique(
-      dframe[c("subject", "whole")]
-    )
-    group_table <- table(subject_groups$whole)
-
-    a <- nlevels(dframe$whole)
-
-    if (a < 2L) {
-      stop(
-        "At least two groups must remain after removing incomplete subjects.",
-        call. = FALSE
-      )
+    data <- t(data)
+    d <- nrow(data)
+    N <- ncol(data)
+    if(length(group) != N){
+      stop("group must be of length ncol(data)", call. = FALSE)
     }
-
-    # Split the data frame by group ('whole')
-    L <- split(dframe, dframe$whole)
-
-    # Determine the repeated-measurement dimension in each group
-    dimensions <- integer(a)
-
-    for (i in seq_len(a)) {
-      subject_dimensions <- unname(table(L[[i]]$subject))
-      subject_dimensions <- subject_dimensions[subject_dimensions > 0L]
-      unique_dimensions <- unique(subject_dimensions)
-
-      if (length(unique_dimensions) != 1L) {
-        stop(
-          "All subjects within each group must have the same dimension.",
-          call. = FALSE
-        )
-      }
-
-      dimensions[i] <- unique_dimensions
-    }
-
-    # Check that all groups have the same repeated-measurement dimension
-    if (length(unique(dimensions)) != 1L) {
-      stop(
-        "All groups must have the same repeated-measurement dimension.",
-        call. = FALSE
-      )
-    }
-
-    d <- dimensions[[1L]]
-    Nv <- integer(a)
-
-    # Get the number of subjects in each group
-    for (i in seq_len(a)) {
-      Nv[i] <- length(unique(L[[i]]$subject))
-    }
-
-    # Calculate the total number of subjects
-    N <- sum(Nv)
-    # Initialize the data matrix and group vector
-    X <- matrix(
-      numeric(0),
-      nrow = d,
-      ncol = 0L
-    )
-    group <- integer(0)
-
-    # Fill the matrix with data for each group
-    for (j in seq_len(a)) {
-      temp <- droplevels(L[[j]])
-      n_j <- nlevels(temp$subject)
-
-      M <- matrix(
-        NA_real_,
-        nrow = d,
-        ncol = n_j
-      )
-
-      group <- c(group, rep.int(j, n_j))
-
-      k <- 1L
-
-      for (i in levels(temp$subject)) {
-        M[, k] <- temp$value[temp$subject == i]
-        k <- k + 1L
-      }
-
-      X <- cbind(X, M)
-    }
-
-    # Store the data actually used in the analysis
-    out <- list(data = X)
-  } else {  # If 'data' is a matrix
-
-    # Remove incomplete subjects from the user-facing N x d matrix and
-    # transpose once into the internal d x N representation.
-    N_with_NA <- nrow(data)
-
-    complete_subjects <- stats::complete.cases(data)
-
-    group <- group[complete_subjects]
-    group <- droplevels(as.factor(group))
-    group_table <- table(group)
-
-    X <- t(data[complete_subjects, , drop = FALSE])
-
-    a <- nlevels(group)
-
-    if (a < 2L) {
-      stop(
-        "At least two groups must remain after removing incomplete subjects.",
-        call. = FALSE
-      )
-    }
-
-    # Get the number of subjects (N) and repeated-measurement dimensions (d)
-    # from the internal d x N representation.
-    N <- ncol(X)
-    d <- nrow(X)
-
-
-
-    # Store the processed data in the output
-    out <- list(data = t(X))
+    data_list <- lapply(split(seq_len(N), group), function(cols) data[, cols, drop = FALSE])
   }
+  
+  if(data_is_df){
+    if(is.null(data$value) || is.null(data$subject) || is.na(data$time)){
+      stop("data must contain columns 'value', 'subject' and 'time'", 
+           call. = FALSE)
+    }
+    if(nrow(data) < 1){
+      stop("data must not be empty", call. = FALSE)
+    }
+    if(!is.numeric(data$value) || any(!is.finite(data$value))){
+      stop("data$value must be numeric and finite", call. = FALSE)
+    }
+    
+    data$group <- group
+    data <- data[order(data$subject, data$time, data$group), ]
+    ## reshape data to widetable format
+    df_wide <- reshape(
+      data,
+      idvar = c("subject", "group"),
+      timevar = "time",
+      direction = "wide"
+    )
+    ## split df_wide into groups, transform to matrix
+    data_list <- lapply(split(df_wide[, -c(1, 2)], df_wide$group), 
+                       function(x) unname(as.matrix(t(x))))
+    N <- sum(sapply(data_list, ncol))
+    d <- nrow(data_list[[1]])
+  }
+  
+  ## check mathematical requirements
+  a <- length(data_list)
+  n <- sapply(data_list, ncol)
+  if(a < 2) stop("there msut be at least two groups", call. = FALSE)
+  if(d < 2) stop("there mustb e at least two observations per subject", call. = FALSE)
+  if(any(n < 6)) stop("there must be at least six subjects per group", call. = FALSE)
+  
+  
+  
   # Convert B to a positive integer without evaluating arbitrary R code
   reps <- evaluate_subsample_budget(B = B, N = N)
   ## reps <- eval(parse(text = B))
@@ -449,32 +253,14 @@ hdrm_grouped <- function(data,
   
   # The grouped third-trace estimators use a * B draws. Validate the
   # effective budget before any stochastic estimator is evaluated.
-  expand_subsample_budget(
-    B = reps,
-    multiplier = a
-  ) # TODO kann das weg oder wurde hier vergessen, etwas zuzuweisen?
-
-  # Check the grouping criteria
-  check_criteria_grouped(X = X, group = group, hypothesis = hypothesis, reps = reps, subsampling = subsampling)
-
-
+  expand_subsample_budget(B = reps, multiplier = a) # TODO kann das weg oder wurde hier vergessen, etwas zuzuweisen?
+  
 
   # Get the hypothesis matrices based on the provided hypothesis
   H <- get_hypothesis_mult(hypothesis, AM, a, d)
   
   
   ### Output
-
-  # Sort subjects by group while preserving the correspondence
-  # between the data columns and the group labels
-  group_order <- order(group)
-  X_ordered <- X[, group_order, drop = FALSE]
-  group_ordered <- as.integer(group[group_order])
-
-  # Store the processed data in the public N x d orientation while the
-  # internal calculations continue to use subjects in columns.
-  out$data <- t(X_ordered)
-
   if (cov.equal) {
     out <- c(
       out,
@@ -499,9 +285,10 @@ hdrm_grouped <- function(data,
   }
 
   # Add further output to the result
-  out$groups$table <- group_table
-  out$removed.cases <- N_with_NA - N
+  out$removed.cases <- N - N
   out$subsamples <- reps
+  out$groups = list(a = a, table = table(group))  # Grouping information
+  # Description of the hypothesis
   out$hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom")
   class(out) <- "hdrm_grouped"
   return(out)
