@@ -19,7 +19,7 @@ hdrm_grouped_internal <- function(X_list, H, subsampling, B, seed){
   a <- length(X_list)
   n <- sapply(X_list, ncol)
   d <- nrow(X_list[[1]])
-  N <- sum(N)
+  N <- sum(n)
 
   ## multiply data with TSalt
   X_TS_list <- lapply(X_list, function(x) H$TSalt %*% x)
