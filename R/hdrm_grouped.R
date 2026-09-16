@@ -468,10 +468,7 @@ hdrm_grouped <- function(data,
     out <- list(data = t(X))
   }
   # Convert B to a positive integer without evaluating arbitrary R code
-  reps <- evaluate_subsample_budget(
-    B = B,
-    N = N
-  )
+  reps <- evaluate_subsample_budget(B = B, N = N)
   ## reps <- eval(parse(text = B))
   ## if(!is.finite(reps) && reps < .Machine$integer.max)
   
