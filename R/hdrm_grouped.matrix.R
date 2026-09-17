@@ -43,8 +43,8 @@ hdrm_grouped.matrix <- function(data,
   
   ## do all matrix related checks
   data <- t(data)
-  if(any(dim(data) == 0) || any(is.na(data)) || !is.numeric(data)){
-    stop("'data' must be a numeric matrix without missing values.")
+  if(any(dim(data) == 0) || any(is.na(data)) || any(!is.finite(data)) || !is.numeric(data)){
+    stop("'data' must be a finite numeric matrix without missing values.")
   }
   # Check that 'group' is a one-dimensional atomic vector
   if (!is.atomic(group) || length(group) != ncol(data) || !is.null(dim(group))) {
