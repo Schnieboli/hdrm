@@ -23,9 +23,9 @@ print.hdrm_grouped <- function(x, digits = 4, ...) {
   cat(
     "\n",
     "          Multi Group Repeated Measure\n",
-    "Analysis of ", x$dim$N,
-    " individuals in ", x$groups$a,
-    " groups and ", x$dim$d,
+    "Analysis of ", x$dim["N"],
+    " individuals in ", x$dim["a"],
+    " groups and ", x$dim["d"],
     " dimensions:",
     "\nW = ", round(x$statistic, digits),
     "  f = ", round(x$f, digits),

@@ -62,23 +62,31 @@ hdrm_grouped.matrix <- function(data,
   if(d < 2) stop("there must be at least two observations per subject", call. = FALSE)
   if(any(n < 6)) stop("there must be at least six subjects per group", call. = FALSE)
   
-  out <- c(
-    out,
-    hdrm_grouped_internal(
-      X_list = data_list,
-      H = get_hypothesis_mult(hypothesis, AM, a, d),
-      cov.equal = cov.equal,
-      subsampling = subsampling,
-      B = evaluate_subsample_budget(B = B, N = N),
-      seed = seed
-    )
+  
+  test_result <- hdrm_grouped_internal(
+    X_list = data_list,
+    H = get_hypothesis_mult(hypothesis, AM, a, d),
+    cov.equal = cov.equal,
+    subsampling = subsampling,
+    B = evaluate_subsample_budget(B = B, N = N),
+    seed = seed
   )
   
-  # Add further output to the result
-  out$groups = list(a = a, table = table(group) / d)  # Grouping information
-  # Description of the hypothesis
-  out$hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom")
+  out <- list(
+    data = t(data),
+    dim = c(N = N, a = a, d = d),
+    group = group,
+    H = test_result$H,
+    statistic = test_result$statistic,
+    p.value = test_result$p.value,
+    f = test_result$f,
+    tau = 1/test_result$f,
+    AM = AM,
+    cov.equal = cov.equal,
+    subsampling = subsampling,
+    B = test_result$B,
+    seed = seed
+  )
   class(out) <- "hdrm_grouped"
-  return(out)
-  
+  out
 }

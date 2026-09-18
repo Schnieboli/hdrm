@@ -40,10 +40,8 @@ hdrm_grouped_internal <- function(X_list, H, cov.equal, subsampling, B, seed){
   list(
     f = f,
     statistic = W,
-    tau = 1 / f,  # Inverse of f
     H = list(TW = H$TW, TS = H$TS),  # Hypothesis matrices (TW and TS)
     p.value = p.value,
-    dim = list(d = d, N = N),
-    subsamples = B
+    B = B
   )
 }
