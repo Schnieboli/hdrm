@@ -26,25 +26,12 @@ hdrm_single_internal <- function(X, H){
   
   f <- max(1, traceSquare^3 / traceCubic^2)
   
-  p.value <- max(
-    stats::pchisq(W * sqrt(2 * f) + f, df = f, lower.tail = FALSE),
-    .Machine$double.eps
-    )
+  p.value <- stats::pchisq(W * sqrt(2 * f) + f, df = f, lower.tail = FALSE)
   
-  out <- list(
-    data = t(X),
+  list(
     f = f,
     statistic = W,
-    tau = 1 / f,
-    H = H$TM,
-    p.value = p.value,
-    dim = c(d = d, N = N)
+    p.value = max(p.value, .Machine$double.eps),
+    H = H$TM
   )
-  
-  class(out) <- "hdrm_single"
-  out
-  
-  
-  
-  
 }

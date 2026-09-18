@@ -50,13 +50,21 @@ hdrm_single.data.frame <- function(
   if (d < 2L) stop("At least two repeated-measurement dimensions are required.", call. = FALSE)
   if (N < 3L) stop("At least three subjects are required.", call. = FALSE)
   
-  out <- list(data = t(X))
-  out <- c(out, hdrm_single_internal(X = X, 
-                                     H = get_hypothesis_single(hypothesis, AM, d)
+  test_result <- hdrm_single_internal(
+    X = X, 
+    H = get_hypothesis_single(hypothesis, AM, d)
   )
+  
+  out <- list(
+    data = t(X),
+    dim = c(N = N, d = d),
+    H = test_result$H,
+    statistic = test_result$statistic,
+    p.value = test_result$p.value,
+    f = test_result$f,
+    tau = 1/test_result$f,
+    AM = AM
   )
-  out$hypothesis <- ifelse(is.character(hypothesis[1]), hypothesis[1], "custom")
-
   class(out) <- "hdrm_single"
   out
 }
