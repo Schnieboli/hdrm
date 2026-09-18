@@ -51,6 +51,11 @@ hdrm_grouped.matrix <- function(data,
     stop("'group' must be a one-dimensional vector or factor of length nrow(data).",
          call. = FALSE)
   }
+  
+  if(!all(is.finite(group)) || any(is.na(group))){
+    stop("'group' must only contain finite non-missing values.")
+  }
+  
   d <- nrow(data)
   N <- ncol(data)
   data_list <- lapply(split(seq_len(N), group), function(cols) data[, cols, drop = FALSE])
