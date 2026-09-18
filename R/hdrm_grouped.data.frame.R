@@ -42,19 +42,20 @@ hdrm_grouped.data.frame <- function(data,
          call. = FALSE)
   }
   
-  data <- data.frame(value = data$value, 
-                     subject = as.factor(data$subject), 
-                     dimension = as.factor(data$dimension))
-  
   if(nrow(data) < 1){
     stop("'data' must not be empty.", call. = FALSE)
   }
-  if(any(is.na(data))){
-    stop("'data' must not contain any missing values.", call. = FALSE)
+  if(any(is.na(data)) || any(!sapply(data, is.finite))){
+    stop("'data' must only contain finite, non-missing values", call. = FALSE)
   }
   if(!is.numeric(data$value) || any(!is.finite(data$value))){
     stop("data$value must be numeric and finite", call. = FALSE)
   }
+  
+  data <- data.frame(value = data$value, 
+                     subject = as.factor(data$subject), 
+                     dimension = as.factor(data$dimension))
+  data <- droplevels(data)
   
   if(!is.atomic(group) || !is.null(dim(group)) || length(group) != nrow(data)){
     stop("'group' must be a one-dimensional vector or factor of length nrow(data).", call. = FALSE)

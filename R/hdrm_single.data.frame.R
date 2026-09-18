@@ -14,21 +14,23 @@ hdrm_single.data.frame <- function(
     stop("'data' must contain columns 'value', 'subject' and 'dimension'", 
          call. = FALSE)
   }
-  data <- data.frame(value = data$value, 
-                     subject = as.factor(data$subject), 
-                     dimension = as.factor(data$dimension))
   
   if(nrow(data) < 1){
     stop("'data' must not be empty.", call. = FALSE)
   }
-  if(any(is.na(data))){
-    stop("'data' must not contain any missing values.", call. = FALSE)
+  if(any(is.na(data)) || any(!sapply(data, is.finite))){
+    stop("'data' must only contain finite, non-missing values.", call. = FALSE)
   }
   if(!is.numeric(data$value) || any(!is.finite(data$value))){
     stop("data$value must be numeric and finite", call. = FALSE)
   }
-
   
+  data <- data.frame(value = data$value, 
+                     subject = as.factor(data$subject), 
+                     dimension = as.factor(data$dimension))
+  data <- droplevels(data)
+  
+
   if(any(table(data$subject, data$dimension) != 1))
     stop("each combination of subject and dimension must occur exactly once.", 
          call. = FALSE)
@@ -43,6 +45,8 @@ hdrm_single.data.frame <- function(
   )
   
   X <- t(as.matrix(df_wide[, -1]))
+  dimnames(X) <- NULL
+    
   
   d <- nrow(X)
   N <- ncol(X)
