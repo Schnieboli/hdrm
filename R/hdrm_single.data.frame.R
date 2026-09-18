@@ -30,7 +30,7 @@ hdrm_single.data.frame <- function(
 
   
   if(any(table(data$subject, data$dimension) != 1))
-    stop("each combination of subject and dimension must occur exactly one.", 
+    stop("each combination of subject and dimension must occur exactly once.", 
          call. = FALSE)
   
   data <- data[order(data$subject, data$dimension), ]
