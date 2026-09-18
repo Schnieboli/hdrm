@@ -60,6 +60,14 @@ hdrm_grouped.data.frame <- function(data,
     stop("'group' must be a one-dimensional vector or factor of length nrow(data).", call. = FALSE)
   }
   
+  if(any(is.na(group)) || any(!is.finite(group))){
+    stop("'group' must only contain finite, non-missing values.", call. = FALSE)
+  }
+  
+  if(any(table(data$subject, data$dimension) != 1))
+    stop("each combination of subject and dimension must occur exactly once.", 
+         call. = FALSE)
+  
   data$group <- as.factor(group)
   data <- data[order(data$subject, data$dimension, data$group), ]
   ## reshape data to widetable format
