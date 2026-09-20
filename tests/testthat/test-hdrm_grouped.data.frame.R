@@ -32,9 +32,9 @@ test_that("perfect input does not produce any conditions and results can be repr
                   hypothesis = hypothesis,
                   group = group,
                   subsampling = subsampling,
-                  AM = AM,
                   cov.equal = cov.equal,
                   B = B,
+                  AM = AM,
                   seed = 3141
                 )
                 
@@ -43,9 +43,9 @@ test_that("perfect input does not produce any conditions and results can be repr
                   hypothesis = initial$H,
                   group = initial$group,
                   subsampling = initial$subsampling,
-                  AM = initial$AM,
                   cov.equal = initial$cov.equal,
                   B = initial$B,
+                  AM = initial$AM,
                   seed = initial$seed
                 )
               })
@@ -65,9 +65,9 @@ test_that("permutations result in the same test result",{
     hypothesis = "interaction",
     group = group_int,
     subsampling = TRUE,
-    AM = TRUE,
     cov.equal = FALSE,
     B = 100,
+    AM = TRUE,
     seed = 3141
   )
   res_perm <- hdrm_grouped(
@@ -75,9 +75,9 @@ test_that("permutations result in the same test result",{
     hypothesis = "interaction",
     group = group_int[perm],
     subsampling = TRUE,
-    AM = TRUE,
     cov.equal = FALSE,
     B = 100,
+    AM = TRUE,
     seed = 3141
   )
   expect_identical(res_sorted, res_perm)
