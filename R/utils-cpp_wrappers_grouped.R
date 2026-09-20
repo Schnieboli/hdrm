@@ -1,24 +1,29 @@
-Exp_Q <- function(X_list, TW, subsampling, B){
-  a <- length(X_list)
+Exp_Q <- function(X_TS_list, TW, subsampling, B){
+  a <- length(X_TS_list)
   if(subsampling){
-    A1 <- sapply(X_list, A1star_i_cpp, B = B)
+    A1 <- sapply(X_TS_list, A1star_i_cpp, B = B)
   }else{
-    A1 <- sapply(X_list, A1_i_cpp)
+    A1 <- sapply(X_TS_list, A1_i_cpp)
   }
-  n <- sapply(X_list, ncol)
+  if (any(is.na(A1)) || any(!is.finite(A1)) || any(A1 < 0)) {
+    stop("The grouped trace estimators must be finite and non-negative.",
+         call. = FALSE)
+  }
+  
+  n <- sapply(X_TS_list, ncol)
   N <- sum(n)
-  sum(N/n * diag(TW) * A1)
+  sum((N/n) * diag(TW) * A1)
 }
 
-A4 <- function(X_list, TW, subsampling, B){
-  a <- length(X_list)
-  n <- sapply(X_list, ncol)
+A4 <- function(X_TS_list, TW, subsampling, B){
+  a <- length(X_TS_list)
+  n <- sapply(X_TS_list, ncol)
   N <- sum(n)
   
   if(subsampling){
-    part1 <- sum(sapply(X_list, A3star_i_cpp, B = B) * (N/n)^2 * diag(TW)^2)
+    part1 <- sum(sapply(X_TS_list, A3star_i_cpp, B = B) * (N/n)^2 * diag(TW)^2)
   }else{
-    part1 <- sum(sapply(X_list, A3_i_cpp) * (N/n)^2 * diag(TW)^2)
+    part1 <- sum(sapply(X_TS_list, A3_i_cpp) * (N/n)^2 * diag(TW)^2)
   }
   
   part2 <- 0
@@ -28,16 +33,23 @@ A4 <- function(X_list, TW, subsampling, B){
         part2 = part2 +
           (N^2 / (n[i]*n[r])) *
           TW[i,r]^2 *
-          A2star_ir_cpp(X_list[[i]], X_list[[r]], B = B)
+          A2star_ir_cpp(X_TS_list[[i]], X_TS_list[[r]], B = B)
       }else{
         part2 = part2 +
           (N^2 / (n[i]*n[r])) *
           TW[i,r]^2 *
-          A2_ir_cpp(X_list[[i]], X_list[[r]])
+          A2_ir_cpp(X_TS_list[[i]], X_TS_list[[r]])
       }
     }
   }
-  part1 + 2 * part2
+  A4 <- part1 + 2 * part2
+  
+  if (is.na(A4) || !is.finite(A4) || A4 <= 0) {
+    stop("The estimated variance of the test statistic must be finite and positive.",
+         call. = FALSE)
+  }
+  
+  A4
 }
 
 

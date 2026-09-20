@@ -54,6 +54,5 @@ expand_subsample_budget <- function(B, multiplier) {
       call. = FALSE
     )
   }
-  
   as.integer(effective_budget)
 }

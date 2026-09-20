@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use hdrm in a scientific publication, please cite the preferred paper below."
+message: "If you use hdrm in a scientific publication, please cite the article below."
 type: software
 title: "hdrm"
 abstract: "Inference procedures for high-dimensional repeated-measures data in one-sample and multiple-group designs."
@@ -32,3 +32,14 @@ preferred-citation:
   year: 2025
   doi: "10.48550/arXiv.2512.17478"
   url: "https://arxiv.org/abs/2512.17478"
+references:
+  - type: software
+    title: "hdrm: Inference procedures for high-dimensional repeated-measures data"
+    authors:
+      - family-names: "Hichert"
+        given-names: "Nils"
+      - family-names: "Sattler"
+        given-names: "Paavo"
+    year: 2026
+    url: "https://github.com/Schnieboli/hdrm"
+    version: "1.0.0"
