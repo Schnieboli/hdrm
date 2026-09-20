@@ -15,91 +15,24 @@
 #'
 #' @noRd
 allocate_C1_subsamples <- function(group_sizes, B) {
-  if (
-    !is.numeric(group_sizes) ||
-    length(group_sizes) < 1L ||
-    anyNA(group_sizes) ||
-    any(!is.finite(group_sizes)) ||
-    any(group_sizes != floor(group_sizes)) ||
-    any(group_sizes < 6L)
-  ) {
-    stop(
-      "'group_sizes' must contain finite integers of at least 6.",
-      call. = FALSE
-    )
-  }
-  
   group_sizes <- as.integer(group_sizes)
   a <- length(group_sizes)
   
-  if (
-    !is.numeric(B) ||
-    length(B) != 1L ||
-    is.na(B) ||
-    !is.finite(B) ||
-    B != floor(B) ||
-    B < 1
-  ) {
-    stop(
-      "'B' must be a finite positive integer.",
-      call. = FALSE
-    )
-  }
-  
-  total_budget <- expand_subsample_budget(
-    B = B,
-    multiplier = a
-  )
-  
-  combination_counts <- choose(group_sizes, 6)
-  
-  if (
-    any(!is.finite(combination_counts)) ||
-    sum(combination_counts) <= 0
-  ) {
-    stop(
-      "The six-subject combination weights could not be computed.",
-      call. = FALSE
-    )
-  }
-  
-  remaining_budget <- total_budget - a
-  
-  if (remaining_budget == 0L) {
+  B_tot <- a * B
+  if (B_tot - a <= 0L) {
     return(rep.int(1L, a))
   }
   
-  raw_allocation <- remaining_budget *
-    combination_counts /
-    sum(combination_counts)
+  w <- choose(group_sizes, 6)
+  B_rem <- B_tot - a
   
-  integer_allocation <- floor(raw_allocation)
-  allocation <- 1L + as.integer(integer_allocation)
+  alloc_raw <- B_rem * w / sum(w)
+  alloc <- floor(alloc_raw) + 1L
+  r <- B_tot - sum(alloc)
   
-  remainder <- total_budget - sum(allocation)
-  
-  if (remainder > 0L) {
-    fractional_parts <- raw_allocation - integer_allocation
-    
-    priority <- order(
-      -fractional_parts,
-      seq_along(fractional_parts)
-    )
-    
-    selected_groups <- priority[seq_len(remainder)]
-    allocation[selected_groups] <-
-      allocation[selected_groups] + 1L
+  if (r > 0L) {
+    priority <- head(order(-(alloc_raw %% 1)), r)
+    alloc[priority] <- alloc[priority] + 1L
   }
-  
-  if (
-    any(allocation < 1L) ||
-    sum(allocation) != total_budget
-  ) {
-    stop(
-      "Internal error while allocating the subsampling budget.",
-      call. = FALSE
-    )
-  }
-  
-  allocation
+  as.integer(alloc)
 }
