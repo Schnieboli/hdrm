@@ -15,11 +15,6 @@
 #' @param group A one-dimensional atomic vector or factor defining the group
 #'   allocation. For matrix input it must contain one entry per row. For vector
 #'   input it must contain one entry per measurement.
-#' @param AM A single logical value, or alternatively `0` or `1`, specifying
-#'   whether the compact representation of the hypothesis matrices described by
-#'   Sattler and Rosenbaum (2025) is used. It may reduce the number of rows used
-#'   in the calculations without changing the resulting test. The default is
-#'   `TRUE`.
 #' @param cov.equal A single logical value specifying whether the group
 #'   covariance matrices are assumed to be equal. The default is `FALSE`.
 #' @param subsampling A single logical value specifying whether the subsampling
@@ -31,6 +26,11 @@
 #'   numeric constants, `N`, parentheses, and the operators `+`, `-`, `*`, `/`,
 #'   and `^`. Its interpretation depends on `cov.equal` and `subsampling`; see
 #'   Details.
+#' @param AM A single logical value, or alternatively `0` or `1`, specifying
+#'   whether the compact representation of the hypothesis matrices described by
+#'   Sattler and Rosenbaum (2025) is used. It may reduce the number of rows used
+#'   in the calculations without changing the resulting test. The default is
+#'   `TRUE`.
 #' @param seed `NULL` or a single integer-valued number used to make stochastic
 #'   calculations reproducible. When supplied, the seed is applied locally and
 #'   the previous R random-number state is restored after the calculation.
@@ -142,10 +142,10 @@
 hdrm_grouped <- function(data,
                          hypothesis = "whole",
                          group,
-                         AM = TRUE,
                          cov.equal = FALSE,
                          subsampling = FALSE,
                          B = "1000*N",
+                         AM = TRUE,
                          seed = NULL) {
   UseMethod("hdrm_grouped")
 }
