@@ -204,7 +204,10 @@ test_that("false input: B", {
     -10,
     "-10*N",
     "10 *asdfghjkl",
-    diag(3)
+    diag(3),
+    0,
+    2^32,
+    2^31 ## this is illegal, because a*B must nut exceed integer.max
   )
   for(B in illegal_B){
     expect_error(
