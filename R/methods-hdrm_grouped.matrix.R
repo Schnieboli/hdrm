@@ -3,10 +3,10 @@
 hdrm_grouped.matrix <- function(data,
                          hypothesis = "whole",
                          group,
-                         AM = TRUE,
                          cov.equal = FALSE,
                          subsampling = FALSE,
                          B = "1000*N",
+                         AM = TRUE,
                          seed = NULL) {
   ## checks for AM
   AM <- as.logical(AM)
