@@ -176,11 +176,11 @@ test_that("grouped numerical helper functions preserve valid calculations",
             2,
             tolerance = 1e-15)
             
-            expect_equal(hdrm:::compute_grouped_df(second_order = 8, third_order = 4),
+            expect_equal(hdrm:::compute_grouped_df(second_order = 8, third_order = 4, 1),
                          32,
                          tolerance = 1e-15)
             
-            expect_equal(hdrm:::compute_grouped_df(second_order = 1, third_order = 10),
+            expect_equal(hdrm:::compute_grouped_df(second_order = 1, third_order = 10, 1),
                          1,
                          tolerance = 1e-15)
             
@@ -236,13 +236,13 @@ test_that("grouped numerical helper functions reject degenerate quantities",
             )
             
             expect_error(
-              hdrm:::compute_grouped_df(second_order = 0, third_order = 1),
+              hdrm:::compute_grouped_df(second_order = 0, third_order = 1, 1),
               "The second-order trace estimate must be positive.",
               fixed = TRUE
             )
             
             expect_error(
-              hdrm:::compute_grouped_df(second_order = 1, third_order = 0),
+              hdrm:::compute_grouped_df(second_order = 1, third_order = 0, 1),
               paste0(
                 "The third-order trace estimate is zero. Increase 'B' or check ",
                 "whether the data are degenerate."
@@ -251,7 +251,7 @@ test_that("grouped numerical helper functions reject degenerate quantities",
             )
             
             expect_error(
-              hdrm:::compute_grouped_df(second_order = 1e200, third_order = 1e-200),
+              hdrm:::compute_grouped_df(second_order = 1e200, third_order = 1e-200, 1),
               paste0(
                 "The estimated degrees-of-freedom parameter is not finite and ",
                 "positive."
