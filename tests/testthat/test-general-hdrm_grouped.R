@@ -343,7 +343,7 @@ test_that("B expressions are parsed without evaluating arbitrary R code", {
   expect_error(
     hdrm:::evaluate_subsample_budget(B = "N / 0", N = 16, 2),
     paste0(
-      "'B' must evaluate to a single finite positive number not exceeding ",
+      "'B' times the number of groups must evaluate to a single finite positive number not exceeding ",
       .Machine$integer.max,
       "."
     ),
