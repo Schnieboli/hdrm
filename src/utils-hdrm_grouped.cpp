@@ -45,6 +45,7 @@ double A2_ir_cpp(arma::mat& mat1, arma::mat& mat2){
   return out / (4 * R::choose(n1, 2) * R::choose(n2, 2));
 }
 
+
 // [[Rcpp::export]]
 double A3_i_cpp(arma::mat& mat){
   int n = mat.n_cols;
@@ -132,80 +133,6 @@ double A3star_i_cpp(const arma::mat& mat, int& B){
 }
 
 
-// // [[Rcpp::export]]
-// double A4_cpp(const Rcpp::List& X_list, arma::mat& TW, bool subsampling, int B){
-//   
-//   int a = X_list.size();
-//   double sum1 = 0.0, sum2 = 0.0;
-//   double N = 0, n_i, n_r;
-//   std::vector <arma::mat> mats(a);
-//   for(int i = 0; i < a; ++i){
-//     mats[i] = Rcpp::as<arma::mat>(X_list[i]);
-//     N += mats[i].n_cols;
-//   }
-//   
-//   for(int i = 0; i < a; ++i){
-//     arma::mat Xi = mats[i];
-//     n_i = Xi.n_cols;
-//     if(subsampling){
-//       sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3star_i_cpp(Xi, B);
-//     }else{
-//       sum1 += pow(N/n_i, 2) * pow(TW(i,i), 2) * A3_i_cpp(Xi);
-//     }
-//   }
-//   
-//   for(int i = 0; i < a-1; ++i){
-//     arma::mat Xi = mats[i];
-//     n_i = Xi.n_cols;
-//     for(int r = i+1; r < a; ++r){
-//       arma::mat Xr = mats[r];
-//       n_r = Xr.n_cols;
-//       
-//       if(subsampling){
-//         sum2 += (pow(N, 2) / (n_i * n_r)) * pow(TW(i,r), 2) * A2star_ir_cpp(Xi, Xr, B);
-//       }else{
-//         sum2 += (pow(N, 2) / (n_i * n_r)) * pow(TW(i,r), 2) * A2_ir_cpp(Xi, Xr);
-//       }
-// 
-//     }
-//   }
-//   return sum1 + 2 * sum2;
-// }
-
-
-// // [[Rcpp::export]]
-// double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n){ // Matrix X ist schon mit TM multipliziert und schon mit sqrt(N/n) multipliziert
-//   // ausserdem muss X nach Gruppen sortiert sein!!!
-//   int a = unique(group).index_max() + 1;
-//   int d = X.n_rows;
-//   double cout = 0.0;
-//   arma::vec Z12(d), Z34(d), Z56(d);
-//   arma::mat sigma(d, 6*a);
-//   arma::uvec indizes(6);
-//   int ind = 0;
-// 
-//   for(int b = 0; b < B; ++b){
-//     Z12.zeros();
-//     Z34.zeros();
-//     Z56.zeros();
-//     int shift = 0;
-//     for(int i = 0; i < a; ++i){
-//       indizes = arma::randperm(n(i)).head(6); // einfach so lassen!!!
-//       for(int j = 0; j < 6; ++j){
-//         ind = shift + indizes(j);
-//         sigma.col(6*i + j) = X.col(ind);
-//       }
-//       shift += n(i); // damit immer die richtige Gruppe ausgewaehlt wird...
-//       Z12 += sigma.col(0 + 6*i) - sigma.col(1 + 6*i);
-//       Z34 += sigma.col(2 + 6*i) - sigma.col(3 + 6*i);
-//       Z56 += sigma.col(4 + 6*i) - sigma.col(5 + 6*i);
-//     }
-//     cout += arma::dot(Z12, Z34) * arma::dot(Z34, Z56) * arma::dot(Z56, Z12);
-//   }
-//   return cout/(8*B);
-// }
-
-
 // [[Rcpp::export]]
 double C5star_cpp(const Rcpp::List& X_list, const int B) {
   int a = X_list.size();
@@ -246,6 +173,5 @@ double C5star_cpp(const Rcpp::List& X_list, const int B) {
     
     out += dot_12_34 * dot_34_56 * dot_56_12;
   }
-  
   return out / (8 * B);
 }
