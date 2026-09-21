@@ -14,7 +14,7 @@
 #' @returns A named list with components `TW` and `TS`.
 #'
 #' @noRd
-get_hypothesis_mult <- function(hypothesis, AM, a, d) {
+get_hypothesis_grouped <- function(hypothesis, AM, a, d) {
   if (!is.character(hypothesis) && !is.list(hypothesis)) {
     stop("'hypothesis' must be one of the predefined character values or a named list containing 'TW' and 'TS'.",
          call. = FALSE)

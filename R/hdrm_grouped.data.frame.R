@@ -94,7 +94,7 @@ hdrm_grouped.data.frame <- function(data,
   
   test_result <- hdrm_grouped_internal(
     X_list = data_list,
-    H = get_hypothesis_mult(hypothesis, AM, a, d),
+    H = get_hypothesis_grouped(hypothesis, AM, a, d),
     cov.equal = cov.equal,
     subsampling = subsampling,
     B = evaluate_subsample_budget(B = B, N = N),
