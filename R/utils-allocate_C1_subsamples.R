@@ -31,7 +31,7 @@ allocate_C1_subsamples <- function(group_sizes, B) {
   r <- B_tot - sum(alloc)
   
   if (r > 0L) {
-    priority <- head(order(-(alloc_raw %% 1)), r)
+    priority <- utils::head(order(-(alloc_raw %% 1)), r)
     alloc[priority] <- alloc[priority] + 1L
   }
   as.integer(alloc)
