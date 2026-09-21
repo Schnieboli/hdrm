@@ -1,4 +1,4 @@
-Exp_Q <- function(X_TS_list, TW, subsampling, B){
+A1 <- function(X_TS_list, TW, subsampling, B){
   a <- length(X_TS_list)
   if(subsampling){
     A1 <- sapply(X_TS_list, A1star_i_cpp, B = B)
@@ -9,10 +9,7 @@ Exp_Q <- function(X_TS_list, TW, subsampling, B){
     stop("The grouped trace estimators must be finite and non-negative.",
          call. = FALSE)
   }
-  
-  n <- sapply(X_TS_list, ncol)
-  N <- sum(n)
-  sum((N/n) * diag(TW) * A1)
+  A1
 }
 
 A4 <- function(X_TS_list, TW, subsampling, B){
