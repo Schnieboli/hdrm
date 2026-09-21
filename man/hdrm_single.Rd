@@ -4,32 +4,28 @@
 \alias{hdrm_single}
 \title{One-group inference for high-dimensional repeated measures}
 \usage{
-hdrm_single(data, hypothesis = "flat", subject = NULL, AM = TRUE)
+hdrm_single(data, hypothesis = "flat", AM = TRUE)
 }
 \arguments{
-\item{data}{A numeric vector or matrix. For matrix input, subjects are
+\item{data}{A matrix or a data.frame. For matrix input, subjects are
 represented by rows and repeated-measurement dimensions by columns. For
-vector input, \code{subject} must identify the subject associated with every
-measurement.}
+data.frame input, data must contain columns \code{value}, \code{subject} and
+\code{dimension}, giving the observations and the subject and dimension IDs.}
 
-\item{hypothesis}{Either \code{"flat"} or a finite numeric projection matrix
-whose dimensions equal the repeated-measurement dimension.}
+\item{hypothesis}{Either \code{"flat"} or a finite numeric projection matrix whose
+dimensions equal the repeated-measurement dimension.}
 
-\item{subject}{An optional one-dimensional atomic vector identifying
-subjects. It is required for vector input and ignored with a warning for
-matrix input.}
-
-\item{AM}{A single logical value, or alternatively \code{0} or \code{1}, specifying
-whether the compact representation of the hypothesis matrix described by
-\insertCite{Sattler2025;textual}{hdrm} is used. It may reduce the number of
+\item{AM}{A single logical value, specifying whether the compact
+representation of the hypothesis matrix described by
+Sattler and Rosenbaum (2025) is used. It may reduce the number of
 rows used in the calculations without changing the resulting test. The
 default is \code{TRUE}.}
 }
 \value{
 A named list of class \code{"hdrm_single"} with components:
 \describe{
-\item{data}{The processed data matrix with subjects in rows and
-repeated-measurement dimensions in columns.}
+\item{data}{A matrix with the data used. if data was a data.frame, this is
+the transformed output.}
 \item{f}{The estimated Pearson degrees of freedom.}
 \item{statistic}{The standardized test statistic \eqn{W}.}
 \item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
@@ -44,39 +40,20 @@ analysis.}
 }
 }
 \description{
-Implements the one-group test of
-\insertCite{Pauly2015;textual}{hdrm}.
+Implements the one-group test described by Pauly et al. (2015).
 }
 \details{
-For vector input, a missing value in \code{data} causes the entire affected
-subject to be removed. The \code{subject} vector must not contain missing values.
-For matrix input, every row containing at least one missing value is
-removed. A warning is issued whenever incomplete subjects are dropped.
+#' The predefined value \code{"flat"} tests \deqn{\bm P_d\bm\mu=\bm 0.}
+Alternatively, \code{hypothesis} may be a finite numeric \eqn{d\times d}
+projection matrix. It must be symmetric, idempotent, and have positive rank.
+Small numerical deviations within the implemented tolerance are accepted.
 
-For vector input, repeated measurements must occur in the same order for
-every subject. No separate variable identifying the repeated-measurement
-dimension is supplied, so the within-subject order in \code{data} determines the
-component order in the processed data matrix. At least two dimensions and
-three complete subjects are required.
+At least two dimensions and three subjects are required. Missing values in
+the input data will result in an error.
 
-The predefined value \code{"flat"} tests
-\deqn{\bm P_d\bm\mu=\bm 0.}
-Alternatively, \code{hypothesis} may be a finite numeric
-\eqn{d\times d} projection matrix. It must be symmetric, idempotent, and
-have positive rank. Small numerical deviations within the implemented
-tolerance are accepted.
-
-The third trace is estimated by
-\deqn{
-B_3=\binom{N}{3}^{-1}
-\sum_{i<j<k}A_{ij}A_{jk}A_{ki}.
-}
-The compiled helper computes the unnormalized sum, and division by
-\eqn{\binom{N}{3}} is performed in the R wrapper.
-
-Upper-tail probabilities are computed directly. Reported p-values are
-bounded below by \code{.Machine$double.eps}; a returned value at this boundary
-should be interpreted as no larger than the numerical reporting threshold.
+Upper-tail probabilities are computed directly. Reported p-values are bounded
+below by \code{.Machine$double.eps}; a returned value at this boundary should be
+interpreted as no larger than the numerical reporting threshold.
 }
 \examples{
 # Long-format data ---------------------------------------------------------
@@ -84,29 +61,21 @@ should be interpreted as no larger than the numerical reporting threshold.
 data("EEG")
 
 # Select one diagnostic group for a one-group analysis.
-eeg_single <- droplevels(
-  EEG[EEG$group == levels(EEG$group)[1L], ]
-)
-
-eeg_single <- eeg_single[
-  order(eeg_single$subject, eeg_single$dimension),
-]
+EEG_single <- droplevels(EEG[EEG$group == "SCC+", ])
 
 hdrm_single(
-  data = eeg_single$value,
-  hypothesis = "flat",
-  subject = eeg_single$subject
+  data = EEG_single,
+  hypothesis = "flat"
 )
 
 # A custom projection matrix equivalent to hypothesis = "flat".
-d <- nlevels(eeg_single$dimension)
+d <- nlevels(EEG_single$dimension)
 flat_projection <- diag(d) -
   matrix(1 / d, nrow = d, ncol = d)
 
 hdrm_single(
-  data = eeg_single$value,
-  hypothesis = flat_projection,
-  subject = eeg_single$subject
+  data = EEG_single,
+  hypothesis = flat_projection
 )
 
 
@@ -135,5 +104,7 @@ hdrm_single(
 )
 }
 \references{
-\insertAllCited
+Pauly M, Ellenberger D, Brunner E (2015). “Analysis of high-dimensional one group repeated measures designs.” Statistics, 49(6), 1243–1261. doi: 10.1080/02331888.2015.1050022.
+
+Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix for using the Anova-type-statistic.” Statistics & Probability Letters, 219, 110356. doi: 10.1016/j.spl.2025.110356.
 }

@@ -7,11 +7,11 @@
 \title{hdrm: Inference for High-Dimensional Repeated Measures}
 \description{
 The package provides tests for expectation vectors in high-dimensional
-repeated-measures designs. It implements the one-group procedure of
-\insertCite{Pauly2015;textual}{hdrm}, the heterogeneous multiple-group
-procedure of \insertCite{Sattler2018;textual}{hdrm}, and the
-equal-covariance multiple-group procedure of
-\insertCite{Sattler2021;textual}{hdrm}.
+repeated-measures designs. It implements the one-group procedure described by
+Pauly et al. (2015), the heterogeneous multiple-group
+procedure described by Sattler and Pauly (2018), and the
+equal-covariance multiple-group procedure described by
+Sattler (2021).
 }
 \details{
 The main user-facing functions are:
@@ -28,7 +28,11 @@ required structure, available hypotheses, and interpretation of the
 subsampling budget.
 }
 \references{
-\insertAllCited
+Pauly M, Ellenberger D, Brunner E (2015). “Analysis of high-dimensional one group repeated measures designs.” Statistics, 49(6), 1243–1261. doi: 10.1080/02331888.2015.1050022.
+
+Sattler P, Pauly M (2018). “Inference for high-dimensional split-plot-designs: A unified approach for small to large numbers of factor levels.” Electronic Journal of Statistics, 12(2), 2743–2805. doi: 10.1214/18-EJS1465.
+
+Sattler P (2021). “A comprehensive treatment of quadratic-form-based inference in repeated measures designs under diverse asymptotics.” Electronic Journal of Statistics, 15(1), 3611–3634. doi: 10.1214/21-EJS1865.
 }
 \seealso{
 Useful links:
