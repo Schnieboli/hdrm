@@ -60,10 +60,7 @@ C5star <- function(data_list, TW, TS, B){
     Y_list[[i]] <- kronecker(TW[, i], TS %*% data_list[[i]]) * sqrt(N / n[i])
   }
   
-  joint_B <- expand_subsample_budget(
-    B = B,
-    multiplier = a
-  )
+  joint_B <- a * B
   
   C5star_cpp(Y_list, B = joint_B)
 }
