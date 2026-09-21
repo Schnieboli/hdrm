@@ -1,4 +1,4 @@
-A1 <- function(X_TS_list, TW, subsampling, B){
+A1 <- function(X_TS_list, subsampling, B){
   a <- length(X_TS_list)
   if(subsampling){
     A1 <- sapply(X_TS_list, A1star_i_cpp, B = B)
