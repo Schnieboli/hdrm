@@ -77,17 +77,7 @@ evaluate_subsample_budget <- function(B, N, a) {
       "^" = left^right
     ))
   }
-  
-  if (!is.numeric(N) ||
-      length(N) != 1L ||
-      is.na(N) ||
-      !is.finite(N) ||
-      N < 1 ||
-      N != floor(N)) {
-    stop("Internal error: 'N' must be a finite positive integer.",
-         call. = FALSE)
-  }
-  
+
   if (!(is.numeric(B) || is.character(B)) ||
       length(B) != 1L ||
       !is.null(dim(B)) ||
