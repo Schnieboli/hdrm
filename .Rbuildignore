@@ -7,3 +7,5 @@
 ^2d-materials\.csl$
 ^CITATION\.cff$
 ^build$
+^.Rprofile
+^\.github$
