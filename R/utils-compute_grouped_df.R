@@ -1,7 +1,7 @@
 #' @keywords internal
 compute_grouped_df <- function(second_order,
                                third_order,
-                               design_factor = 1) {
+                               design_factor) {
   quantities <- c(
     second_order = second_order,
     third_order = third_order,
