@@ -73,7 +73,7 @@ hdrm_grouped.matrix <- function(data,
     H = get_hypothesis_grouped(hypothesis, AM, a, d),
     cov.equal = cov.equal,
     subsampling = subsampling,
-    B = evaluate_subsample_budget(B = B, N = N),
+    B = evaluate_subsample_budget(B = B, N = N, a = a),
     seed = seed
   )
   

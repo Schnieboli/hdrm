@@ -316,12 +316,12 @@ test_that("equal-covariance subsampling budget is allocated correctly", {
 })
 
 test_that("B expressions are parsed without evaluating arbitrary R code", {
-  expect_identical(hdrm:::evaluate_subsample_budget(B = 10, N = 16), 10L)
-  expect_identical(hdrm:::evaluate_subsample_budget(B = 10.1, N = 16), 11L)
-  expect_identical(hdrm:::evaluate_subsample_budget(B = "10*N", N = 16), 160L)
-  expect_identical(hdrm:::evaluate_subsample_budget(B = "2 * (N + 1)", N = 16), 34L)
-  expect_identical(hdrm:::evaluate_subsample_budget(B = "N^2 / 3", N = 16), 86L)
-  expect_identical(hdrm:::evaluate_subsample_budget(B = "-(1 - N)", N = 16), 15L)
+  expect_identical(hdrm:::evaluate_subsample_budget(B = 10, N = 16, 2), 10L)
+  expect_identical(hdrm:::evaluate_subsample_budget(B = 10.1, N = 16, 2), 11L)
+  expect_identical(hdrm:::evaluate_subsample_budget(B = "10*N", N = 16, 2), 160L)
+  expect_identical(hdrm:::evaluate_subsample_budget(B = "2 * (N + 1)", N = 16, 2), 34L)
+  expect_identical(hdrm:::evaluate_subsample_budget(B = "N^2 / 3", N = 16, 2), 86L)
+  expect_identical(hdrm:::evaluate_subsample_budget(B = "-(1 - N)", N = 16, 2), 15L)
   expression_error <- "'B' must be an arithmetic expression"
   invalid_expressions <- c("sqrt(N)",
                            "N; 10",
@@ -334,14 +334,14 @@ test_that("B expressions are parsed without evaluating arbitrary R code", {
   
   for (current_expression in invalid_expressions) {
     expect_error(
-      hdrm:::evaluate_subsample_budget(B = current_expression, N = 16),
+      hdrm:::evaluate_subsample_budget(B = current_expression, N = 16, 2),
       expression_error,
       fixed = TRUE
     )
   }
   
   expect_error(
-    hdrm:::evaluate_subsample_budget(B = "N / 0", N = 16),
+    hdrm:::evaluate_subsample_budget(B = "N / 0", N = 16, 2),
     paste0(
       "'B' must evaluate to a single finite positive number not exceeding ",
       .Machine$integer.max,

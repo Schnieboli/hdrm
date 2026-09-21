@@ -2,7 +2,7 @@
 #
 # Character expressions may contain only numeric constants, N, parentheses,
 # and the arithmetic operators +, -, *, /, and ^.
-evaluate_subsample_budget <- function(B, N) {
+evaluate_subsample_budget <- function(B, N, a) {
   invalid_expression <- function() {
     stop(
       paste0(
@@ -119,10 +119,10 @@ evaluate_subsample_budget <- function(B, N) {
       is.na(value) ||
       !is.finite(value) ||
       value < 1 ||
-      value > .Machine$integer.max) {
+      a * value > .Machine$integer.max) {
     stop(
       paste0(
-        "'B' must evaluate to a single finite positive number not exceeding ",
+        "'B' times the number of groups must evaluate to a single finite positive number not exceeding ",
         .Machine$integer.max,
         "."
       ),
