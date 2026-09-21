@@ -5,7 +5,9 @@
 # Internal helper for the known factor eta_{N,a} in the equal-covariance
 # procedure. The calculation is kept separate so that it can be tested
 # independently from the stochastic trace estimators.
-compute_eta_Na <- function(TW, group_sizes) {
+compute_eta_Na <- function(TW, group_sizes, cov.equal) {
+  if(!cov.equal) return(1)
+  
   a <- nrow(TW)
   N <- sum(group_sizes)
   

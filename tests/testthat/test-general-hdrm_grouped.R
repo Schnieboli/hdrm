@@ -70,33 +70,33 @@ test_that("compute_eta_Na agrees with independent design-factor references",
             
             # For a balanced design, D_N = a I. The factor therefore equals the
             # rank of the whole-plot hypothesis matrix.
-            expect_equal(hdrm:::compute_eta_Na(P_a, balanced_sizes), 2, tolerance = 1e-12)
+            expect_equal(hdrm:::compute_eta_Na(P_a, balanced_sizes, TRUE), 2, tolerance = 1e-12)
             
-            expect_equal(hdrm:::compute_eta_Na(J_a, balanced_sizes), 1, tolerance = 1e-12)
+            expect_equal(hdrm:::compute_eta_Na(J_a, balanced_sizes, TRUE), 1, tolerance = 1e-12)
             
-            expect_equal(hdrm:::compute_eta_Na(I_a, balanced_sizes), 3, tolerance = 1e-12)
+            expect_equal(hdrm:::compute_eta_Na(I_a, balanced_sizes, TRUE), 3, tolerance = 1e-12)
             
             unbalanced_sizes <- c(4L, 7L, 9L)
             
             expect_equal(
-              hdrm:::compute_eta_Na(P_a, unbalanced_sizes),
+              hdrm:::compute_eta_Na(P_a, unbalanced_sizes, TRUE),
               eta_eigen_R(P_a, unbalanced_sizes),
               tolerance = 1e-12
             )
             
             expect_equal(
-              hdrm:::compute_eta_Na(J_a, unbalanced_sizes),
+              hdrm:::compute_eta_Na(J_a, unbalanced_sizes, TRUE),
               eta_eigen_R(J_a, unbalanced_sizes),
               tolerance = 1e-12
             )
             
             expect_equal(
-              hdrm:::compute_eta_Na(I_a, unbalanced_sizes),
+              hdrm:::compute_eta_Na(I_a, unbalanced_sizes, TRUE),
               eta_eigen_R(I_a, unbalanced_sizes),
               tolerance = 1e-12
             )
             
-            expect_equal(hdrm:::compute_eta_Na(P_a, unbalanced_sizes),
+            expect_equal(hdrm:::compute_eta_Na(P_a, unbalanced_sizes, TRUE),
                          1.7009569124998098,
                          tolerance = 1e-12)
             
@@ -113,15 +113,15 @@ test_that("compute_eta_Na agrees with independent design-factor references",
             custom_sizes <- c(3L, 5L, 8L, 11L)
             
             expect_equal(
-              hdrm:::compute_eta_Na(custom_TW, custom_sizes),
+              hdrm:::compute_eta_Na(custom_TW, custom_sizes, TRUE),
               eta_eigen_R(custom_TW, custom_sizes),
               tolerance = 1e-11
             )
             
             # A common nonzero scaling of TW cancels from the trace ratio.
             expect_equal(
-              hdrm:::compute_eta_Na(7.5 * custom_TW, custom_sizes),
-              hdrm:::compute_eta_Na(custom_TW, custom_sizes),
+              hdrm:::compute_eta_Na(7.5 * custom_TW, custom_sizes, TRUE),
+              hdrm:::compute_eta_Na(custom_TW, custom_sizes, TRUE),
               tolerance = 1e-12
             )
             
@@ -130,8 +130,8 @@ test_that("compute_eta_Na agrees with independent design-factor references",
             permutation <- c(3L, 1L, 4L, 2L)
             
             expect_equal(
-              hdrm:::compute_eta_Na(custom_TW[permutation, permutation, drop = FALSE], custom_sizes[permutation]),
-              hdrm:::compute_eta_Na(custom_TW, custom_sizes),
+              hdrm:::compute_eta_Na(custom_TW[permutation, permutation, drop = FALSE], custom_sizes[permutation], TRUE),
+              hdrm:::compute_eta_Na(custom_TW, custom_sizes, TRUE),
               tolerance = 1e-12
             )
           })
