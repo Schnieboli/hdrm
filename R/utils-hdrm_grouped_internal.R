@@ -21,7 +21,7 @@ hdrm_grouped_internal <- function(X_list, H, cov.equal, subsampling, B, seed){
     Var <- 2 * second_order * sum((H$TW)^2 * (N^2 / outer(n, n)))
     eta_Na <- compute_eta_Na(TW = H$TW, group_sizes = n)
   } else{
-    EW <- Exp_Q(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
+    EW <- sum((N / n) * diag(H$TW) * A1(X_TS_list, TW = H$TW, subsampling = subsampling, B = B))
     second_order <- A4(X_TS_list, TW = H$TW, subsampling = subsampling, B = B)
     third_order <- C5star(X_list, TW = H$TWalt, TS = H$TSalt, B = B)
     Var <- 2 * second_order
