@@ -16,44 +16,48 @@ data.frame input, data must contain columns \code{value}, \code{subject} and
 dimensions equal the repeated-measurement dimension.}
 
 \item{AM}{A single logical value, specifying whether the compact
-representation of the hypothesis matrix described by
-Sattler and Rosenbaum (2025) is used. It may reduce the number of
-rows used in the calculations without changing the resulting test. The
-default is \code{TRUE}.}
+representation of the hypothesis matrix described by Sattler and Rosenbaum
+(2025) is used. It may reduce the number of rows used in the calculations
+without changing the resulting test. The default is \code{TRUE}.}
 }
 \value{
 A named list of class \code{"hdrm_single"} with components:
 \describe{
-\item{data}{A matrix with the data used. if data was a data.frame, this is
+\item{data}{A matrix with the data used. If data was a data.frame, this is
 the transformed output.}
+\item{dim}{A named numeric vector containing the repeated-measurement
+dimension \code{d} and the number of analyzed subjects \code{N}.}
+\item{H}{A named list with the hypothesis-matrix \code{T} used for the test and
+the hypothesis label \code{label}.}
+\item{AM}{The input value for \code{AM}.}
 \item{f}{The estimated Pearson degrees of freedom.}
 \item{statistic}{The standardized test statistic \eqn{W}.}
 \item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
-\item{H}{The hypothesis-matrix representation used in the calculation.}
-\item{hypothesis}{\code{"flat"} or \code{"custom"}.}
 \item{p.value}{The upper-tail p-value, bounded below by
 \code{.Machine$double.eps}.}
-\item{dim}{A named numeric vector containing the repeated-measurement
-dimension \code{d} and the number of analyzed subjects \code{N}.}
-\item{removed.cases}{The number of incomplete subjects removed before the
-analysis.}
 }
 }
 \description{
 Implements the one-group test described by Pauly et al. (2015).
 }
 \details{
-#' The predefined value \code{"flat"} tests \deqn{\bm P_d\bm\mu=\bm 0.}
+At least two repeated-measurement dimensions are required. Missing
+values in \code{data} are not allowed and will result in an error.
+
+The predefined value \code{"flat"} tests \deqn{\bm P_d\bm\mu=\bm 0.}
 Alternatively, \code{hypothesis} may be a finite numeric \eqn{d\times d}
-projection matrix. It must be symmetric, idempotent, and have positive rank.
-Small numerical deviations within the implemented tolerance are accepted.
+projection matrix, where \eqn{d} is the number of dimensions. It must be
+symmetric, idempotent, and have positive rank. Small numerical deviations
+within the implemented tolerance are accepted.
 
-At least two dimensions and three subjects are required. Missing values in
-the input data will result in an error.
+For data.frame input, observations are sorted according to \code{subject} and
+\code{dimension} (in that order) and then converted to a matrix with
+the first subject in the first row. This should be taken into account, when
+passing a matrix to \code{hypothesis}.
 
-Upper-tail probabilities are computed directly. Reported p-values are bounded
-below by \code{.Machine$double.eps}; a returned value at this boundary should be
-interpreted as no larger than the numerical reporting threshold.
+Upper-tail probabilities are computed directly. Reported p-values are
+bounded below by \code{.Machine$double.eps}; a returned value at this boundary
+should be interpreted as no larger than the numerical reporting threshold.
 }
 \examples{
 # Long-format data ---------------------------------------------------------
@@ -104,7 +108,11 @@ hdrm_single(
 )
 }
 \references{
-Pauly M, Ellenberger D, Brunner E (2015). “Analysis of high-dimensional one group repeated measures designs.” Statistics, 49(6), 1243–1261. doi: 10.1080/02331888.2015.1050022.
+Pauly M, Ellenberger D, Brunner E (2015). “Analysis of
+high-dimensional one group repeated measures designs.” Statistics, 49(6),
+1243–1261. doi: 10.1080/02331888.2015.1050022.
 
-Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix for using the Anova-type-statistic.” Statistics & Probability Letters, 219, 110356. doi: 10.1016/j.spl.2025.110356.
+Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
+for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
+110356. doi: 10.1016/j.spl.2025.110356.
 }
