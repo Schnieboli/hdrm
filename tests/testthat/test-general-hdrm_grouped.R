@@ -137,33 +137,33 @@ test_that("compute_eta_Na agrees with independent design-factor references",
           })
 
 
-test_that("compute_eta_Na rejects invalid or degenerate inputs", {
-  # expect_error(compute_eta_Na(matrix(0, nrow = 2L, ncol = 2L), c(5L, 5L)),
-  #              "The whole-plot trace factor is degenerate.",
-  #              fixed = TRUE)
-  
-  # expect_error(
-  #   compute_eta_Na(diag(3L), c(5L, 5L)),
-  #   paste0(
-  #     "'group_sizes' must contain one positive integer for each ",
-  #     "row of 'TW'."
-  #   ),
-  #   fixed = TRUE
-  # )
-  
-  # expect_error(
-  #   compute_eta_Na(diag(3L), c(5L, 0L, 5L)),
-  #   paste0(
-  #     "'group_sizes' must contain one positive integer for each ",
-  #     "row of 'TW'."
-  #   ),
-  #   fixed = TRUE
-  # )
-  
-  # expect_error(compute_eta_Na(matrix(
-  #   c(1, 1, 0, 1), nrow = 2L, ncol = 2L
-  # ), c(5L, 5L)), "'TW' must be symmetric.", fixed = TRUE)
-})
+# test_that("compute_eta_Na rejects invalid or degenerate inputs", {
+#   # expect_error(compute_eta_Na(matrix(0, nrow = 2L, ncol = 2L), c(5L, 5L)),
+#   #              "The whole-plot trace factor is degenerate.",
+#   #              fixed = TRUE)
+#   
+#   # expect_error(
+#   #   compute_eta_Na(diag(3L), c(5L, 5L)),
+#   #   paste0(
+#   #     "'group_sizes' must contain one positive integer for each ",
+#   #     "row of 'TW'."
+#   #   ),
+#   #   fixed = TRUE
+#   # )
+#   
+#   # expect_error(
+#   #   compute_eta_Na(diag(3L), c(5L, 0L, 5L)),
+#   #   paste0(
+#   #     "'group_sizes' must contain one positive integer for each ",
+#   #     "row of 'TW'."
+#   #   ),
+#   #   fixed = TRUE
+#   # )
+#   
+#   # expect_error(compute_eta_Na(matrix(
+#   #   c(1, 1, 0, 1), nrow = 2L, ncol = 2L
+#   # ), c(5L, 5L)), "'TW' must be symmetric.", fixed = TRUE)
+# })
 
 
 test_that("grouped numerical helper functions preserve valid calculations",
@@ -363,20 +363,20 @@ test_that("B expressions are parsed without evaluating arbitrary R code", {
 })
 
 
-test_that("grouped third-trace budgets scale with the number of groups", {
-  # expect_identical(hdrm:::expand_subsample_budget(B = 100L, multiplier = 4L),
-  #                  400L)
-  
-  # expect_error(
-  #   hdrm:::expand_subsample_budget(B = .Machine$integer.max, multiplier = 2L),
-  #   paste0(
-  #     "The effective subsampling budget must not exceed ",
-  #     .Machine$integer.max,
-  #     "."
-  #   ),
-  #   fixed = TRUE
-  # )
-})
+# test_that("grouped third-trace budgets scale with the number of groups", {
+#   # expect_identical(hdrm:::expand_subsample_budget(B = 100L, multiplier = 4L),
+#   #                  400L)
+#   
+#   # expect_error(
+#   #   hdrm:::expand_subsample_budget(B = .Machine$integer.max, multiplier = 2L),
+#   #   paste0(
+#   #     "The effective subsampling budget must not exceed ",
+#   #     .Machine$integer.max,
+#   #     "."
+#   #   ),
+#   #   fixed = TRUE
+#   # )
+# })
 
 
 test_that("additional invalid B values are rejected", {
