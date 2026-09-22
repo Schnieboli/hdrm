@@ -62,7 +62,10 @@ hdrm_single.data.frame <- function(
   out <- list(
     data = t(X),
     dim = c(N = N, d = d),
-    H = test_result$H,
+    H = list(
+      "T" = test_result$H,
+      label = ifelse(is.character(hypothesis), hypothesis, "custom")
+    ),
     statistic = test_result$statistic,
     p.value = test_result$p.value,
     f = test_result$f,

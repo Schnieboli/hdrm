@@ -20,9 +20,12 @@ test_that("perfect input does not produce any conditions and results can be repr
           hypothesis = hypothesis,
           AM = AM
         )
+        
+        initial$H$label <- "custom"
+        
         secondary <- hdrm_single(
           initial$data,
-          hypothesis = initial$H,
+          hypothesis = initial$H$T,
           AM = initial$AM
         )
       })

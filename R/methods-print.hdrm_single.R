@@ -20,7 +20,7 @@ print.hdrm_single <- function(x, digits = 4, ...) {
     "\nW = ", round(x$statistic, digits),
     "  f = ", round(x$f, digits),
     "  p.value ", p_text,
-    "\nHypothesis type: ", x$hypothesis,
+    "\nHypothesis type: ", x$H$label,
     "\nConvergence parameter \u03c4 = ", round(x$tau, digits),
     "\n",
     sep = ""
