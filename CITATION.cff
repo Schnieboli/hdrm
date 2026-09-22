@@ -1,16 +1,45 @@
 cff-version: 1.2.0
-title: hdrm
-message: 'If you use this package, please cite it as below.'
+message: "If you use hdrm in a scientific publication, please cite the article below."
 type: software
+title: "hdrm"
+abstract: "Inference procedures for high-dimensional repeated-measures data in one-sample and multiple-group designs."
 authors:
-  - family-names: Hichert
-    given-names: Nils
-    email: nils.hichert@tu-dortmund.de
-  - given-names: Paavo
-    family-names: Sattler
-    email: paavo.sattler@tu-dortmund.de
-    orcid: 'https://orcid.org/0000-0001-8731-0893'
-url: 'https://github.com/Schnieboli/hdrm'
-version: 1.0
-date-released: '2025-09-24'
-subtitle: A package for testing high dimensional repeated measures
+  - family-names: "Hichert"
+    given-names: "Nils"
+  - family-names: "Sattler"
+    given-names: "Paavo"
+    orcid: "https://orcid.org/0000-0001-8731-0893"
+version: "1.0.0"
+license: "GPL-3.0-or-later"
+repository-code: "https://github.com/Schnieboli/hdrm"
+url: "https://github.com/Schnieboli/hdrm"
+keywords:
+  - "high-dimensional data"
+  - "repeated measures"
+  - "split-plot designs"
+  - "hypothesis testing"
+  - "R package"
+preferred-citation:
+  type: article
+  title: "Inference for high dimensional repeated measure designs with the R package hdrm"
+  authors:
+    - family-names: "Sattler"
+      given-names: "Paavo"
+      orcid: "https://orcid.org/0000-0001-8731-0893"
+    - family-names: "Hichert"
+      given-names: "Nils"
+  journal: "arXiv"
+  year: 2025
+  doi: "10.48550/arXiv.2512.17478"
+  url: "https://arxiv.org/abs/2512.17478"
+references:
+  - type: software
+    title: "hdrm: Inference procedures for high-dimensional repeated-measures data"
+    authors:
+      - family-names: "Hichert"
+        given-names: "Nils"
+      - family-names: "Sattler"
+        given-names: "Paavo"
+    year: 2026
+    url: "https://github.com/Schnieboli/hdrm"
+    version: "1.0.0"

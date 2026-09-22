@@ -1,291 +1,146 @@
-#' @title Internal function to conduct the grouped test
+#' Multiple-group inference for high-dimensional repeated measures
 #'
-#' @description If all parameter and options are suitable when executing the function
-#' hdrm_grouped and after preparing the arguments, this function conducts the test.
-#' @param data a matrix where cols represent subjects and rows represent factor levels
-#' @param hypothesis either one of "whole", "sub" "interaction", "identical" or
-#'  "flat" or a named list with quadratic matrices `TW` and `TS`
-#' @param AM binary variable, specifying whether an alternative hypothesis
-#'  matrix based on Sattler and Rosenbaum (2025) should be used, which has
-#'  fewer rows but does not influence any values. The usage of this matrix is
-#'  the predefined setting.
-#' @param group vector, which gives the allocation of the matrix cols
-#' to the single groups
-#' @param B `integer` that determines the number of subsamples used by the
-#' subsampling trace estimators.
-#' @param subsampling `logical`. Specifying whether the subsampling versions for
-#'  all trace estimators should be used (see details).
-#' @param seed an optional natural number as seed, if it should be set for
-#' reproducibility.
-#'@return a named list of class "hdrm_grouped" with the components
-#'@returns \item{data}{the input data used.}
-#'@returns \item{f}{the degrees of freedom \eqn{f}.}
-#'@returns \item{tau}{the convergence parameter \eqn{\tau}.}
-#'@returns \item{H}{a named list with components `TW` and `TS` that give the
-#'  components of the hypothesis matrix.}
-#'@returns \item{hypothesis}{a character. Will be "custom" if `hypothesis` is a
-#'  list, otherwise `hypothesis[1]`.}
-#'@returns \item{p.value}{the \eqn{p}-value of the test statistic.}
-#'@returns \item{dim}{a named list with with number of factor levels \eqn{d} and
-#'  number of subjects \eqn{N} of `data`.}
-#'@returns \item{groups}{a named list with components number of groups `a` and
-#'  distribution of groups `table`.}
-#'@returns \item{removed.cases}{number of incomplete subjects removed.}
-#'@returns \item{subsamples}{number of subsamples used for subsampling
-#'  estimators.}
-#' @keywords internal
-hdrm_grouped_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, subsampling, B, seed){
-
-  # Set seed if provided
-  if(!is.null(seed)){
-    if(exists(".Random.seed")){
-      old_seed <- .Random.seed
-      on.exit({ .Random.seed <<- old_seed })  # Ensure seed is restored after function exit
-    }
-    if(!exists(".Random.seed")){
-      on.exit({ set.seed(NULL) })  # Default seed restoration
-    }
-    set.seed(seed)  # Set the random seed
-  }
-
-  # Determine the number of samples (N), dimensions (d), groups (a), and group sizes (n)
-  N <- ncol(data)
-  d <- nrow(data)
-  a <- length(table(group))
-  n <- as.integer(table(group))  # Number of samples in each group
-
-  # Get the hypothesis matrices based on the provided hypothesis
-  H <- get_hypothesis_mult(hypothesis, a, d)
-  TW <- H$TW
-  TS <- H$TS
-
-  # Alternative matrices for the setting when AM = TRUE
-  TWalt <- TW
-  TSalt <- TS
-  if(AM) {
-    TWalt <- MSrootcompact(TW)   # Apply a transformation to TW if AM is TRUE
-    TSalt <- MSrootcompact(TS)  # Apply a transformation to TS if AM is TRUE
-  }
-
-
-  # Kronecker product of hypothesis matrices
-  TM <- kronecker(TW, TS)
-  TMalt <- kronecker(TWalt, TSalt)
-
-  # Prepare the transformed data matrix (X_TS)
-  X_TS <- TSalt %*% data
-
-  # Initialize vectors for estimators
-  A1 <- A3 <- numeric(a)
-  A2 <- matrix(0, a, a)
-  C5 <- numeric(1)
-
-  # Estimate A1 and A3 using the appropriate method based on subsampling
-  for (i in 1:a) {
-    if(subsampling){
-      # Use bootstrap sampling if subsampling is true
-      A1[i] <- A1star_cpp(X = X_TS[, group == i,drop=FALSE], B)
-      A3[i] <- A3star_cpp(X = X_TS[, group == i,drop=FALSE], B)
-    } else {
-      # Use the original method without subsampling
-      A1[i] <- A1_cpp(mat = X_TS[, group == i,drop=FALSE])
-      A3[i] <- A3_cpp(mat = X_TS[, group == i,drop=FALSE], Part6 = sum(rowMeans(X_TS[, group == i,drop=FALSE])^2))
-    }
-  }
-
-  # Estimate A2 for pairwise group comparisons
-  for (i in 1:(a-1)) {
-    for(r in (i+1):a){
-      if(subsampling){
-        A2[i, r] <- A2star_cpp(X = X_TS[, group == i, drop = FALSE], Y = X_TS[, group == r, drop = FALSE], B)
-      } else {
-        A2[i, r] <- A2(X = X_TS[, group == i, drop = FALSE], Y = X_TS[, group == r, drop = FALSE])
-      }
-    }
-  }
-
-  # Calculate C5 estimator using the alternative matrices
-  C5 <- C5star_cpp(X = data, group = group, TW = TWalt, TS = TSalt, B = B)
-  # Estimate A4 using A1, A2, and A3
-  temp1 <- temp2 <- 0
-  for (i in 1:a) {
-    temp1 <- temp1 + ((N/n[i])^2 * TW[i, i]^2 * A3[i])
-  }
-  for (i in 1:(a-1)) {
-    for(r in (i+1):a){
-      temp2 <- temp2 + ( (N^2 / (n[i]*n[r])) * TW[i, r]^2 * A2[i, r])
-    }
-  }
-  A4 <- temp1 + 2 * temp2  # Combine terms to get A4
-
-  ### Calculate test statistic
-  X_bar <- numeric(a * d)
-  for (i in 1:a) {
-    # Calculate row means for each group (since 'data' is not transposed)
-    X_bar[1:d + ((i - 1) * d)] <- rowMeans(data[, group == i, drop = FALSE])
-  }
-
-  # Calculate expectation values (EW), variances (Var), and test statistic components (QN and W)
-  EW <- sum((N/n) * diag(TW) * A1)
-  Var <- 2 * A4
-  TMbar <- (TMalt %*% X_bar)
-  QN <- N * sum(TMbar * TMbar)
-  W <- as.numeric((QN - EW) / sqrt(Var))
-
-  # Calculate f and the p-value based on the test statistic
-  f <- max(1, as.numeric(A4^3 / C5^2))  # Calculate f-statistic
-  p.value <- max(1 - stats::pchisq(W * sqrt(2 * f) + f, df = f), .Machine$double.eps)
-
-  # Return the results as a list
-  return(
-    list(
-      f = f,
-      statistic = W,
-      tau = 1 / f,
-      # Inverse of f
-      H = H,
-      # Hypothesis matrices (TW and TS)
-      hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom"),
-      # Description of the hypothesis
-      p.value = p.value,
-      dim = list(d = d, N = N),
-      # Dimensions of the input data
-      groups = list(a = a, table = table(group))  # Grouping information
-    )
-  )
-}
-
-
-
-
-#' @title Internal function to conduct the grouped test for equal covariances
+#' @description Implements the multiple-group procedure allowing heterogeneous
+#'   covariance matrices described by Sattler and Pauly (2018) and the
+#'   multiple-group procedure under equal covariance matrices described by
+#'   Sattler (2021).
 #'
-#' @description If all parameter and options are suitable  when executing the function
-#' hdrm_grouped and after preparing the arguments, this function conducts the test,
-#' if equal covariance matrices are assumed.
-#' @param data the data for which the test is applied, where two formats are
-#' possible:
-#' -A matrix where subjects represented by columns.
-#' -A value column from a data frame, where in this case an additional parameter
-#' specifying the subjects is necessary.
-#'@param hypothesis either one of "whole", "sub" "interaction", "identical" or
-#'  "flat" or a named list with quadratic matrices `TW` and `TS` (see details).
-#'@param AM binary variable, specifying whether an alternative hypothesis
-#'  matrix based on
-#'  Sattler and Rosenbaum (2025) should be used, which has
-#'  fewer rows but does not influence any values. The usage of this matrix is
-#'  the predefined setting.
-#' @param group vector, which gives the allocation of the matrix cols
-#' to the single groups
-#' @param B `integer` that determines the number of subsamples used by the
-#' subsampling trace estimators.
-#'@param subsampling `logical`. Specifying whether the subsampling versions for
-#'  all trace estimators should be used (see details).
-#'@param seed an optional natural number as seed, if it should be set for
-#'reproducibility.
-#'@return a named list of class "hdrm_grouped" with the components
-#'@returns \item{data}{the input data used.}
-#'@returns \item{f}{the degrees of freedom \eqn{f}.}
-#'@returns \item{tau}{the convergence parameter \eqn{\tau}.}
-#'@returns \item{H}{a named list with components `TW` and `TS` that give the
-#'  components of the hypothesis matrix.}
-#'@returns \item{hypothesis}{a character. Will be "custom" if `hypothesis` is a
-#'  list, otherwise `hypothesis[1]`.}
-#'@returns \item{p.value}{the \eqn{p}-value of the test statistic.}
-#'@returns \item{dim}{a named list with with number of factor levels \eqn{d} and
-#'  number of subjects \eqn{N} of `data`.}
-#'@returns \item{groups}{a named list with components number of groups `a` and
-#'  distribution of groups `table`.}
-#'@returns \item{removed.cases}{number of incomplete subjects removed.}
-#'@returns \item{subsamples}{number of subsamples used for subsampling
-#'  estimators.}
-#' @keywords internal
-hdrm_grouped_eq_cov_internal <- function(data, group, hypothesis = c("whole", "sub", "interaction"), AM, B, subsampling, seed){
-
-  # Set the random seed for reproducibility, if provided
-  if(!is.null(seed)){
-    if(exists(".Random.seed")){
-      old_seed <- .Random.seed
-      on.exit({ .Random.seed <<- old_seed })  # Restore the original seed upon exit
-    }
-    if(!exists(".Random.seed")){
-      on.exit({ set.seed(NULL) })  # If no previous seed, reset the seed to NULL
-    }
-    set.seed(seed)  # Set the provided seed
-  }
-
-  # Determine key variables: N (number of samples), d (dimension), a (number of groups), and n (group sizes)
-  N <- ncol(data)  # Number of samples (columns in the data)
-  d <- nrow(data)  # Number of dimensions (rows in the data)
-  a <- length(table(group))  # Number of groups
-  n <- as.integer(table(group))  # Size of each group
-
-  # Determine the hypothesis matrices based on the hypothesis parameter
-  H <- get_hypothesis_mult(hypothesis, a, d)
-  TW <- H$TW  # Matrix TW from the hypothesis
-  TS <- H$TS  # Matrix TS from the hypothesis
-
-  # Modify TW and TS if AM is set to 1 (apply root compact transformation)
-  TWalt <- TW
-  TSalt <- TS
-  if(AM == 1){
-    TWalt <- MSrootcompact(TW)
-    TSalt <- MSrootcompact(TS)
-  }
-
-  # Create the Kronecker product of TW and TS, and their alternative versions if AM = 1
-  TM <- kronecker(TW, TS)
-  TMalt <- kronecker(TWalt, TSalt)
-
-  # Prepare the X_TS matrix by multiplying TSalt with the data matrix
-  X_TS <- TSalt %*% data
-
-  # Calculate estimators A1, A2, and C1 using the provided functions
-  A1 <- make_A1_eq(X = X_TS, group = group)
-  A2 <- make_A2_eq(X = X_TS, group = group)
-  if(subsampling){
-    C1 <- make_C1_star_eq(X = X_TS, group = group, B = B)
-  }else{
-    C1 <- make_C1_eq(X = X_TS, group = group)
-  }
-
-
-  ### Compute the test statistic
-  X_bar <- numeric(a * d)  # Initialize a vector for the group-wise means
-  for (i in 1:a) {
-    # For each group, calculate the row means across dimensions (using rowMeans as the data is transposed)
-    X_bar[1:d + ((i - 1) * d)] <- rowMeans(data[, group == i, drop = FALSE])
-  }
-
-  # Calculate the expectation values (EW), variance (Var), and the test statistic components
-  EW <- sum((N / n) * diag(TW)) * A1  # Expectation values
-  tmp = 0
-  for (i in 1:a) {
-    for(r in 1:a){
-      tmp = tmp + (TW[i, r]^2 * (N^2 / (n[i] * n[r])))  # Accumulate variance terms
-    }
-  }
-  Var <- 2 * A2 * tmp  # Variance calculation
-  TMbar <- TMalt %*% X_bar  # Calculate the transformed means using the alternative matrices
-  QN <- N * sum(TMbar * TMbar)  # Sum of squared values for QN
-  W <- as.numeric((QN - EW) / sqrt(Var))  # Compute the test statistic W
-
-  # Calculate f (scale factor) and the p-value using the chi-square distribution
-  f <- max(1, as.numeric(A2^3 / C1^2))  # Scale factor f, ensuring it's at least 1
-  p.value <- max(1 - stats::pchisq(W * sqrt(2 * f) + f, df = f), .Machine$double.eps)  # p-value using chi-square distribution
-
-  ## Return the results as a list
-  return(
-    list(
-      f = f,  # The scale factor f
-      statistic = W,  # The test statistic W
-      tau = 1 / f,  # The tau value (inverse of f)
-      H = H,  # The hypothesis matrices (TW and TS)
-      hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom"),  # Description of the hypothesis
-      p.value = p.value,  # The computed p-value
-      dim = list(d = d, N = N),  # Dimensions of the data (d: number of dimensions, N: number of samples)
-      groups = list(a = a, table = table(group))  # Group information (a: number of groups, group sizes)
-    )
-  )
+#' @param data A matrix or a data.frame. For matrix input, subjects are
+#'   represented by rows and repeated-measurement dimensions by columns. For
+#'   data.frame input, data must contain columns `value`, `subject` and
+#'   `dimension`, containing the observations and the subject and dimension IDs.
+#' @param hypothesis Either one of `"whole"`, `"sub"`, `"interaction"`,
+#'   `"identical"`, or `"flat"`, or a named list containing projection matrices
+#'   `TW` and `TS`; see Details.
+#' @param group A one-dimensional atomic vector or factor defining the group
+#'   allocation. For matrix input it must contain one entry per row. For vector
+#'   input it must contain one entry per measurement.
+#' @param cov.equal A single logical value specifying whether the group
+#'   covariance matrices are assumed to be equal. The default is `FALSE`.
+#' @param subsampling A single logical value specifying whether the subsampling
+#'   versions of all available trace estimators are used in the
+#'   heterogeneous-covariance procedure. It has no effect when `cov.equal = TRUE`; see Details.
+#' @param B A single numeric value or arithmetic character expression in `N`
+#'   defining the subsampling budget. Character expressions may contain only
+#'   numeric constants, `N`, parentheses, and the operators `+`, `-`, `*`, `/`,
+#'   and `^`. Its interpretation depends on `cov.equal` and `subsampling`; see
+#'   Details.
+#' @param AM A single logical value, specifying whether the compact
+#'   representation of the hypothesis matrices described by Sattler and
+#'   Rosenbaum (2025) is used. It may reduce the number of rows used in the
+#'   calculations without changing the resulting test. The default is `TRUE`.
+#' @param seed `NULL` or a single integer-valued number used to make stochastic
+#'   calculations reproducible. When supplied, the seed is applied locally and
+#'   the previous R random-number state is restored after the calculation.
+#'
+#' @details At least two groups and two repeated-measurement dimensions are
+#'   required. Every group must contain at least six subjects. Missing values in
+#'   `data` or `group` are not allowed and will result in an error.
+#'
+#' The tested hypothesis has the form \deqn{(\bm T_W \otimes \bm T_S)\bm\mu=\bm
+#' 0.} The predefined hypotheses are:
+#' \itemize{
+#'   \item `"whole"`:
+#'   \eqn{\bm T_W=\bm P_a} and
+#'   \eqn{\bm T_S=\bm J_d/d}; no whole-plot or group main effect.
+#'   \item `"sub"`:
+#'   \eqn{\bm T_W=\bm J_a/a} and
+#'   \eqn{\bm T_S=\bm P_d}; no subplot or dimension main effect.
+#'   \item `"interaction"`:
+#'   \eqn{\bm T_W=\bm P_a} and
+#'   \eqn{\bm T_S=\bm P_d}; no group-by-dimension interaction.
+#'   \item `"identical"`:
+#'   \eqn{\bm T_W=\bm P_a} and
+#'   \eqn{\bm T_S=\bm I_d}; identical expectation vectors across groups.
+#'   \item `"flat"`:
+#'   \eqn{\bm T_W=\bm I_a} and
+#'   \eqn{\bm T_S=\bm P_d}; a flat expectation profile in every group.
+#' }
+#'
+#'   Alternatively, `hypothesis` may be a named list containing `TW` and `TS`.
+#'   Both matrices must be finite, symmetric, idempotent projection matrices
+#'   with positive rank. `TW` must have one row and column per analyzed group,
+#'   and `TS` must have one row and column per repeated-measurement dimension.
+#'   Small numerical deviations within the implemented tolerance are accepted.
+#'
+#'   For data.frame input, observations are sorted according to `subject`,
+#'   `dimension` and `group` (in that order) and then converted to a matrix with
+#'   the first subject in the first row. This should be taken into account, when
+#'   passing a list with custom matrices to `hypothesis`.
+#'
+#'   When `cov.equal = FALSE`, the method of Sattler and Pauly (2018) is used.
+#'   The third-trace estimator entering `f` is always computed using
+#'   subsampling. Here, `B` is the base subsampling budget. Group-specific and
+#'   pairwise subsampling estimators use `B` draws for each group or group pair,
+#'   respectively. The joint third-trace estimator uses \eqn{aB} joint draws,
+#'   where each draw simultaneously samples six subjects from every group and
+#'   \eqn{a} is the number of groups. When `subsampling = TRUE`, the remaining
+#'   available trace estimators are also replaced by their subsampling versions.
+#'
+#'   When `cov.equal = TRUE`, the method described in Sattler (2021) is used and
+#'   `subsampling` has no effect. The pooled third-trace estimator uses an exact
+#'   total of \eqn{aB} six-subject draws across all groups. These draws are
+#'   allocated approximately proportionally to \eqn{\binom{n_i}{6}} using the
+#'   largest-remainder method, with every group receiving at least one draw.
+#'
+#'   Even when `subsampling = FALSE`, `f`, `tau`, and `p.value` remain seed
+#'   dependent because a third-trace quantity is estimated by subsampling. For
+#'   heterogeneous covariance matrices with `subsampling = TRUE`, `statistic` is
+#'   seed dependent as well.
+#'
+#'   `B` may be numeric or an arithmetic character expression involving `N`,
+#'   such as `"1000*N"` or `"10*(N + 1)"`. The result is rounded up to the next
+#'   integer. Functions, assignments, indexing, and additional variable names
+#'   are rejected and are never evaluated.
+#'
+#'   Upper-tail probabilities are computed directly. Reported p-values are
+#'   bounded below by `.Machine$double.eps`; a returned value at this boundary
+#'   should be interpreted as no larger than the numerical reporting threshold.
+#'
+#' @returns A named list of class `"hdrm_grouped"` with components:
+#' \describe{
+#'   \item{data}{The processed data matrix with subjects in rows,
+#'   repeated-measurement dimensions in columns, and subjects ordered by group.}
+#'   \item{dim}{A named vector containing the repeated-measurement dimension `d`,
+#'   the number of analyzed subjects `N` and the number of analyzed groups `a`.}
+#'   \item{H}{A named list containing the projection matrices `TW` and `TS` used
+#'   for the test and `label` with the hypothesis label.}
+#'   \item{group}{The sorted input to `group`.}
+#'   \item{cov.equal}{The input value for `cov.equal`.}
+#'   \item{subsampling}{The input value for `subsampling`.}
+#'   \item{B}{The evaluated integer base budget `B`. The grouped
+#'   third-trace estimators use \eqn{aB} draws; see Details.}
+#'   \item{AM}{The input value for `AM`.}
+#'   \item{seed}{The input value for `seed`}
+#'   \item{statistic}{The standardized test statistic \eqn{W}.}
+#'   \item{p.value}{The upper-tail p-value, bounded below by
+#'   `.Machine$double.eps`.}
+#'   \item{f}{The estimated degrees of freedom.}
+#'   \item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
+#' }
+#'
+#' @example man/examples/examples_hdrm_grouped.R
+#'
+#' @references Sattler P (2021). “A comprehensive treatment of
+#'   quadratic-form-based inference in repeated measures designs under diverse
+#'   asymptotics.” Electronic Journal of Statistics, 15(1), 3611–3634. doi:
+#'   10.1214/21-EJS1865.
+#' @references Sattler P, Pauly M (2018). “Inference for high-dimensional
+#'   split-plot-designs: A unified approach for small to large numbers of factor
+#'   levels.” Electronic Journal of Statistics, 12(2), 2743–2805. doi:
+#'   10.1214/18-EJS1465.
+#' @references Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
+#'   for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
+#'   110356. doi: 10.1016/j.spl.2025.110356.
+#'
+#' @export
+hdrm_grouped <- function(data,
+                         hypothesis = "whole",
+                         group,
+                         cov.equal = FALSE,
+                         subsampling = FALSE,
+                         B = "1000*N",
+                         AM = TRUE,
+                         seed = NULL) {
+  UseMethod("hdrm_grouped")
 }
-

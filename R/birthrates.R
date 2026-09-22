@@ -1,9 +1,16 @@
-#' Yearly birthrates in German States 1990-2023
+#' Total fertility rates in the German federal states, 1990--2023
 #'
-#' A data set containing the number of births per woman in each German State for
-#' 1990-2023 (Statistisches Bundesamt (Destatis), 2024). States are represented by columns
-#' and time is represented by rows.
+#' Annual total fertility rates for the 16 German federal states. The entries
+#' give the number of children per woman reported in table 12612-09 of the
+#' German Federal Statistical Office (Statistisches Bundesamt (Destatis), 2024).
 #'
-#' @references {Statistisches Bundesamt (Destatis) (2024). “Statistischer Bericht - Geburten 2023, Tabelle 12612-09.” https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html.}
-
+#' @format A data frame with 34 rows and 16 variables. Rows represent the years
+#' 1990 through 2023 and columns represent the German federal states.
+#'
+#' @source Statistisches Bundesamt (Destatis), table 12612-09.
+#' @references Statistisches Bundesamt (Destatis) (2024). “Statistischer Bericht – Geburten 2023, Tabelle 12612-09.” Zusammengefasste Geburtenziffer nach Bundesländern (Kinder je Frau). https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html.
+#' @docType data
+#' @keywords datasets
+#' @name birthrates
+#' @usage birthrates
 "birthrates"

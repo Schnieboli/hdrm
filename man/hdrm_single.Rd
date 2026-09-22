@@ -2,125 +2,117 @@
 % Please edit documentation in R/hdrm_single.R
 \name{hdrm_single}
 \alias{hdrm_single}
-\title{Test for one group high dimensional repeated measures}
+\title{One-group inference for high-dimensional repeated measures}
 \usage{
-hdrm_single(data, hypothesis = "flat", subject = NULL, AM = TRUE, ...)
+hdrm_single(data, hypothesis = "flat", AM = TRUE)
 }
 \arguments{
-\item{data}{the data for which the test is applied, where two formats are
-possible:
-\itemize{
-\item a matrix where subjects represented by columns.
-\item a value column from a data frame, where in this case an additional parameter
-specifying the subjects is necessary.
-}}
+\item{data}{A matrix or a data.frame. For matrix input, subjects are
+represented by rows and repeated-measurement dimensions by columns. For
+data.frame input, data must contain columns \code{value}, \code{subject} and
+\code{dimension}, giving the observations and the subject and dimension IDs.}
 
-\item{hypothesis}{either "flat" or a quadratic numeric matrix (see Details).}
+\item{hypothesis}{Either \code{"flat"} or a finite numeric projection matrix whose
+dimensions equal the repeated-measurement dimension.}
 
-\item{subject}{optional parameter vector, which gives the allocation of the
-measurements to the subjects}
-
-\item{AM}{\code{logical}. Specifying whether an alternative hypothesis matrix
-based on Sattler and Rosenbaum (2025) should be used (default: \code{TRUE}),
-which has fewer rows but does not influence any values.}
-
-\item{...}{further arguments are currently ignored.}
+\item{AM}{A single logical value, specifying whether the compact
+representation of the hypothesis matrix described by Sattler and Rosenbaum
+(2025) is used. It may reduce the number of rows used in the calculations
+without changing the resulting test. The default is \code{TRUE}.}
 }
 \value{
-Returns a list with class "hdrm_single" with the components
-
-\item{data}{the input data used.}
-
-\item{f}{the degrees of freedom \eqn{f}.}
-
-\item{statistic}{the test statistic \eqn{W}.}
-
-\item{tau}{the convergence parameter \eqn{\tau}.}
-
-\item{H}{the hypothesis-matrix used.}
-
-\item{hypothesis}{a character. Will be 'custom' if \code{hypothesis} was
-given as a matrix, otherwise \code{hypothesis[1]}.}
-
-\item{p.value}{the p-value of the test statistic.}
-
-\item{dim}{a named vector giving the dimensions \eqn{d \times N} of \code{data}.}
-
-\item{removed.cases}{number of subjects removed for having missing values.}
+A named list of class \code{"hdrm_single"} with components:
+\describe{
+\item{data}{A matrix with the data used. If data was a data.frame, this is
+the transformed output.}
+\item{dim}{A named numeric vector containing the repeated-measurement
+dimension \code{d} and the number of analyzed subjects \code{N}.}
+\item{H}{A named list with the hypothesis-matrix \code{T} used for the test and
+the hypothesis label \code{label}.}
+\item{AM}{The input value for \code{AM}.}
+\item{f}{The estimated Pearson degrees of freedom.}
+\item{statistic}{The standardized test statistic \eqn{W}.}
+\item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
+\item{p.value}{The upper-tail p-value, bounded below by
+\code{.Machine$double.eps}.}
+}
 }
 \description{
-This function implements the methods outlined in
-Pauly et al. (2015).
+Implements the one-group test described by Pauly et al. (2015).
 }
 \details{
-If \code{data} is a matrix, the parameter \code{subject} has no effect. \cr
-If \code{data} is a vector, \code{subject} allocates the measurements to the subjects.
-\code{subject} then must be of length \code{length(data)}.
+At least two repeated-measurement dimensions are required. Missing
+values in \code{data} are not allowed and will result in an error.
 
-The function can deal with missing values only in the measurements.
-The test is then performed without the affected subjects. Missing values in
-\code{subject} will result in an error.
+The predefined value \code{"flat"} tests \deqn{\bm P_d\bm\mu=\bm 0.}
+Alternatively, \code{hypothesis} may be a finite numeric \eqn{d\times d}
+projection matrix, where \eqn{d} is the number of dimensions. It must be
+symmetric, idempotent, and have positive rank. Small numerical deviations
+within the implemented tolerance are accepted.
 
-The test outlined in Pauly et al. (2015) is performed for
-the hypothesis given by \code{hypothesis}. The \code{hypothesis} can either be given as
-a \code{character} or a \code{list}. The only legal character is "flat" (default).
-"flat" stands for \eqn{H_0}: time profile is flat. Other
-characters will result in an error.
+For data.frame input, observations are sorted according to \code{subject} and
+\code{dimension} (in that order) and then converted to a matrix with
+the first subject in the first row. This should be taken into account, when
+passing a matrix to \code{hypothesis}.
 
-Alternatively, \code{hypothesis} can be the quadratic hypothesis matrix \eqn{T} with
-the number of rows equal to the number of rows of \code{data}. \eqn{T} must be
-a projection matrix, meaning symmetrical and \eqn{T^2 = T}. A matrix that does not
-match those criteria will result in an error.
+Upper-tail probabilities are computed directly. Reported p-values are
+bounded below by \code{.Machine$double.eps}; a returned value at this boundary
+should be interpreted as no larger than the numerical reporting threshold.
 }
 \examples{
-## Load data set EEG (data frame)
-data(EEG)
-# ?EEG
+# Long-format data ---------------------------------------------------------
 
+data("EEG")
 
-## call test
-hdrm_single(data = EEG$value,
-            ## test if time profiles are flat
-            hypothesis = "flat",
-            ## if data is a vector, subject must be specified
-            subject = EEG$subject
+# Select one diagnostic group for a one-group analysis.
+EEG_single <- droplevels(EEG[EEG$group == "SCC+", ])
+
+hdrm_single(
+  data = EEG_single,
+  hypothesis = "flat"
+)
+
+# A custom projection matrix equivalent to hypothesis = "flat".
+d <- nlevels(EEG_single$dimension)
+flat_projection <- diag(d) -
+  matrix(1 / d, nrow = d, ncol = d)
+
+hdrm_single(
+  data = EEG_single,
+  hypothesis = flat_projection
 )
 
 
-## hypothesis as list
-hypothesis_matrix <- diag(40) - matrix(1/40, 40, 40)
+# Wide matrix data ---------------------------------------------------------
 
-hdrm_single(data = EEG$value,
-            ## test if time profiles are flat
-            hypothesis = hypothesis_matrix,
-            subject = EEG$subject
+data("birthrates")
+
+birthrates_matrix <- t(as.matrix(birthrates))
+
+hdrm_single(
+  data = birthrates_matrix,
+  hypothesis = "flat"
 )
 
-## Load data set birthrates (matrix)
-data(birthrates)
-# ?birthrates
+d <- ncol(birthrates_matrix)
+flat_projection <- diag(d) -
+  matrix(
+    1 / d,
+    nrow = d,
+    ncol = d
+  )
 
-## call test
-hdrm_single(data = birthrates,
-            ## test if time profiles are flat
-            hypothesis = "flat"
-            ## if data is a matrix, subject does not need to be specified
+hdrm_single(
+  data = birthrates_matrix,
+  hypothesis = flat_projection
 )
-
-
-## hypothesis as list
-hypothesis_matrix <- diag(34) - matrix(1/34, 34, 34)
-
-hdrm_single(data = birthrates,
-            ## equivalent to hypothesis = "flat"
-            hypothesis = hypothesis_matrix
-)
-
 }
 \references{
-{Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of high-dimensional one group repeated measures designs. Statistics, 49(6), 1243–1261. doi:10.1080/02331888.2015.1050022
-}
+Pauly M, Ellenberger D, Brunner E (2015). “Analysis of
+high-dimensional one group repeated measures designs.” Statistics, 49(6),
+1243–1261. doi: 10.1080/02331888.2015.1050022.
 
-{Sattler, P., & Rosenbaum, M. (2025). Choice of the hypothesis matrix for using the Anova-type-statistic. Statistics & Probability Letters, 219(110356), 110356. doi:10.1016/j.spl.2025.110356
-}
+Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
+for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
+110356. doi: 10.1016/j.spl.2025.110356.
 }

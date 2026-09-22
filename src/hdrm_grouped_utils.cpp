@@ -12,33 +12,17 @@ double A1_cpp(arma::mat& mat){
   double out = 0.0;
   double diff = 0.0;
 
-  // Fall 1: Wenn die Matrix mehr als eine Zeile hat, wie im Originalcode
-  if(d > 1){
-    for(int i = 0; i < N - 1; ++i){
-      col1 = mat.col(i);
-      for(int j = i + 1; j < N; ++j){
-        col2 = mat.col(j);
-        for(int k = 0; k < d; ++k){
-          diff = col1(k) - col2(k);
-          out += diff * diff;
-        }
-      }
-    }
-    return out / (N * (N - 1));
-  }
-
-  // Fall 2: Wenn die Matrix nur eine Zeile hat
-  else {
-    for(int i = 0; i < N - 1; ++i){
-      col1 = mat.col(i);
-      for(int j = i + 1; j < N; ++j){
-        col2 = mat.col(j);
-        diff = col1(0) - col2(0); // Nur die Werte der ersten (und einzigen) Zeile vergleichen
+  for(int i = 0; i < N - 1; ++i){
+    col1 = mat.col(i);
+    for(int j = i + 1; j < N; ++j){
+      col2 = mat.col(j);
+      for(int k = 0; k < d; ++k){
+        diff = col1(k) - col2(k);
         out += diff * diff;
       }
     }
-    return out / (N * (N - 1));
   }
+  return out/(N*(N-1));
 }
 
 
@@ -103,7 +87,7 @@ double A1star_cpp(const arma::mat& X, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    ind = arma::randperm(n, 2);
+    ind = arma::randperm(n).head(2);
     v1 = X.col(ind(0));
     v2 = X.col(ind(1));
     for(int j = 0; j < d; ++j){
@@ -127,8 +111,8 @@ double A2star_cpp(const arma::mat& X, arma::mat& Y, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    indX = arma::randperm(nX, 2);
-    indY = arma::randperm(nY, 2);
+    indX = arma::randperm(nX).head(2);
+    indY = arma::randperm(nY).head(2);
     v1 = X.col(indX(0));
     v2 = X.col(indX(1));
     v3 = Y.col(indY(0));
@@ -154,7 +138,7 @@ double A3star_cpp(const arma::mat& X, int& B){
 
   for(int b = 0; b < B; ++b){
     temp = 0.0;
-    ind = arma::randperm(n, 4);
+    ind = arma::randperm(n).head(4);
     v1 = X.col(ind(0));
     v2 = X.col(ind(1));
     v3 = X.col(ind(2));
@@ -171,10 +155,10 @@ double A3star_cpp(const arma::mat& X, int& B){
 double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::uvec& n){ // Matrix X ist schon mit TM multipliziert und schon mit sqrt(N/n) multipliziert
   // ausserdem muss X nach Gruppen sortiert sein!!!
   int a = unique(group).index_max() + 1;
-  int m = X.n_rows;
+  int d = X.n_rows/a;
   double cout = 0.0;
-  arma::vec Z12(m), Z34(m), Z56(m);
-  arma::mat sigma(m, 6*a);
+  arma::vec Z12(d*a), Z34(d*a), Z56(d*a);
+  arma::mat sigma(d*a, 6*a);
   arma::uvec indizes(6);
   int ind = 0;
 
@@ -184,7 +168,7 @@ double C5star_cpp_internal(arma::mat& X, arma::vec& group, const int& B, arma::u
     Z56.zeros();
     int shift = 0;
     for(int i = 0; i < a; ++i){
-      indizes = arma::randperm(n(i), 6); // einfach so lassen!!!
+      indizes = arma::randperm(n(i)).head(6); // einfach so lassen!!!
       for(int j = 0; j < 6; ++j){
         ind = shift + indizes(j);
         sigma.col(6*i + j) = X.col(ind);

@@ -1,4 +1,6 @@
 .Rproj.user
-.Rprofile
-.Rhistory
 2d-materials.csl
+.Rprofile
+.RDataTmp
+.RData
+.Rhistory
