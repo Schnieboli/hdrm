@@ -18,12 +18,12 @@ hdrm_grouped(
 \arguments{
 \item{data}{A matrix or a data.frame. For matrix input, subjects are
 represented by rows and repeated-measurement dimensions by columns. For
-data.frame input, data must contain columns value, subject and dimension,
-giving the observations and the subject and dimension IDs.}
+data.frame input, data must contain columns \code{value}, \code{subject} and
+\code{dimension}, containing the observations and the subject and dimension IDs.}
 
 \item{hypothesis}{Either one of \code{"whole"}, \code{"sub"}, \code{"interaction"},
-\code{"identical"}, or \code{"flat"}, or a named list containing the projection
-matrices \code{TW} and \code{TS}; see Details.}
+\code{"identical"}, or \code{"flat"}, or a named list containing projection matrices
+\code{TW} and \code{TS}; see Details.}
 
 \item{group}{A one-dimensional atomic vector or factor defining the group
 allocation. For matrix input it must contain one entry per row. For vector
@@ -42,11 +42,10 @@ numeric constants, \code{N}, parentheses, and the operators \code{+}, \code{-}, 
 and \code{^}. Its interpretation depends on \code{cov.equal} and \code{subsampling}; see
 Details.}
 
-\item{AM}{A single logical value, or alternatively \code{0} or \code{1}, specifying
-whether the compact representation of the hypothesis matrices described by
-Sattler and Rosenbaum (2025) is used. It may reduce the number of rows used
-in the calculations without changing the resulting test. The default is
-\code{TRUE}.}
+\item{AM}{A single logical value, specifying whether the compact
+representation of the hypothesis matrices described by Sattler and
+Rosenbaum (2025) is used. It may reduce the number of rows used in the
+calculations without changing the resulting test. The default is \code{TRUE}.}
 
 \item{seed}{\code{NULL} or a single integer-valued number used to make stochastic
 calculations reproducible. When supplied, the seed is applied locally and
@@ -57,19 +56,22 @@ A named list of class \code{"hdrm_grouped"} with components:
 \describe{
 \item{data}{The processed data matrix with subjects in rows,
 repeated-measurement dimensions in columns, and subjects ordered by group.}
+\item{dim}{A named vector containing the repeated-measurement dimension \code{d},
+the number of analyzed subjects \code{N} and the number of analyzed groups \code{a}.}
+\item{H}{A named list containing the projection matrices \code{TW} and \code{TS} used
+for the test and \code{label} with the hypothesis label.}
+\item{group}{The sorted input to \code{group}.}
+\item{cov.equal}{The input value for \code{cov.equal}.}
+\item{subsampling}{The input value for \code{subsampling}.}
+\item{B}{The evaluated integer base budget \code{B}. The grouped
+third-trace estimators use \eqn{aB} draws; see Details.}
+\item{AM}{The input value for \code{AM}.}
+\item{seed}{The input value for \code{seed}}
 \item{statistic}{The standardized test statistic \eqn{W}.}
-\item{f}{The estimated degrees of freedom.}
-\item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
-\item{H}{A named list containing the projection matrices \code{TW} and \code{TS}.}
-\item{hypothesis}{The selected predefined hypothesis or \code{"custom"}.}
 \item{p.value}{The upper-tail p-value, bounded below by
 \code{.Machine$double.eps}.}
-\item{dim}{A named list containing the repeated-measurement dimension \code{d}
-and the number of analyzed subjects \code{N}.}
-\item{groups}{A named list containing the number of analyzed groups \code{a}
-and their subject counts in \code{table}.}
-\item{subsamples}{The evaluated integer base budget \code{B}. The grouped
-third-trace estimators use \eqn{aB} draws; see Details.}
+\item{f}{The estimated degrees of freedom.}
+\item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
 }
 }
 \description{
@@ -79,20 +81,9 @@ multiple-group procedure under equal covariance matrices described by
 Sattler (2021).
 }
 \details{
-For vector input, missing values in \code{data} cause the entire affected
-subject to be removed. The vectors \code{subject} and \code{group} must not contain
-missing values. For matrix input, every row containing at least one missing
-value is removed. A warning is issued whenever incomplete subjects are
-dropped.
-
-For vector input, repeated measurements must occur in the same order for
-every subject. No separate variable identifying the repeated-measurement
-dimension is supplied, so the within-subject order in \code{data} determines the
-component order in the processed data matrix. The observations themselves
-need not be globally sorted by subject or group.
-
-At least two groups and two repeated-measurement dimensions are required.
-Every group must contain at least six complete subjects.
+At least two groups and two repeated-measurement dimensions are
+required. Every group must contain at least six subjects. Missing values in
+\code{data} or \code{group} are not allowed and will result in an error.
 
 The tested hypothesis has the form \deqn{(\bm T_W \otimes \bm T_S)\bm\mu=\bm
 0.} The predefined hypotheses are:
@@ -120,13 +111,18 @@ with positive rank. \code{TW} must have one row and column per analyzed group,
 and \code{TS} must have one row and column per repeated-measurement dimension.
 Small numerical deviations within the implemented tolerance are accepted.
 
-When \code{cov.equal = FALSE}, the method of
-Sattler and Pauly (2018) is used. The third-trace estimator
-entering \code{f} is always computed by subsampling. Here, \code{B} is the base
-subsampling budget. Group-specific and pairwise subsampling estimators use
-\code{B} draws for each group or group pair, respectively. The joint third-trace
-estimator uses \eqn{aB} joint draws, where each draw simultaneously samples
-six subjects from every group. When \code{subsampling = TRUE}, the remaining
+For data.frame input, observations are sorted according to \code{subject},
+\code{dimension} and \code{group} (in that order) and then converted to a matrix with
+the first subject in the first row. This should be taken into account, when
+passing a list with custom matrices to \code{hypothesis}.
+
+When \code{cov.equal = FALSE}, the method of Sattler and Pauly (2018) is used.
+The third-trace estimator entering \code{f} is always computed using
+subsampling. Here, \code{B} is the base subsampling budget. Group-specific and
+pairwise subsampling estimators use \code{B} draws for each group or group pair,
+respectively. The joint third-trace estimator uses \eqn{aB} joint draws,
+where each draw simultaneously samples six subjects from every group and
+\eqn{a} is the number of groups. When \code{subsampling = TRUE}, the remaining
 available trace estimators are also replaced by their subsampling versions.
 
 When \code{cov.equal = TRUE}, the method described in Sattler (2021) is used and
