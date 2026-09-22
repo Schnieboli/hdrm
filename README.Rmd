@@ -152,57 +152,98 @@ Supplying `seed` makes a call reproducible without permanently changing the
 previous `R` random-number state.
 
 
-```{r example-hdrm-grouped, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
-library(hdrm)
+### Wide matrix input
 
-### Multiple-group test for data in wide-table format using the built-in birthrates data set
+```{r example-hdrm-grouped-matrix-1, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+data("birthrates")
 
-data("birthrates", package = "hdrm")
+birthrates_matrix <- t(as.matrix(birthrates))
 
-# A group vector with one entry for each subject, here each federal state,
-# is required. The states are divided into western and eastern states.
-group <- factor(
-  c(1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2),
-  labels = c("west", "east")
-)
+# group states into east and west (Berlin as east)
+group <- factor(c(1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2), 
+                labels = c("west", "east")) 
 
-# For matrix data, dimensions are stored in rows and subjects in columns.
+## test for interaction effect of group and time
 hdrm_grouped(
-  data = as.matrix(birthrates),
+  data = birthrates_matrix,
   hypothesis = "interaction",
-  group = group
+  group = group,
+  cov.equal = FALSE,
+  subsampling = FALSE,
+  B = "100*N",
+  seed = 3141
 )
 
-### Multiple-group test for data in long-table format using the built-in EEG data set
+```
 
-data("EEG", package = "hdrm")
+The equal-covariance method is selected explicitly:
 
-# Construct subject identifiers that are unique across groups.
-eeg_grouped <- EEG
-eeg_grouped$subject_id <- interaction(
-  eeg_grouped$group,
-  eeg_grouped$subject,
-  drop = TRUE
-)
-
-# Sort the observations so that the dimensions occur in a consistent order
-# for every subject.
-eeg_grouped <- eeg_grouped[
-  order(
-    eeg_grouped$group,
-    eeg_grouped$subject_id,
-    eeg_grouped$dimension
-  ),
-]
-
-# For long-format data, pass the measurements, group identifiers,
-# and subject identifiers as separate vectors.
+```{r example-hdrm-grouped-matrix-2, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+## test for interaction effect of group and time with equal covariance assumption
 hdrm_grouped(
-  data = eeg_grouped$value,
+  data = birthrates_matrix,
+  hypothesis = "interaction",
+  group = group,
+  cov.equal = TRUE,
+  B = "100*N",
+  seed = 3141
+)
+
+```
+
+### Long data.frame input
+
+If `data` is a data.frame, it must contain columns `value`, `subject` and `dimension`.
+
+```{r example-hdrm-grouped-data.frame, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+data("EEG")
+names(EEG) # already contains columns 'value', 'subject' and 'dimension'
+
+## test for differences between the diagnostic groups
+hdrm_grouped(
+  data = EEG,
   hypothesis = "whole",
-  group = eeg_grouped$group,
-  subject = eeg_grouped$subject_id
+  group = EEG$group,
+  cov.equal = FALSE,
+  subsampling = FALSE,
+  B = "100*N",
+  seed = 3141
 )
 ```
+
+### Hypotheses
+
+For `hdrm_grouped()`, the predefined hypotheses are:
+
+- `"whole"`: no whole-plot or group main effect,
+- `"sub"`: no subplot or dimension main effect,
+- `"interaction"`: no group-by-dimension interaction,
+- `"identical"`: identical expectation vectors across groups,
+- `"flat"`: a flat expectation profile within every group.
+
+A custom grouped hypothesis is supplied as a named list containing projection
+matrices `TW` and `TS`:
+
+```{r example-hdrm-grouped-hypothesis.as.list, eval = FALSE, results = 'hide', warning = FALSE, error = FALSE, message = FALSE}
+## custom hypothesis for testing for effect of time
+custom_hypothesis <- list(
+  TW = matrix(1 / 2, nrow = 2, ncol = 2),
+  TS = diag(34) - matrix(1 / 34, nrow = 34, ncol = 34)
+)
+
+## testing for time effect (equivalent to hypothesis = "sub")
+hdrm_grouped(
+  data = birthrates_matrix,
+  hypothesis = custom_hypothesis,
+  group = group,
+  B = "100*N",
+  seed = 3141
+)
+```
+
+## Reported p-values
+
+Upper-tail probabilities are calculated directly. To avoid reporting an exact numerical zero, p-values smaller than machine precision are returned as `.Machine$double.eps`. Such a value should be interpreted as being no larger than the numerical reporting threshold.
+
 
 ## References

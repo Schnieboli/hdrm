@@ -1,20 +1,20 @@
+
 # hdrm
 
 <!-- badges: start -->
 
 [![DOI](https://img.shields.io/badge/DOI-10.48550%2FarXiv.2512.17478-blue)](https://doi.org/10.48550/arXiv.2512.17478)
+[![R-CMD-check](https://github.com/Schnieboli/hdrm-2026/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Schnieboli/hdrm-2026/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The `hdrm` package provides inference procedures for expectation vectors in
-high-dimensional repeated-measures designs. It implements a one-group method
-[1], a multiple-group method allowing heterogeneous covariance matrices [2],
-and a multiple-group method under equal covariance matrices [3].
+The `hdrm` package provides inference procedures for high-dimensional
+repeated-measures data in one-sample and multiple-group designs \[1,2\].
 
 ## Installation
 
-The current development version can be installed from GitHub:
+The current version can be installed with:
 
-```r
+``` r
 if (!requireNamespace("remotes", quietly = TRUE)) {
   install.packages("remotes")
 }
@@ -25,15 +25,15 @@ remotes::install_github(
 )
 ```
 
-Because `hdrm` contains compiled C++ code, Windows users installing from source
-need the Rtools version corresponding to their version of R.
+Because `hdrm` contains compiled C++ code, Windows users installing from
+source need the `Rtools` version corresponding to their version of `R`.
 
 ## Citation
 
-When using `hdrm` in a scientific publication, please cite the package paper
-[4]. The citation can also be obtained directly in R:
+When using `hdrm` in a scientific publication, please cite this article
+\[3\]. The citation can also be obtained directly in `R`:
 
-```r
+``` r
 citation("hdrm")
 ```
 
@@ -41,109 +41,127 @@ citation("hdrm")
 
 Both main functions accept either:
 
-- a numeric matrix with subjects in rows and repeated-measurement dimensions
-  in columns, or
-- a numeric measurement vector together with subject identifiers.
+- a numeric matrix with subjects in rows and repeated-measurement
+  dimensions in columns, or
+- a data.frame with columns `value`, `subject` and `dimension`, giving
+  the measurements and the subject and dimension IDs.
 
-For vector input, measurements must occur in the same dimensional order for
-every subject. In `hdrm_grouped()`, subject labels only need to distinguish
-subjects within a group; the same labels may be reused in different groups.
+In the grouped case, a vector specifying which subject belongs to which
+group must be passed to `group`.
 
-Incomplete subjects are removed as complete blocks and reported through a
-warning. At least two dimensions are required. The one-group method requires
-at least three complete subjects, while every group in `hdrm_grouped()` must
-contain at least six complete subjects.
+Missing values in `data` (and `group`) are not allowed and will result
+in an error. At least two dimensions are required. The one-group method
+requires at least three subjects, while in the multi-group case, each
+group must contain at least six complete subjects.
 
-## One-group inference
+## One-Group Test
 
-`hdrm_single()` implements the one-group procedure. The predefined hypothesis
-`"flat"` tests whether the expectation profile is constant over dimensions.
-A custom hypothesis can be supplied as a symmetric, idempotent projection
-matrix with positive rank.
+A one-group test can be performed using `hdrm_single()`. The
+functionaccepts either a numeric matrix with dimensions in rows and
+subjects incolumns, or a data.frame containing columns `value`,
+`subject` and `dimension`.
+
+The package includes two example data sets: `birthrates` \[4\], a
+wide-format data set containing birth rates for the 16 German federal
+states from 1990 to 2023, and `EEG` \[5\], a long-format data set
+containing EEG measurements of 160 individuals in 40 dimensions.
 
 ### Wide matrix input
 
-```r
-library(hdrm)
+``` r
+data("birthrates")
 
-data("birthrates", package = "hdrm")
-
-# The bundled data set stores years in rows and federal states in columns.
-# hdrm uses the usual R wide-data convention: subjects in rows.
+## transform 'birthrates' to matrix and transpose
 birthrates_matrix <- t(as.matrix(birthrates))
 
-birthrates_result <- hdrm_single(
+## test whether the time profile is flat
+hdrm_single(
   data = birthrates_matrix,
   hypothesis = "flat"
 )
 
-birthrates_result
+## define hypothesis = "flat" via equivalent projection matrix
+d <- ncol(birthrates_matrix)
+flat_projection <- diag(d) -
+  matrix(
+    1 / d,
+    nrow = d,
+    ncol = d
+  )
+
+## test whether the time profile is flat via custom hypothesis matrix
+hdrm_single(
+  data = birthrates_matrix,
+  hypothesis = flat_projection
+)
 ```
 
-### Measurement-vector input
+### Long data.frame input
 
 The included `EEG` data contain several diagnostic groups. The following
 example selects one group for a one-group analysis.
 
-```r
-data("EEG", package = "hdrm")
+``` r
+data("EEG")
+names(EEG) # already contains columns value, dimension and subject
 
-eeg_single <- droplevels(
-  EEG[EEG$group == levels(EEG$group)[1L], ]
+## select only one diagnostic group for one-group analysis
+EEG_single <- EEG[EEG$group == "SCC+", ]
+
+## test whether the time profile is flat
+hdrm_single(
+  data = EEG_single,
+  hypothesis = "flat"
 )
 
-eeg_single <- eeg_single[
-  order(eeg_single$subject, eeg_single$dimension),
-]
-
-d <- nlevels(eeg_single$dimension)
+## define hypothesis = "flat" via equivalent projection matrix
+d <- nlevels(EEG_single$dimension)
 flat_projection <- diag(d) -
   matrix(1 / d, nrow = d, ncol = d)
 
-eeg_single_result <- hdrm_single(
-  data = eeg_single$value,
-  hypothesis = flat_projection,
-  subject = eeg_single$subject
+## test whether the time profile is flat via custom hypothesis matrix
+hdrm_single(
+  data = EEG_single,
+  hypothesis = flat_projection
 )
-
-eeg_single_result
 ```
 
-## Multiple-group inference
+## Multiple-Group inference
 
 `hdrm_grouped()` covers two different covariance settings.
 
 | Setting | Main arguments | Interpretation of `B` |
-|---|---|---|
+|----|----|----|
 | Heterogeneous covariances with exact available trace estimators | `cov.equal = FALSE`, `subsampling = FALSE` | Base budget; the joint third-trace estimator uses `a * B` joint draws |
 | Heterogeneous covariances with additional subsampling | `cov.equal = FALSE`, `subsampling = TRUE` | Base budget; group-specific and pairwise estimators use `B` draws per group or pair, while the joint third-trace estimator uses `a * B` joint draws |
 | Equal covariance matrices | `cov.equal = TRUE` | Base budget; the pooled third-trace estimator uses `a * B` total draws distributed across groups |
 
-For the equal-covariance method, `subsampling` has no effect. The `a * B`
-third-trace draws are allocated across groups approximately proportionally to
-the numbers of available six-subject subsets.
+For the equal-covariance method, `subsampling` has no effect. The
+`a * B` third-trace draws are allocated across groups approximately
+proportionally to the numbers of available six-subject subsets.
 
-A third-trace quantity is estimated by subsampling in every grouped analysis.
-Consequently, `f`, `tau`, and the p-value depend on `B` and the random seed even
-when `subsampling = FALSE`. With heterogeneous covariances and
-`subsampling = TRUE`, the test statistic itself is seed dependent as well.
+A third-trace quantity is estimated by subsampling in every grouped
+analysis. Consequently, `f`, `tau`, and the p-value depend on `B` and
+the random seed even when `subsampling = FALSE`. With heterogeneous
+covariances and `subsampling = TRUE`, the test statistic itself is seed
+dependent as well.
 
-Supplying `seed` makes a call reproducible without permanently changing the
-previous R random-number state.
+Supplying `seed` makes a call reproducible without permanently changing
+the previous `R` random-number state.
 
 ### Wide matrix input
 
-```r
-data("birthrates", package = "hdrm")
+``` r
+data("birthrates")
 
 birthrates_matrix <- t(as.matrix(birthrates))
 
-group <- factor(
-  c(1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2),
-  labels = c("west", "east")
-)
+# group states into east and west (Berlin as east)
+group <- factor(c(1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2), 
+                labels = c("west", "east")) 
 
-heterogeneous_result <- hdrm_grouped(
+## test for interaction effect of group and time
+hdrm_grouped(
   data = birthrates_matrix,
   hypothesis = "interaction",
   group = group,
@@ -152,52 +170,44 @@ heterogeneous_result <- hdrm_grouped(
   B = "100*N",
   seed = 3141
 )
-
-heterogeneous_result
 ```
 
 The equal-covariance method is selected explicitly:
 
-```r
-equal_covariance_result <- hdrm_grouped(
+``` r
+## test for interaction effect of group and time with equal covariance assumption
+hdrm_grouped(
   data = birthrates_matrix,
-  hypothesis = "whole",
+  hypothesis = "interaction",
   group = group,
   cov.equal = TRUE,
   B = "100*N",
   seed = 3141
 )
-
-equal_covariance_result
 ```
 
-### Measurement-vector input
+### Long data.frame input
 
-Subject labels may be reused in different groups. There is no need to construct
-globally unique identifiers.
+If `data` is a data.frame, it must contain columns `value`, `subject`
+and `dimension`.
 
-```r
-data("EEG", package = "hdrm")
+``` r
+data("EEG")
+names(EEG) # already contains columns 'value', 'subject' and 'dimension'
 
-eeg_grouped <- EEG[
-  order(EEG$group, EEG$subject, EEG$dimension),
-]
-
-eeg_grouped_result <- hdrm_grouped(
-  data = eeg_grouped$value,
+## test for differences between the diagnostic groups
+hdrm_grouped(
+  data = EEG,
   hypothesis = "whole",
-  group = eeg_grouped$group,
-  subject = eeg_grouped$subject,
+  group = EEG$group,
   cov.equal = FALSE,
   subsampling = FALSE,
   B = "100*N",
   seed = 3141
 )
-
-eeg_grouped_result
 ```
 
-## Hypotheses
+### Hypotheses
 
 For `hdrm_grouped()`, the predefined hypotheses are:
 
@@ -207,16 +217,18 @@ For `hdrm_grouped()`, the predefined hypotheses are:
 - `"identical"`: identical expectation vectors across groups,
 - `"flat"`: a flat expectation profile within every group.
 
-A custom grouped hypothesis is supplied as a named list containing projection
-matrices `TW` and `TS`:
+A custom grouped hypothesis is supplied as a named list containing
+projection matrices `TW` and `TS`:
 
-```r
+``` r
+## custom hypothesis for testing for effect of time
 custom_hypothesis <- list(
   TW = matrix(1 / 2, nrow = 2, ncol = 2),
   TS = diag(34) - matrix(1 / 34, nrow = 34, ncol = 34)
 )
 
-custom_result <- hdrm_grouped(
+## testing for time effect (equivalent to hypothesis = "sub")
+hdrm_grouped(
   data = birthrates_matrix,
   hypothesis = custom_hypothesis,
   group = group,
@@ -227,30 +239,66 @@ custom_result <- hdrm_grouped(
 
 ## Reported p-values
 
-Upper-tail probabilities are calculated directly. To avoid reporting an exact
-numerical zero, p-values smaller than machine precision are returned as
-`.Machine$double.eps`. Such a value should be interpreted as being no larger
-than the numerical reporting threshold.
+Upper-tail probabilities are calculated directly. To avoid reporting an
+exact numerical zero, p-values smaller than machine precision are
+returned as `.Machine$double.eps`. Such a value should be interpreted as
+being no larger than the numerical reporting threshold.
 
 ## References
 
-1. Pauly M, Ellenberger D and Brunner E (2015). “Analysis of
-   high-dimensional one group repeated measures designs.” *Statistics* 49,
-   1243–1261. <https://doi.org/10.1080/02331888.2015.1050022>
-2. Sattler P and Pauly M (2018). “Inference for high-dimensional
-   split-plot-designs: A unified approach for small to large numbers of factor
-   levels.” *Electronic Journal of Statistics* 12(2), 2743–2805.
-   <https://doi.org/10.1214/18-EJS1465>
-3. Sattler P (2021). “A comprehensive treatment of quadratic-form-based
-   inference in repeated measures designs under diverse asymptotics.”
-   *Electronic Journal of Statistics* 15, 3611–3634.
-   <https://doi.org/10.1214/21-EJS1865>
-4. Sattler P and Hichert N (2025). “Inference for high dimensional repeated
-   measure designs with the R package hdrm.” *arXiv:2512.17478*.
-   <https://doi.org/10.48550/arXiv.2512.17478>
-5. Statistisches Bundesamt (Destatis) (2024). “Statistischer Bericht –
-   Geburten 2023, Tabelle 12612-09.”
-6. Höller Y et al. (2017). “Combining SPECT and quantitative EEG analysis for
-   the automated differential diagnosis of disorders with amnestic symptoms.”
-   *Frontiers in Aging Neuroscience* 9, 290.
-   <https://doi.org/10.3389/fnagi.2017.00290>
+<div id="refs" class="references csl-bib-body">
+
+<div id="ref-Pauly2015" class="csl-entry">
+
+<span class="csl-left-margin">\[1\]
+</span><span class="csl-right-inline">Pauly M, Ellenberger D and Brunner
+E 2015 [Analysis of high-dimensional one group repeated measures
+designs](https://doi.org/10.1080/02331888.2015.1050022) *Statistics*
+**49** 1243–61</span>
+
+</div>
+
+<div id="ref-Sattler2018" class="csl-entry">
+
+<span class="csl-left-margin">\[2\]
+</span><span class="csl-right-inline">Sattler P and Pauly M 2018
+[Inference for high-dimensional split-plot-designs: A unified approach
+for small to large numbers of factor
+levels](https://doi.org/10.1214/18-EJS1465) *Electronic Journal of
+Statistics* **12** 2743–805</span>
+
+</div>
+
+<div id="ref-SattlerHichert2025hdrm" class="csl-entry">
+
+<span class="csl-left-margin">\[3\]
+</span><span class="csl-right-inline">Sattler P and Hichert N 2025
+[Inference for high dimensional repeated measure designs with the R
+package hdrm](https://doi.org/10.48550/arXiv.2512.17478)</span>
+
+</div>
+
+<div id="ref-birthrates" class="csl-entry">
+
+<span class="csl-left-margin">\[4\]
+</span><span class="csl-right-inline">Statistisches Bundesamt (Destatis)
+2024 [Statistischer Bericht – Geburten 2023, Tabelle
+12612-09](https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html)</span>
+
+</div>
+
+<div id="ref-EEG_dataset" class="csl-entry">
+
+<span class="csl-left-margin">\[5\]
+</span><span class="csl-right-inline">Höller Y, Bathke A C, Uhl A,
+Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner
+M, Jahanbekam A, Trinka E and Staffen W 2017 [Combining SPECT and
+quantitative EEG analysis for the automated differential diagnosis of
+disorders with amnestic
+symptoms](https://doi.org/10.3389/fnagi.2017.00290)
+*<span class="nocase">Frontiers in Aging Neuroscience</span>* **9**
+290</span>
+
+</div>
+
+</div>
