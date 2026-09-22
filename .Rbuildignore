@@ -6,3 +6,6 @@
 ^README\.Rmd$
 ^2d-materials\.csl$
 ^CITATION\.cff$
+^build$
+^.Rprofile
+^\.github$

@@ -1,63 +1,64 @@
-#' @keywords internal
-hdrm1_internal <- function(X, hypothesis,...){
-
-  ## Dimensionen definieren
-  N <- ncol(X)
-  d <- nrow(X)
-
-
-  ### Hypothesenmatrizen
-  TM <- NA
-  # hypothesis is matrix
-  if(is.matrix(hypothesis)) TM <- hypothesis
-  #hypothesis ist character
-  if(is.character(hypothesis)){
-    if(hypothesis[1] == "flat") TM <- diag(d) -  matrix(1/d, d, d)
-    else stop("The only legal character is 'flat'. Other hypotheses can be specified by a matrix.")
-  }
-
-  # wenn keiner der oberen faelle zutrifft oder ein NA in TM ist oder TM nicht
-  # numeric ist, dann breche ab
-
-  ## Dimensionen pruefen
-  if(!all(dim(TM) == c(d,d))) stop("hypothesis must be a quadratic matrix with the number of rows equal to the number of dimension d.")
-  if(any(is.na(TM)) | !is.numeric(TM)) stop("Please specify valid hypothesis.")
-  # Symmetrie und Idempotenz pruefen
-  # Symmetrie
-  if((mean(t(TM) - TM) >= sqrt(.Machine$double.eps))) warning(paste0("TM is not symmetric (mean difference = ", mean(t(TM) - TM),"). This will likely have a big influence on the test result!"))
-  # Idempootenz
-  # checke ob all.equal TRUE ist -> wenn ja, dann milde warnung
-  if((mean(TM%*%TM - TM) >= sqrt(.Machine$double.eps))) warning(paste0("TM is not idempotent (mean difference = ", mean(TM%*%TM - TM),"). This will likely have a big influence on the test result!"))
-
-  ### Teststatistik Q
-  XT <- TM %*% X
-  Xquer <- rowMeans(XT)
-  Qn = N * sum(Xquer^2)
-
-
-  ### Schaetzer berechnen
-  spurNormal <- B0_cpp(XT)
-  spurQuadrat <- B2_cpp(XT)
-  spurHoch3 <- B3_cpp(XT)/choose(N,3) # das muss so, weil ich nicht weiss, wie man in cpp bionom ausrechnet
-
-  ### Teststatistik W
-  W <- (Qn - spurNormal) / sqrt(2*spurQuadrat)
-
-  ### Verteilungsparameter f schaetzen
-  f <- max(1, spurQuadrat^3 / spurHoch3^2)
-
-  ### p-Wert
-  p.value <- max(1 - stats::pchisq(W * sqrt(2 * f) + f, df = f), .Machine$double.eps)
-
-
-  L <- list(f = f,
-            statisitc = W,
-            tau = 1/f,
-            H = TM,
-            hypothesis = ifelse(is.character(hypothesis), hypothesis[1], "custom"),
-            p.value = p.value,
-            dim = c(d = d, N = N)
-  )
-  return(L)
-
+#' One-group inference for high-dimensional repeated measures
+#'
+#' @description Implements the one-group test described by Pauly et al. (2015).
+#'
+#' @param data A matrix or a data.frame. For matrix input, subjects are
+#'   represented by rows and repeated-measurement dimensions by columns. For
+#'   data.frame input, data must contain columns `value`, `subject` and
+#'   `dimension`, giving the observations and the subject and dimension IDs.
+#' @param hypothesis Either `"flat"` or a finite numeric projection matrix whose
+#'   dimensions equal the repeated-measurement dimension.
+#' @param AM A single logical value, specifying whether the compact
+#'   representation of the hypothesis matrix described by Sattler and Rosenbaum
+#'   (2025) is used. It may reduce the number of rows used in the calculations
+#'   without changing the resulting test. The default is `TRUE`.
+#'
+#' @details At least two repeated-measurement dimensions are required. Missing
+#'   values in `data` are not allowed and will result in an error.
+#'
+#'   The predefined value `"flat"` tests \deqn{\bm P_d\bm\mu=\bm 0.}
+#'   Alternatively, `hypothesis` may be a finite numeric \eqn{d\times d}
+#'   projection matrix, where \eqn{d} is the number of dimensions. It must be
+#'   symmetric, idempotent, and have positive rank. Small numerical deviations
+#'   within the implemented tolerance are accepted.
+#'   
+#'   For data.frame input, observations are sorted according to `subject` and
+#'   `dimension` (in that order) and then converted to a matrix with
+#'   the first subject in the first row. This should be taken into account, when
+#'   passing a matrix to `hypothesis`.
+#'
+#'   Upper-tail probabilities are computed directly. Reported p-values are
+#'   bounded below by `.Machine$double.eps`; a returned value at this boundary
+#'   should be interpreted as no larger than the numerical reporting threshold.
+#'
+#'
+#' @returns A named list of class `"hdrm_single"` with components:
+#' \describe{
+#'   \item{data}{A matrix with the data used. If data was a data.frame, this is
+#'   the transformed output.}
+#'   \item{dim}{A named numeric vector containing the repeated-measurement
+#'   dimension `d` and the number of analyzed subjects `N`.}
+#'   \item{H}{A named list with the hypothesis-matrix `T` used for the test and
+#'   the hypothesis label `label`.}
+#'   \item{AM}{The input value for `AM`.}
+#'   \item{f}{The estimated Pearson degrees of freedom.}
+#'   \item{statistic}{The standardized test statistic \eqn{W}.}
+#'   \item{tau}{The estimated convergence parameter \eqn{\tau=1/f}.}
+#'   \item{p.value}{The upper-tail p-value, bounded below by
+#'   `.Machine$double.eps`.}
+#' }
+#'
+#' @example man/examples/examples_hdrm_single.R
+#'
+#' @references Pauly M, Ellenberger D, Brunner E (2015). “Analysis of
+#'   high-dimensional one group repeated measures designs.” Statistics, 49(6),
+#'   1243–1261. doi: 10.1080/02331888.2015.1050022.
+#' @references Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
+#'   for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
+#'   110356. doi: 10.1016/j.spl.2025.110356.
+#' @export
+hdrm_single <- function(data,
+                        hypothesis = "flat",
+                        AM = TRUE) {
+  UseMethod("hdrm_single")
 }

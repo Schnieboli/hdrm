@@ -1,9 +1,25 @@
-citHeader("To cite hdrm, please use:")
-citEntry(entry = "MISC",
-         title        = "hdrm",
-         author       = personList(as.person("Nils Hichert")),
-         subtitle     = "A package for hypothesis testing with high dimensional repeated measures",
-         year         = "2024",
-         url          = "https://github.com/Schnieboli/hdrm/",
-         textVersion  = paste("Hichert, N. (2024). hdrm (Version 0.9) [Computer software]. https://github.com/Schnieboli/hdrm")
-)
+citHeader("If you use hdrm in a scientific publication, please cite the article below.")
+
+
+bibentry(bibtype = "Article",
+         key = "sattler_etall:2025",
+         title = "Inference for high dimensional repeated measure designs with the R package hdrm",
+         author = c(person(given = "Paavo",
+                           family = "Sattler",
+                           comment = c(ORCID = "0000-0001-8731-0893")),
+                    person(given = "Nils",
+                           family = "Hichert")),
+         year = "2025",
+         journal = "arXiv",
+         doi = "10.48550/arXiv.2512.17478",
+         url = "https://arxiv.org/abs/2512.17478")
+bibentry(bibtype = "Misc",
+         key = "hichert_etall:2026",
+         title = "hdrm: Inference procedures for high-dimensional repeated-measures data",
+         author = c(person(given = "Nils",
+                           family = "Hichert"),
+                    person(given = "Paavo",
+                           family = "Sattler")),
+         year = "2026",
+         url = "https://github.com/Schnieboli/hdrm",
+         version = "1.0.0")
