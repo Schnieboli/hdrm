@@ -37,6 +37,8 @@ test_that("perfect input does not produce any conditions and results can be repr
                   seed = 3141
                 )
                 
+                initial$H$label <- "custom"
+                
                 secondary <- hdrm_grouped(
                   initial$data,
                   hypothesis = initial$H,

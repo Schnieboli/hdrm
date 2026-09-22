@@ -105,7 +105,11 @@ hdrm_grouped.data.frame <- function(data,
     data = t(do.call(cbind, data_list)),
     dim = c(N = N, a = a, d = d),
     group = rep(1:a, sapply(data_list, ncol)),
-    H = test_result$H,
+    H = list(
+      TW = test_result$H$TW,
+      TS = test_result$H$TS,
+      label = ifelse(is.character(hypothesis), hypothesis, "custom")
+    ),
     statistic = test_result$statistic,
     p.value = test_result$p.value,
     f = test_result$f,
