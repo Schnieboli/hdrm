@@ -43,11 +43,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Nils Hichert \email{nils.hichert@tu-dortmund.de}
+\strong{Maintainer}: Nils Hichert \email{nils.hichert@tu-dortmund.de} [copyright holder]
 
 Authors:
 \itemize{
-  \item Nils Hichert \email{nils.hichert@tu-dortmund.de}
+  \item Nils Hichert \email{nils.hichert@tu-dortmund.de} [copyright holder]
   \item Paavo Sattler \email{paavo.sattler@tu-dortmund.de} (\href{https://orcid.org/0000-0001-8731-0893}{ORCID})
 }
 
