@@ -104,21 +104,21 @@ hdrm_grouped.data.frame <- function(data,
   out <- list(
     data = t(do.call(cbind, data_list)),
     dim = c(N = N, a = a, d = d),
-    group = rep(1:a, sapply(data_list, ncol)),
     H = list(
       TW = test_result$H$TW,
       TS = test_result$H$TS,
       label = ifelse(is.character(hypothesis), hypothesis, "custom")
     ),
+    group = rep(1:a, sapply(data_list, ncol)),
+    cov.equal = cov.equal,
+    subsampling = subsampling,
+    AM = AM,
+    B = test_result$B,
+    seed = seed,
     statistic = test_result$statistic,
     p.value = test_result$p.value,
     f = test_result$f,
-    tau = 1/test_result$f,
-    AM = AM,
-    cov.equal = cov.equal,
-    subsampling = subsampling,
-    B = test_result$B,
-    seed = seed
+    tau = 1 / test_result$f
   )
   levels(out$group) <- names(data_list)
   class(out) <- "hdrm_grouped"

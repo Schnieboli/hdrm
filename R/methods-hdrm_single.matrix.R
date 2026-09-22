@@ -33,11 +33,11 @@ hdrm_single.matrix <- function(
       "T" = test_result$H,
       label = ifelse(is.character(hypothesis), hypothesis, "custom")
     ),
+    AM = AM,
     statistic = test_result$statistic,
     p.value = test_result$p.value,
     f = test_result$f,
-    tau = 1/test_result$f,
-    AM = AM
+    tau = 1/test_result$f
   )
   class(out) <- "hdrm_single"
   out

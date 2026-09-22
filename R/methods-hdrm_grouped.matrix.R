@@ -84,21 +84,21 @@ hdrm_grouped.matrix <- function(data,
   out <- list(
     data = t(data),
     dim = c(N = N, a = a, d = d),
-    group = group,
     H = list(
       TW = test_result$H$TW,
       TS = test_result$H$TS,
       label = ifelse(is.character(hypothesis), hypothesis, "custom")
     ),
+    group = group,
+    cov.equal = cov.equal,
+    subsampling = subsampling,
+    AM = AM,
+    B = test_result$B,
+    seed = seed,
     statistic = test_result$statistic,
     p.value = test_result$p.value,
     f = test_result$f,
-    tau = 1 / test_result$f,
-    AM = AM,
-    cov.equal = cov.equal,
-    subsampling = subsampling,
-    B = test_result$B,
-    seed = seed
+    tau = 1 / test_result$f
   )
   class(out) <- "hdrm_grouped"
   out
