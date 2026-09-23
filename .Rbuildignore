@@ -9,3 +9,4 @@
 ^build$
 ^.Rprofile
 ^\.github$
+^cran-comments\.md$
