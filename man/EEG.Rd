@@ -32,8 +32,8 @@ conducted by Höller et al. (2017) and are a part of the package \code{HRM}
 described by Happ et al. (2018)
 }
 \references{
-Happ M, Harrar SW, Bathke AC (2018). “HRM: An R Package for Analysing High-dimensional Multi-factor Repeated Measures.” The R Journal, 10(1), 534–548. doi: 10.32614/RJ-2018-032.
+Happ M, Harrar SW, Bathke AC (2018). “HRM: An R Package for Analysing High-dimensional Multi-factor Repeated Measures.” The R Journal, 10(1), 534–548. \url{doi:10.32614/RJ-2018-032}.
 
-Höller Y, Bathke AC, Uhl A, Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner M, Jahanbekam A, Trinka E, Staffen W (2017). “Combining SPECT and Quantitative EEG Analysis for the Automated Differential Diagnosis of Disorders with Amnestic Symptoms.” Frontiers in Aging Neuroscience, 9, 290. doi: 10.3389/fnagi.2017.00290.
+Höller Y, Bathke AC, Uhl A, Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner M, Jahanbekam A, Trinka E, Staffen W (2017). “Combining SPECT and Quantitative EEG Analysis for the Automated Differential Diagnosis of Disorders with Amnestic Symptoms.” Frontiers in Aging Neuroscience, 9, 290. \url{doi:10.3389/fnagi.2017.00290}.
 }
 \keyword{datasets}

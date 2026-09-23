@@ -20,6 +20,6 @@ give the number of children per woman reported in table 12612-09 of the
 German Federal Statistical Office (Statistisches Bundesamt (Destatis), 2024).
 }
 \references{
-Statistisches Bundesamt (Destatis) (2024). “Statistischer Bericht – Geburten 2023, Tabelle 12612-09.” Zusammengefasste Geburtenziffer nach Bundesländern (Kinder je Frau). https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html.
+Statistisches Bundesamt (Destatis) (2024). “Statistischer Bericht – Geburten 2023, Tabelle 12612-09.” Zusammengefasste Geburtenziffer nach Bundesländern (Kinder je Frau). \url{url:https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html}.
 }
 \keyword{datasets}

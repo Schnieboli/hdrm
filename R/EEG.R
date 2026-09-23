@@ -19,11 +19,11 @@
 #'   temporal, occipital, and parietal, each measured on the left and right.}
 #'   \item{dimension}{Combined variable-region dimension coded from 1 to 40.}
 #' }
-#' 
+#'
 #' The documentation was taken from Happ et al. (2018).
 #'
-#' @references Happ M, Harrar SW, Bathke AC (2018). “HRM: An R Package for Analysing High-dimensional Multi-factor Repeated Measures.” The R Journal, 10(1), 534–548. doi: 10.32614/RJ-2018-032.
-#' @references Höller Y, Bathke AC, Uhl A, Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner M, Jahanbekam A, Trinka E, Staffen W (2017). “Combining SPECT and Quantitative EEG Analysis for the Automated Differential Diagnosis of Disorders with Amnestic Symptoms.” Frontiers in Aging Neuroscience, 9, 290. doi: 10.3389/fnagi.2017.00290.
+#' @references Happ M, Harrar SW, Bathke AC (2018). “HRM: An R Package for Analysing High-dimensional Multi-factor Repeated Measures.” The R Journal, 10(1), 534–548. <doi:10.32614/RJ-2018-032>.
+#' @references Höller Y, Bathke AC, Uhl A, Strobl N, Lang A, Bergmann J, Nardone R, Rossini F, Zauner H, Kirschner M, Jahanbekam A, Trinka E, Staffen W (2017). “Combining SPECT and Quantitative EEG Analysis for the Automated Differential Diagnosis of Disorders with Amnestic Symptoms.” Frontiers in Aging Neuroscience, 9, 290. <doi:10.3389/fnagi.2017.00290>.
 #' @docType data
 #' @keywords datasets
 #' @name EEG

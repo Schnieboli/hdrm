@@ -117,9 +117,9 @@ hdrm_single(
 \references{
 Pauly M, Ellenberger D, Brunner E (2015). “Analysis of
 high-dimensional one group repeated measures designs.” Statistics, 49(6),
-1243–1261. doi: 10.1080/02331888.2015.1050022.
+1243–1261. \url{doi:10.1080/02331888.2015.1050022}.
 
 Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
 for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
-110356. doi: 10.1016/j.spl.2025.110356.
+110356. \url{doi:10.1016/j.spl.2025.110356}.
 }

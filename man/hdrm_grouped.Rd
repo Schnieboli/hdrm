@@ -239,15 +239,15 @@ hdrm_grouped(
 \references{
 Sattler P (2021). “A comprehensive treatment of
 quadratic-form-based inference in repeated measures designs under diverse
-asymptotics.” Electronic Journal of Statistics, 15(1), 3611–3634. doi:
-10.1214/21-EJS1865.
+asymptotics.” Electronic Journal of Statistics, 15(1), 3611–3634.
+\url{doi:10.1214/21-EJS1865}.
 
 Sattler P, Pauly M (2018). “Inference for high-dimensional
 split-plot-designs: A unified approach for small to large numbers of factor
-levels.” Electronic Journal of Statistics, 12(2), 2743–2805. doi:
-10.1214/18-EJS1465.
+levels.” Electronic Journal of Statistics, 12(2), 2743–2805.
+\url{doi:10.1214/18-EJS1465}.
 
 Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
 for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
-110356. doi: 10.1016/j.spl.2025.110356.
+110356. \url{doi:10.1016/j.spl.2025.110356}.
 }

@@ -21,7 +21,7 @@
 #'   projection matrix, where \eqn{d} is the number of dimensions. It must be
 #'   symmetric, idempotent, and have positive rank. Small numerical deviations
 #'   within the implemented tolerance are accepted.
-#'   
+#'
 #'   For data.frame input, observations are sorted according to `subject` and
 #'   `dimension` (in that order) and then converted to a matrix with
 #'   the first subject in the first row. This should be taken into account, when
@@ -52,10 +52,10 @@
 #'
 #' @references Pauly M, Ellenberger D, Brunner E (2015). “Analysis of
 #'   high-dimensional one group repeated measures designs.” Statistics, 49(6),
-#'   1243–1261. doi: 10.1080/02331888.2015.1050022.
+#'   1243–1261. <doi:10.1080/02331888.2015.1050022>.
 #' @references Sattler P, Rosenbaum M (2025). “Choice of the hypothesis matrix
 #'   for using the Anova-type-statistic.” Statistics & Probability Letters, 219,
-#'   110356. doi: 10.1016/j.spl.2025.110356.
+#'   110356. <doi:10.1016/j.spl.2025.110356>.
 #' @export
 hdrm_single <- function(data,
                         hypothesis = "flat",
