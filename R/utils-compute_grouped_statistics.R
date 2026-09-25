@@ -4,6 +4,8 @@ compute_grouped_statistic <- function(QN, EW, variance) {
                   EW = EW,
                   variance = variance)
 
+  statistic <- as.numeric((QN - EW) / sqrt(variance))
+
   if (any(lengths(list(QN, EW, variance)) != 1L) ||
       !is.numeric(quantities) ||
       anyNA(quantities) ||
