@@ -8,8 +8,8 @@
 <!-- badges: end -->
 
 The `hdrm` package provides inference procedures for high-dimensional
-repeated-measures data in one-sample and multiple-group designs (Pauly
-et al., 2015; Sattler, 2021; Sattler & Pauly, 2018).
+repeated-measures data in one-sample (Pauly et al., 2015) and
+multiple-group designs (Sattler, 2021; Sattler & Pauly, 2018).
 
 ## Installation
 
