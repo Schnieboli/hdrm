@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 The `hdrm` package provides inference procedures for high-dimensional
 repeated-measures data in one-sample and multiple-group designs
-[@Pauly2015; @Sattler2018].
+[@Pauly2015; @Sattler2018; @Sattler2021].
 
 ## Installation
 

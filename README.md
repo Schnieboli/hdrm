@@ -9,7 +9,7 @@
 
 The `hdrm` package provides inference procedures for high-dimensional
 repeated-measures data in one-sample and multiple-group designs (Pauly
-et al., 2015; Sattler & Pauly, 2018).
+et al., 2015; Sattler, 2021; Sattler & Pauly, 2018).
 
 ## Installation
 
@@ -269,6 +269,15 @@ Neuroscience</span>*, *9*, 290.
 Pauly, M., Ellenberger, D., & Brunner, E. (2015). Analysis of
 high-dimensional one group repeated measures designs. *Statistics*,
 *49*(6), 1243–1261. <https://doi.org/10.1080/02331888.2015.1050022>
+
+</div>
+
+<div id="ref-Sattler2021" class="csl-entry">
+
+Sattler, P. (2021). A comprehensive treatment of quadratic-form-based
+inference in repeated measures designs under diverse asymptotics.
+*Electronic Journal of Statistics*, *15*(1), 3611–3634.
+<https://doi.org/10.1214/21-EJS1865>
 
 </div>
 
