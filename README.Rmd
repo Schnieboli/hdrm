@@ -1,7 +1,7 @@
 ---
 output: github_document
 bibliography: inst/REFERENCES.bib 
-csl: apa.csl
+csl: inst/apa.csl
 ---
 
 
