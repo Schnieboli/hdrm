@@ -299,7 +299,7 @@ factor levels. *Electronic Journal of Statistics*, *12*(2), 2743–2805.
 Statistisches Bundesamt (Destatis). (2024). *Statistischer Bericht –
 Geburten 2023, Tabelle 12612-09*. Zusammengefasste Geburtenziffer nach
 Bundesländern (Kinder je Frau).
-<https://www.destatis.de/DE/Themen/Gesellschaft-Umwelt/Bevoelkerung/Geburten/Publikationen/Downloads-Geburten/statistischer-bericht-geburten-5126104237005.html>
+<https://www.statistischebibliothek.de/mir/receive/DEHeft_mods_00160779>
 
 </div>
 
