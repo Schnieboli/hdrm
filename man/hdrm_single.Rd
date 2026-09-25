@@ -102,11 +102,7 @@ hdrm_single(
 ## define hypothesis = "flat" via equivalent projection matrix
 d <- ncol(birthrates_matrix)
 flat_projection <- diag(d) -
-  matrix(
-    1 / d,
-    nrow = d,
-    ncol = d
-  )
+  matrix(1 / d, nrow = d, ncol = d)
 
 ## test whether the time profile is flat via custom hypothesis matrix
 hdrm_single(
