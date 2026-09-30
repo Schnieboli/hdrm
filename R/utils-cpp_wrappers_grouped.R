@@ -93,10 +93,22 @@ A1_eq <- function(X_TS_list, subsampling, B){
 }
 
 
-A2_eq <- function(X_TS_list){
+A2_eq <- function(X_TS_list, subsampling, B){
   n_i <- sapply(X_TS_list, ncol)
-  A2_body <- sum(sapply(X_TS_list, A2_i_eq_cpp))
-  A2 <- A2_body / (24 * sum(choose(n_i, 4)))
+  a <- length(n_i)
+
+  if(subsampling){
+    B_i <- allocate_C1_subsamples(n_i, B, 4)
+    A2_bodies <- numeric(a)
+    for(i in 1:a){
+      A2_bodies <- A3star_i_cpp(X_TS_list[[i]], B_i[i])
+    }
+    A2 <- sum(B_i * A2_bodies) / sum(B_i)
+
+  } else{
+    A2_body <- sum(sapply(X_TS_list, A2_i_eq_cpp))
+    A2 <- A2_body / (24 * sum(choose(n_i, 4)))
+  }
   if (is.na(A2) || !is.finite(A2) || A2 < 0)
     stop("Internal error: please contact 'hdrm' package maintainer", call. = FALSE)
   A2
