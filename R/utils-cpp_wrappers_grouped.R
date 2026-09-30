@@ -94,7 +94,7 @@ A2_eq <- function(X_TS_list){
 
 C1star_eq <- function(X_TS_list, B){
   n_i <- sapply(X_TS_list, ncol)
-  B_i <- allocate_C1_subsamples(group_sizes = n_i, B = B)
+  B_i <- allocate_C1_subsamples(group_sizes = n_i, B = B, m = 6)
   C1_body <- 0
   for(i in seq_along(X_TS_list)){
     C1_body <- C1_body + C1star_i_eq_cpp(X_TS_list[[i]], B_i[i])
