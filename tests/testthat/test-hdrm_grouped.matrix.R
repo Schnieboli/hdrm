@@ -17,7 +17,7 @@ legal$B <- list("10*N", 100)
 
 
 test_that("perfect input does not produce any conditions and results can be reproduced from output", {
-  
+
   # legal list to hypothesis
   for (hypothesis in legal$hypotheses) {
     for (subsampling in legal$subsampling)
@@ -36,9 +36,9 @@ test_that("perfect input does not produce any conditions and results can be repr
                   B = B,
                   seed = 3141
                 )
-                
+
                 initial$H$label <- "custom"
-                
+
                 secondary <- hdrm_grouped(
                   initial$data,
                   hypothesis = initial$H,
@@ -50,7 +50,7 @@ test_that("perfect input does not produce any conditions and results can be repr
                   seed = initial$seed[[1]]
                 )
               })
-              expect_identical(initial, secondary) 
+              expect_identical(initial, secondary)
             }
   }
 })
@@ -62,7 +62,7 @@ test_that("illegal 'data' input", {
   mat_NA[1,1] <- NA
   mat_Inf[1,1] <- Inf
   mat_char <- matrix(as.character(mat_char), nrow = nrow(Matrixbirthrates))
-  
+
   for(M in list(mat_NA, mat_Inf, mat_char))
     expect_error(
       hdrm_grouped(
@@ -77,13 +77,13 @@ test_that("illegal 'data' input", {
 })
 
 test_that("illegal 'group' input",{
-  
+
   ## test NA, Inf in group or group wrong length
   group_NA <- c(NA, group_int[-1])
   group_Inf <- c(Inf, group_int[-1])
   group_short <- group_int[-1]
   group_long <- c(group_int, 1)
-  
+
   for(group in list(group_NA, group_Inf)){
     expect_error(
       hdrm_grouped(
@@ -95,7 +95,7 @@ test_that("illegal 'group' input",{
       ), "'group' must only contain finite non-missing values."
     )
   }
-  
+
   for(group in list(group_short, group_long)){
     expect_error(
       hdrm_grouped(
@@ -107,7 +107,7 @@ test_that("illegal 'group' input",{
       ), "'group' must be a one-dimensional vector or factor of length nrow\\(data\\)\\."
     )
   }
-  
+
 })
 
 test_that("wrong input: hypothesis", {
@@ -129,7 +129,7 @@ test_that("wrong input: hypothesis", {
                       list(TW = TW_idem , TS = diag(34)), ## TW not symmetrical
                       list(TW = diag(2), TS = TS_idem)    ## TW not symmetrical
   )
-  
+
   for(h in illegal_hyp){
     expect_error(
       hdrm_grouped(
@@ -156,10 +156,11 @@ test_that("false input: B", {
     NA,
     Inf,
     2^34,
-    "2^32 * N"
-    
+    "2^32 * N",
+    2^31
+
   )
-  
+
   for(B in illegal_B){
     expect_error(
       hdrm_grouped(
@@ -175,14 +176,14 @@ test_that("false input: B", {
 
 
 test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
-  
+
   # Helper: Vergleicht statistic, p.value und f in einem Rutsch
   test_metrics <- function(res, expected_stat, expected_p, expected_f, tolerance = 1e-6) {
     expect_equal(res$statistic, expected_stat, tolerance = tolerance)
     expect_equal(res$p.value,   expected_p,    tolerance = tolerance)
     expect_equal(res$f,         expected_f,    tolerance = tolerance)
   }
-  
+
   ## define default arguments for readability
   res_whole <- hdrm_grouped(
     data = Matrixbirthrates,
@@ -192,7 +193,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
     B = "10*N",
     seed = 3141
   )
-  
+
   res_sub <- hdrm_grouped(
     data = Matrixbirthrates,
     hypothesis = "sub",
@@ -201,7 +202,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
     B = "10*N",
     seed = 3141
   )
-  
+
   res_interaction <- hdrm_grouped(
     data = Matrixbirthrates,
     hypothesis = "interaction",
@@ -210,7 +211,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
     B = "10*N",
     seed = 3141
   )
-  
+
   res_identical <- hdrm_grouped(
     data = Matrixbirthrates,
     hypothesis = "identical",
@@ -219,7 +220,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
     B = "10*N",
     seed = 3141
   )
-  
+
   res_flat <- hdrm_grouped(
     data = Matrixbirthrates,
     hypothesis = "flat",
@@ -228,7 +229,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
     B = "10*N",
     seed = 3141
   )
-  
+
   # Subsampling = TRUE
   res_subsampling <- hdrm_grouped(
     Matrixbirthrates,
@@ -249,7 +250,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
     B = "10*N",
     seed = 3141
   )
-  
+
   # cov.equal = TRUE, AM = 0
   res_cov_equal <- hdrm_grouped(
     Matrixbirthrates,
