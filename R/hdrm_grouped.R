@@ -19,13 +19,11 @@
 #'   covariance matrices are assumed to be equal. The default is `FALSE`.
 #' @param subsampling A single logical value specifying whether the subsampling
 #'   versions of all available trace estimators are used in the
-#'   heterogeneous-covariance procedure. It has no effect when `cov.equal =
-#'   TRUE`; see Details.
+#'   heterogeneous-covariance procedure; see Details.
 #' @param B A single numeric value or arithmetic character expression in `N`
 #'   defining the subsampling budget. Character expressions may contain only
 #'   numeric constants, `N`, parentheses, and the operators `+`, `-`, `*`, `/`,
-#'   and `^`. Its interpretation depends on `cov.equal` and `subsampling`; see
-#'   Details.
+#'   and `^`. Its interpretation depends `subsampling`; see Details.
 #' @param AM A single logical value, specifying whether the compact
 #'   representation of the hypothesis matrices described by Sattler and
 #'   Rosenbaum (2025) is used. It may reduce the number of rows used in the
@@ -78,10 +76,10 @@
 #'   \eqn{a} is the number of groups. When `subsampling = TRUE`, the remaining
 #'   available trace estimators are also replaced by their subsampling versions.
 #'
-#'   When `cov.equal = TRUE`, the method described in Sattler (2021) is used and
-#'   `subsampling` has no effect. The pooled third-trace estimator uses an exact
-#'   total of \eqn{aB} six-subject draws across all groups. These draws are
-#'   allocated approximately proportionally to \eqn{\binom{n_i}{6}} using the
+#'   When `cov.equal = TRUE`, the method described in Sattler (2021) is used.
+#'   The pooled third-trace estimator uses an exact total of \eqn{aB}
+#'   six-subject draws across all groups. These draws are allocated
+#'   approximately proportionally to \eqn{\binom{n_i}{6}} using the
 #'   largest-remainder method, with every group receiving at least one draw.
 #'
 #'   Even when `subsampling = FALSE`, `f`, `tau`, and `p.value` remain seed

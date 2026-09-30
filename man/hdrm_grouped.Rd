@@ -34,13 +34,12 @@ covariance matrices are assumed to be equal. The default is \code{FALSE}.}
 
 \item{subsampling}{A single logical value specifying whether the subsampling
 versions of all available trace estimators are used in the
-heterogeneous-covariance procedure. It has no effect when \code{cov.equal = TRUE}; see Details.}
+heterogeneous-covariance procedure; see Details.}
 
 \item{B}{A single numeric value or arithmetic character expression in \code{N}
 defining the subsampling budget. Character expressions may contain only
 numeric constants, \code{N}, parentheses, and the operators \code{+}, \code{-}, \code{*}, \code{/},
-and \code{^}. Its interpretation depends on \code{cov.equal} and \code{subsampling}; see
-Details.}
+and \code{^}. Its interpretation depends \code{subsampling}; see Details.}
 
 \item{AM}{A single logical value, specifying whether the compact
 representation of the hypothesis matrices described by Sattler and
@@ -125,10 +124,10 @@ where each draw simultaneously samples six subjects from every group and
 \eqn{a} is the number of groups. When \code{subsampling = TRUE}, the remaining
 available trace estimators are also replaced by their subsampling versions.
 
-When \code{cov.equal = TRUE}, the method described in Sattler (2021) is used and
-\code{subsampling} has no effect. The pooled third-trace estimator uses an exact
-total of \eqn{aB} six-subject draws across all groups. These draws are
-allocated approximately proportionally to \eqn{\binom{n_i}{6}} using the
+When \code{cov.equal = TRUE}, the method described in Sattler (2021) is used.
+The pooled third-trace estimator uses an exact total of \eqn{aB}
+six-subject draws across all groups. These draws are allocated
+approximately proportionally to \eqn{\binom{n_i}{6}} using the
 largest-remainder method, with every group receiving at least one draw.
 
 Even when \code{subsampling = FALSE}, \code{f}, \code{tau}, and \code{p.value} remain seed
