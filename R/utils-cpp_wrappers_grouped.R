@@ -101,7 +101,7 @@ A2_eq <- function(X_TS_list, subsampling, B){
     B_i <- allocate_C1_subsamples(n_i, B = B, m = 4)
     A2_bodies <- numeric(a)
     for(i in 1:a){
-      A2_bodies <- A3star_i_cpp(X_TS_list[[i]], B_i[i])
+      A2_bodies[i] <- A3star_i_cpp(X_TS_list[[i]], B_i[i])
     }
     A2 <- sum(B_i * A2_bodies) / sum(B_i)
   } else{
