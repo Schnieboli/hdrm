@@ -72,10 +72,21 @@ C5star <- function(data_list, TW, TS, B){
 
 # Equal covariance --------------------------------------------------------
 
-A1_eq <- function(X_TS_list){
+A1_eq <- function(X_TS_list, subsampling, B){
   n_i <- sapply(X_TS_list, ncol)
-  A1_body <- sum(sapply(X_TS_list, A1_i_eq_cpp))
-  A1 <- A1_body / sum(n_i*(n_i-1))
+  a <- length(n_i)
+
+  if(subsampling){
+    B_i <- allocate_C1_subsamples(n_i, B = B, m = 2)
+    A1_bodies <- numeric(a)
+    for(i in 1:a){
+      A1_bodies[i] <- A1star_i_cpp(X_TS_list[[i]], B_i[i])
+    }
+    A1 <- sum(B_i * A1_bodies) / sum(B_i)
+  } else{
+    A1_body <- sum(sapply(X_TS_list, A1_i_eq_cpp))
+    A1 <- A1_body / sum(n_i*(n_i-1))
+  }
   if (is.na(A1) || !is.finite(A1) || A1 < 0)
     stop("Internal error: please contact 'hdrm' package maintainer", call. = FALSE)
   A1
