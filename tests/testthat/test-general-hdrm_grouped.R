@@ -279,7 +279,7 @@ test_that("equal-covariance subsampling budget is allocated correctly", {
 
 
   # Equal group sizes and base budget B = 8 give exactly 8 draws per group.
-  balanced_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 6L, 6L), B = 8L)
+  balanced_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 6L, 6L), B = 8L, m = 6)
 
   expect_identical(balanced_allocation, c(8L, 8L, 8L))
   expect_equal(sum(balanced_allocation), 24L)
@@ -288,7 +288,7 @@ test_that("equal-covariance subsampling budget is allocated correctly", {
 
   # Unequal group sizes are weighted approximately proportionally to
   # choose(n_i, 6), while the exact total remains a * B.
-  unbalanced_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 7L, 8L), B = 20L)
+  unbalanced_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 7L, 8L), B = 20L, m = 6)
 
   expect_identical(unbalanced_allocation, c(3L, 12L, 45L))
   expect_equal(sum(unbalanced_allocation), 60L)
