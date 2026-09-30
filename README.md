@@ -132,18 +132,19 @@ hdrm_single(
 | Setting | Main arguments | Interpretation of `B` |
 |----|----|----|
 | Heterogeneous covariances with exact available trace estimators | `cov.equal = FALSE`, `subsampling = FALSE` | Base budget; the joint third-trace estimator uses `a * B` joint draws |
+| Equal covariances with exact available trace estimators | `cov.equal = TRUE`, `subsampling = FALSE` | Base budget; the pooled third-trace estimators uses `a * B` total draws distributed across groups |
 | Heterogeneous covariances with additional subsampling | `cov.equal = FALSE`, `subsampling = TRUE` | Base budget; group-specific and pairwise estimators use `B` draws per group or pair, while the joint third-trace estimator uses `a * B` joint draws |
-| Equal covariance matrices | `cov.equal = TRUE` | Base budget; the pooled third-trace estimator uses `a * B` total draws distributed across groups |
+| Equal covariance matrices | `cov.equal = TRUE`, `subsampling = TRUE` | Base budget; the pooled trace estimators uses `a * B` total draws distributed across groups |
 
-For the equal-covariance method, `subsampling` has no effect. The
-`a * B` third-trace draws are allocated across groups approximately
-proportionally to the numbers of available six-subject subsets.
+In the `cov.equal = TRUE` case, the `a * B` first/second/third-trace
+draws are allocated across groups approximately proportionally to the
+numbers of available two/four/six-subject subsets.
 
 A third-trace quantity is estimated by subsampling in every grouped
 analysis. Consequently, `f`, `tau`, and the p-value depend on `B` and
-the random seed even when `subsampling = FALSE`. With heterogeneous
-covariances and `subsampling = TRUE`, the test statistic itself is seed
-dependent as well.
+the random seed even when `subsampling = FALSE`. With
+`subsampling = TRUE`, the test statistic itself is seed dependent as
+well.
 
 Supplying `seed` makes a call reproducible without permanently changing
 the previous `R` random-number state.
