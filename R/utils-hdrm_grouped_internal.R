@@ -15,8 +15,8 @@ hdrm_grouped_internal <- function(X_list, H, cov.equal, subsampling, B, seed){
   }
   
   if(cov.equal){
-    EW <- sum((N / n) * diag(H$TW)) * A1_eq(X_TS_list)
-    second_order <- A2_eq(X_TS_list)
+    EW <- sum((N / n) * diag(H$TW)) * A1_eq(X_TS_list, subsampling = subsampling, B = B)
+    second_order <- A2_eq(X_TS_list,  subsampling = subsampling, B = B)
     third_order <- C1star_eq(X_TS_list, B = B)
     Var <- 2 * second_order * sum((H$TW)^2 * (N^2 / outer(n, n)))
   } else{
