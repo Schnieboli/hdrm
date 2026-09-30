@@ -98,13 +98,12 @@ A2_eq <- function(X_TS_list, subsampling, B){
   a <- length(n_i)
 
   if(subsampling){
-    B_i <- allocate_C1_subsamples(n_i, B, 4)
+    B_i <- allocate_C1_subsamples(n_i, B = B, m = 4)
     A2_bodies <- numeric(a)
     for(i in 1:a){
       A2_bodies <- A3star_i_cpp(X_TS_list[[i]], B_i[i])
     }
     A2 <- sum(B_i * A2_bodies) / sum(B_i)
-
   } else{
     A2_body <- sum(sapply(X_TS_list, A2_i_eq_cpp))
     A2 <- A2_body / (24 * sum(choose(n_i, 4)))
