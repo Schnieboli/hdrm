@@ -61,7 +61,7 @@ hdrm_grouped.data.frame <- function(data,
     stop("'group' must be a one-dimensional vector or factor of length nrow(data).", call. = FALSE)
   }
   
-  if(any(is.na(group)) || any(!is.finite(group))){
+  if(any(is.na(group)) || (is.numeric(group) && any(!is.finite(group)))){
     stop("'group' must only contain finite, non-missing values.", call. = FALSE)
   }
   
