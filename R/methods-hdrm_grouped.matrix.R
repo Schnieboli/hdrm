@@ -52,7 +52,7 @@ hdrm_grouped.matrix <- function(data,
          call. = FALSE)
   }
   
-  if (!all(is.finite(group)) || any(is.na(group))) {
+  if(any(is.na(group)) || (is.numeric(group) && any(!is.finite(group)))){
     stop("'group' must only contain finite non-missing values.")
   }
   
