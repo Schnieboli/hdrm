@@ -54,13 +54,14 @@ Both main functions accept either:
 - a numeric matrix with subjects in rows and repeated-measurement dimensions in columns, or
 - a data.frame with columns `value`, `subject` and `dimension`, giving the measurements and the subject and dimension IDs.
 
-In the grouped case, a vector specifying which subject belongs to which group must be passed to `group`.
+For `hdrm_grouped()`, `group` must contain one group label per subject for
+matrix input and one group label per observation row for data.frame input.
 
 Missing values in `data` (and `group`) are not allowed and will result in an error. At least two dimensions are required. The one-group method requires at least three subjects, while in the multi-group case, each group must contain at least six complete subjects.
 
 ## One-Group Test
 
-A one-group test can be performed using `hdrm_single()`. The functionaccepts either a numeric matrix with dimensions in rows and subjects incolumns, or a data.frame containing columns `value`, `subject` and `dimension`.
+A one-group test can be performed using `hdrm_single()`. The function accepts either a numeric matrix with subjects in rows and dimensions in columns, or a data.frame containing columns `value`, `subject` and `dimension`.
 
 The package includes two example data sets: `birthrates` @birthrates,
 a wide-format data set containing birth rates for the 16 German federal
@@ -130,11 +131,13 @@ hdrm_single(
 | Setting | Main arguments | Interpretation of `B` |
 |---|---|---|
 | Heterogeneous covariances with exact available trace estimators | `cov.equal = FALSE`, `subsampling = FALSE` | Base budget; the joint third-trace estimator uses `a * B` joint draws |
-| Equal covariances with exact available trace estimators | `cov.equal = TRUE`, `subsampling = FALSE` | Base budget; the pooled third-trace estimators uses `a * B` total draws distributed across groups |
+| Equal covariances with exact available trace estimators | `cov.equal = TRUE`, `subsampling = FALSE` | Base budget; the pooled third-trace estimators use `a * B` total draws distributed across groups |
 | Heterogeneous covariances with additional subsampling | `cov.equal = FALSE`, `subsampling = TRUE` | Base budget; group-specific and pairwise estimators use `B` draws per group or pair, while the joint third-trace estimator uses `a * B` joint draws |
-| Equal covariance matrices | `cov.equal = TRUE`, `subsampling = TRUE` | Base budget; the pooled trace estimators uses `a * B` total draws distributed across groups |
+| Equal covariance matrices | `cov.equal = TRUE`, `subsampling = TRUE` | Base budget; the pooled trace estimators use `a * B` total draws distributed across groups |
 
-In the `cov.equal = TRUE` case, the `a * B` first/second/third-trace draws are allocated across groups approximately proportionally to the numbers of available two/four/six-subject subsets.
+In the `cov.equal = TRUE` case, each subsampling-based trace estimator uses
+a total of `a * B` draws distributed across groups approximately proportionally
+to the numbers of available two-, four-, or six-subject subsets, respectively.
 
 A third-trace quantity is estimated by subsampling in every grouped analysis. Consequently, `f`, `tau`, and the p-value depend on `B` and the random seed even when `subsampling = FALSE`. With `subsampling = TRUE`, the test statistic itself is seed dependent as well.
 
@@ -159,7 +162,7 @@ hdrm_grouped(
   group = group,
   cov.equal = FALSE,
   subsampling = FALSE,
-  B = "100*N",
+  B = "1000*N",
   seed = 3141
 )
 
@@ -174,7 +177,7 @@ hdrm_grouped(
   hypothesis = "interaction",
   group = group,
   cov.equal = TRUE,
-  B = "100*N",
+  B = "1000*N",
   seed = 3141
 )
 
@@ -195,7 +198,7 @@ hdrm_grouped(
   group = EEG$group,
   cov.equal = FALSE,
   subsampling = FALSE,
-  B = "100*N",
+  B = "1000*N",
   seed = 3141
 )
 ```
@@ -224,10 +227,17 @@ hdrm_grouped(
   data = birthrates_matrix,
   hypothesis = custom_hypothesis,
   group = group,
-  B = "100*N",
+  B = "1000*N",
   seed = 3141
 )
 ```
+### Companion matrices
+
+By default, both `hdrm_single()` and `hdrm_grouped()` use `AM = TRUE`.
+In this case, a compact companion representation of the hypothesis matrix is
+used internally. This can reduce the computational effort when the rank of the
+hypothesis matrix is substantially smaller than its dimension, without changing
+the resulting test. Setting `AM = FALSE` uses the original hypothesis matrix.
 
 ## Reported p-values
 
