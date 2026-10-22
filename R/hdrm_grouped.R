@@ -13,17 +13,17 @@
 #'   `"identical"`, or `"flat"`, or a named list containing projection matrices
 #'   `TW` and `TS`; see Details.
 #' @param group A one-dimensional atomic vector or factor defining the group
-#'   allocation. For matrix input it must contain one entry per row. For vector
-#'   input it must contain one entry per measurement.
+#'   allocation. For matrix input it must contain one entry per row. For data.frame
+#'   input it must contain one entry per row.
 #' @param cov.equal A single logical value specifying whether the group
 #'   covariance matrices are assumed to be equal. The default is `FALSE`.
 #' @param subsampling A single logical value specifying whether the subsampling
-#'   versions of all available trace estimators are used in the
-#'   heterogeneous-covariance procedure; see Details.
+#'   versions of all available trace estimators are used; see Details.
 #' @param B A single numeric value or arithmetic character expression in `N`
 #'   defining the subsampling budget. Character expressions may contain only
 #'   numeric constants, `N`, parentheses, and the operators `+`, `-`, `*`, `/`,
-#'   and `^`. Its interpretation depends `subsampling`; see Details.
+#'   and `^`. Its interpretation depends on `cov.equal` and `subsampling`; see
+#'   Details.
 #' @param AM A single logical value, specifying whether the compact
 #'   representation of the hypothesis matrices described by Sattler and
 #'   Rosenbaum (2025) is used. It may reduce the number of rows used in the
@@ -62,10 +62,10 @@
 #'   and `TS` must have one row and column per repeated-measurement dimension.
 #'   Small numerical deviations within the implemented tolerance are accepted.
 #'
-#'   For data.frame input, observations are sorted according to `subject`,
-#'   `dimension` and `group` (in that order) and then converted to a matrix with
-#'   the first subject in the first row. This should be taken into account, when
-#'   passing a list with custom matrices to `hypothesis`.
+#'   For data.frame input, observations are converted to a matrix with subjects
+#'   in rows and repeated-measurement dimensions in columns. For custom
+#'   hypotheses, the order of `TW` must correspond to the factor levels of
+#'   `group`, and the order of `TS` to the factor levels of `dimension`.
 #'
 #'   When `cov.equal = FALSE`, the method of Sattler and Pauly (2018) is used.
 #'   The third-trace estimator entering `f` is always computed using
@@ -83,9 +83,8 @@
 #'   largest-remainder method, with every group receiving at least one draw.
 #'
 #'   Even when `subsampling = FALSE`, `f`, `tau`, and `p.value` remain seed
-#'   dependent because a third-trace quantity is estimated by subsampling. For
-#'   heterogeneous covariance matrices with `subsampling = TRUE`, `statistic` is
-#'   seed dependent as well.
+#'   dependent because a third-trace quantity is estimated by subsampling. With
+#'   `subsampling = TRUE`, `statistic` is seed dependent as well.
 #'
 #'   `B` may be numeric or an arithmetic character expression involving `N`,
 #'   such as `"1000*N"` or `"10*(N + 1)"`. The result is rounded up to the next
@@ -104,7 +103,8 @@
 #'   the number of analyzed subjects `N` and the number of analyzed groups `a`.}
 #'   \item{H}{A named list containing the projection matrices `TW` and `TS` used
 #'   for the test and `label` with the hypothesis label.}
-#'   \item{group}{The sorted input to `group`.}
+#'   \item{group}{The group allocation corresponding to the rows of the
+#'   returned data matrix.}
 #'   \item{cov.equal}{The input value for `cov.equal`.}
 #'   \item{subsampling}{The input value for `subsampling`.}
 #'   \item{B}{The evaluated integer base budget `B`. The grouped
