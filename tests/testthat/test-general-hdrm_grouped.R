@@ -271,7 +271,7 @@ test_that("grouped numerical helper functions reject degenerate quantities",
 test_that("equal-covariance subsampling budget is allocated correctly", {
   # B is a base budget. With B = 1, a groups produce a total of a draws,
   # so every group receives one draw.
-  minimum_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 7L, 8L), B = 1L)
+  minimum_allocation <- hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 7L, 8L), B = 1L)
 
   expect_identical(minimum_allocation, c(1L, 1L, 1L))
   expect_equal(sum(minimum_allocation), 3L)
@@ -279,7 +279,7 @@ test_that("equal-covariance subsampling budget is allocated correctly", {
 
 
   # Equal group sizes and base budget B = 8 give exactly 8 draws per group.
-  balanced_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 6L, 6L), B = 8L, m = 6)
+  balanced_allocation <- hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 6L, 6L), B = 8L, m = 6)
 
   expect_identical(balanced_allocation, c(8L, 8L, 8L))
   expect_equal(sum(balanced_allocation), 24L)
@@ -288,7 +288,7 @@ test_that("equal-covariance subsampling budget is allocated correctly", {
 
   # Unequal group sizes are weighted approximately proportionally to
   # choose(n_i, 6), while the exact total remains a * B.
-  unbalanced_allocation <- hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 7L, 8L), B = 20L, m = 6)
+  unbalanced_allocation <- hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 7L, 8L), B = 20L, m = 6)
 
   expect_identical(unbalanced_allocation, c(3L, 12L, 45L))
   expect_equal(sum(unbalanced_allocation), 60L)
@@ -297,7 +297,7 @@ test_that("equal-covariance subsampling budget is allocated correctly", {
 
   # # The helper rejects non-positive base budgets.
   # expect_error(
-  #   hdrm:::allocate_C1_subsamples(group_sizes = c(6L, 7L, 8L), B = 0L),
+  #   hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 7L, 8L), B = 0L),
   #   "'B' must be a finite positive integer.",
   #   fixed = TRUE
   # )
