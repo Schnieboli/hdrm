@@ -169,7 +169,7 @@ test_that("wrong input: hypothesis", {
   TS_symm <- 2*diag(34)
   TS_rank0 <- matrix(0, 34, 34)
   illegal_hyp <- list("flart",                            ## illegal char
-                      c("flat, sub"),                     ## two legal chars
+                      c("flat", "sub"),                   ## two legal chars
                       1,                                  ## numeric value
                       diag(68),                           ## matrix
                       list(TW = diag(2),  TS = diag(33)), ## wrong dimension TS
@@ -232,7 +232,7 @@ test_that("non continuous levels in data and group work", {
   df$subject[df$subject == 2] <- 1
   df$dimension <- df$dimension + 1
   group_tmp <- group_int
-  group_tmp[group_tmp == 4] <- 5
+  group_tmp[group_tmp == 2] <- 5
   
   res_normal <- hdrm_grouped(
     DFbirthrates,
