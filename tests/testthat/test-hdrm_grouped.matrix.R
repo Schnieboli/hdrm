@@ -117,7 +117,7 @@ test_that("wrong input: hypothesis", {
   TS_idem[c(1,34),34] <- c(1,0)
   TS_symm <- 2*diag(34)
   illegal_hyp <- list("flart",                            ## illegal char
-                      c("flat, sub"),                     ## two legal chars
+                      c("flat", "sub"),                     ## two legal chars
                       1,                                  ## numeric value
                       diag(68),                           ## matrix
                       list(TW = diag(2), TS = diag(33)),  ## wrong dimension TS
@@ -273,7 +273,7 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
   test_metrics(res_cov_equal, 11.078986, 2.155735e-07, 4.595081)
 })
 
-test_that("AM representations agree for the one-group method", {
+test_that("AM representations agree for the grouped method", {
   result_am0 <- hdrm_grouped(
     Matrixbirthrates,
     hypothesis = "whole",
@@ -288,7 +288,7 @@ test_that("AM representations agree for the one-group method", {
     hypothesis = "whole",
     group = group_int,
     subsampling = FALSE,
-    AM = 0,
+    AM = 1,
     B = "10*N",
     seed = 3141
   )
