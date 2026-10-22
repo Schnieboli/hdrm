@@ -78,9 +78,9 @@ test_that("illegal 'data' input", {
 test_that("wrong input: hypothesis", {
   TM_idem <- diag(40)
   TM_idem[c(1,40),40] <- c(1,0)
-  TM_symm <- 2*diag(34)
+  TM_symm <- 2*diag(40)
   illegal_hyp <- list("flart",             ## illegal char
-                      c("flat, flat"),     ## two legal chars
+                      c("flat", "flat"),     ## two legal chars
                       1,                   ## numeric value
                       list(TM = diag(40)), ## list input
                       TM_idem,             ## TM not symmetrical
