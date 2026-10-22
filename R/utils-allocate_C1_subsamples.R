@@ -1,4 +1,4 @@
-#' @title Allocate the equal-covariance third-trace budget across groups
+#' @title Allocate the equal-covariance subsampling budget across groups
 #'
 #' @description
 #' Treats `B` as a base budget per group and allocates the resulting exact total
@@ -9,13 +9,13 @@
 #'
 #' @param group_sizes Integer group sizes, all at least six.
 #' @param B A positive integer giving the base subsampling budget.
-#' @param m Integer describing the number of subject per subset
+#' @param m Integer describing the number of subjects per subset
 #'
 #' @returns An integer vector of group-specific subsample counts whose sum is
 #' exactly \eqn{aB}.
 #'
 #' @noRd
-allocate_C1_subsamples <- function(group_sizes, B, m) {
+allocate_eqcov_subsamples <- function(group_sizes, B, m) {
   group_sizes <- as.integer(group_sizes)
   a <- length(group_sizes)
 
