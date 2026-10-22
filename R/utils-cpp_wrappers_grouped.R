@@ -77,7 +77,7 @@ A1_eq <- function(X_TS_list, subsampling, B){
   a <- length(n_i)
 
   if(subsampling){
-    B_i <- allocate_C1_subsamples(n_i, B = B, m = 2)
+    B_i <- allocate_eqcov_subsamples(n_i, B = B, m = 2)
     A1_bodies <- numeric(a)
     for(i in 1:a){
       A1_bodies[i] <- A1star_i_cpp(X_TS_list[[i]], B_i[i])
@@ -98,7 +98,7 @@ A2_eq <- function(X_TS_list, subsampling, B){
   a <- length(n_i)
 
   if(subsampling){
-    B_i <- allocate_C1_subsamples(n_i, B = B, m = 4)
+    B_i <- allocate_eqcov_subsamples(n_i, B = B, m = 4)
     A2_bodies <- numeric(a)
     for(i in 1:a){
       A2_bodies[i] <- A3star_i_cpp(X_TS_list[[i]], B_i[i])
@@ -116,7 +116,7 @@ A2_eq <- function(X_TS_list, subsampling, B){
 
 C1star_eq <- function(X_TS_list, B){
   n_i <- sapply(X_TS_list, ncol)
-  B_i <- allocate_C1_subsamples(group_sizes = n_i, B = B, m = 6)
+  B_i <- allocate_eqcov_subsamples(group_sizes = n_i, B = B, m = 6)
   C1_body <- 0
   for(i in seq_along(X_TS_list)){
     C1_body <- C1_body + C1star_i_eq_cpp(X_TS_list[[i]], B_i[i])
