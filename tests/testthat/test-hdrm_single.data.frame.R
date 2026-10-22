@@ -13,7 +13,7 @@ test_that("perfect input does not produce any conditions and results can be repr
   
   # legal list to hypothesis
   for (hypothesis in legal$hypotheses) {
-    for (AM in legal$AM)
+    for (AM in legal$AM){
       expect_no_condition({
         initial <- hdrm_single(
           EEG,
@@ -30,7 +30,8 @@ test_that("perfect input does not produce any conditions and results can be repr
         )
       })
     expect_identical(initial, secondary) 
-  }
+     }
+    }
 })
 
 
@@ -65,14 +66,13 @@ test_that("illegal 'data' input", {
       "'data' must contain columns 'value', 'subject' and 'dimension'"
     )
   }
-  expect_error(
-    hdrm_grouped(
-      data.frame(value = numeric(0), subject = numeric(0), dimension = numeric(0)),
-      group = group_int,
-      B = 10
-    ), "'data' must not be empty.", fixed = TRUE)
-  
-})
+ expect_error(
+  hdrm_single(
+    data.frame(value = numeric(0), subject = numeric(0), dimension = numeric(0))
+  ),
+  "'data' must not be empty.",
+  fixed = TRUE
+)
 
 
 test_that("wrong input: hypothesis", {
@@ -97,11 +97,12 @@ test_that("wrong input: hypothesis", {
 
 test_that("non continuous levels in data work", {
   # Non-continuous subject levels
-  df <- EEG
-  levels(df$subject) <- c(1, 3:161)
-  levels(df$dimension) <- 2:41
+  res_normal <- hdrm_single(EEG)
   
-  res_normal <- hdrm_single(df)
+  df <- EEG
+    levels(df$subject) <- c(1, 3:161)
+  levels(df$dimension) <- 2:41
+    
   expect_no_condition(
     res_non_cont <- hdrm_single(df)
   )
