@@ -13,8 +13,9 @@
 #'   (2025) is used. It may reduce the number of rows used in the calculations
 #'   without changing the resulting test. The default is `TRUE`.
 #'
-#' @details At least two repeated-measurement dimensions are required. Missing
-#'   values in `data` are not allowed and will result in an error.
+#' @details At least two repeated-measurement dimensions and at least three
+#'   subjects are required. Missing  values in `data` are not allowed and will 
+#'   result in an error.
 #'
 #'   The predefined value `"flat"` tests \deqn{\bm P_d\bm\mu=\bm 0.}
 #'   Alternatively, `hypothesis` may be a finite numeric \eqn{d\times d}
@@ -23,9 +24,10 @@
 #'   within the implemented tolerance are accepted.
 #'
 #'   For data.frame input, observations are sorted according to `subject` and
-#'   `dimension` (in that order) and then converted to a matrix with
-#'   the first subject in the first row. This should be taken into account, when
-#'   passing a matrix to `hypothesis`.
+#'   `dimension` (in that order) and then converted to a matrix with subjects
+#'   in rows and repeated-measurement dimensions in columns. For a custom
+#'   hypothesis matrix, its row and column order must correspond to the order
+#'   of the repeated-measurement dimensions.
 #'
 #'   Upper-tail probabilities are computed directly. Reported p-values are
 #'   bounded below by `.Machine$double.eps`; a returned value at this boundary
@@ -38,8 +40,8 @@
 #'   the transformed output.}
 #'   \item{dim}{A named numeric vector containing the repeated-measurement
 #'   dimension `d` and the number of analyzed subjects `N`.}
-#'   \item{H}{A named list with the hypothesis-matrix `T` used for the test and
-#'   the hypothesis label `label`.}
+#'   \item{H}{A named list containing the projection matrix `T` defining the
+#'   tested hypothesis and the hypothesis label `label`.}
 #'   \item{AM}{The input value for `AM`.}
 #'   \item{f}{The estimated Pearson degrees of freedom.}
 #'   \item{statistic}{The standardized test statistic \eqn{W}.}
