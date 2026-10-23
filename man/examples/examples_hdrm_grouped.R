@@ -63,8 +63,8 @@ hdrm_grouped(
   seed = 3141
 )
 
-# Under equal covariance matrices, B is the total pooled subsampling budget
-# across groups and the value of subsampling is ignored.
+# Under equal covariance matrices, B is the base subsampling budget and a * B
+# draws are distributed across groups for each subsampling-based trace estimator.
 hdrm_grouped(
   data = birthrates_matrix,
   hypothesis = "whole",
