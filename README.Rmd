@@ -130,7 +130,7 @@ hdrm_single(
 
 | Setting | Main arguments | Interpretation of `B` |
 |---|---|---|
-| Heterogeneous covariances with exact available trace estimators | `cov.equal = FALSE`, `subsampling = FALSE` | Base budget; the joint third-trace estimator uses `a * B` joint draws |
+| Heterogeneous covariances with exact available trace estimator | `cov.equal = FALSE`, `subsampling = FALSE` | Base budget; the joint third-trace estimator uses `a * B` joint draws |
 | Equal covariances with exact available trace estimators | `cov.equal = TRUE`, `subsampling = FALSE` | Base budget; the pooled third-trace estimators use `a * B` total draws distributed across groups |
 | Heterogeneous covariances with additional subsampling | `cov.equal = FALSE`, `subsampling = TRUE` | Base budget; group-specific and pairwise estimators use `B` draws per group or pair, while the joint third-trace estimator uses `a * B` joint draws |
 | Equal covariance matrices | `cov.equal = TRUE`, `subsampling = TRUE` | Base budget; the pooled trace estimators use `a * B` total draws distributed across groups |
