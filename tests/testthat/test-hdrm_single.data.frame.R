@@ -72,7 +72,8 @@ test_that("illegal 'data' input", {
   ),
   "'data' must not be empty.",
   fixed = TRUE
-)
+  )
+})
 
 
 test_that("wrong input: hypothesis", {
