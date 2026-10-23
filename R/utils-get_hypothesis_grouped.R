@@ -11,7 +11,8 @@
 #' @param a A positive integer giving the number of groups.
 #' @param d A positive integer giving the repeated-measurement dimension.
 #'
-#' @returns A named list with components `TW` and `TS`.
+#' @returns A named list with components `TW`, `TS`, `TM`, `TWalt`, `TSalt`,
+#' and `TMalt`.
 #'
 #' @noRd
 get_hypothesis_grouped <- function(hypothesis, AM, a, d) {
