@@ -98,7 +98,7 @@
 #' @returns A named list of class `"hdrm_grouped"` with components:
 #' \describe{
 #'   \item{data}{The processed data matrix with subjects in rows,
-#'   repeated-measurement dimensions in columns, and subjects ordered by group.}
+#'   repeated-measurement dimensions in columns.}
 #'   \item{dim}{A named vector containing the repeated-measurement dimension `d`,
 #'   the number of analyzed subjects `N` and the number of analyzed groups `a`.}
 #'   \item{H}{A named list containing the projection matrices `TW` and `TS` used
