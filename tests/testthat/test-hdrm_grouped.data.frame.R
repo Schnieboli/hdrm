@@ -257,7 +257,23 @@ test_that("non continuous levels in data and group work", {
   expect_equal(res_normal$p.value, res_non_cont$p.value)
 })
 
+test_that("character subject and dimension identifiers work", {
+  df <- DFbirthrates
+  df$subject <- as.character(df$subject)
+  df$dimension <- as.character(df$dimension)
 
+  expect_no_condition(
+    hdrm_grouped(
+      df,
+      hypothesis = "whole",
+      group = group_int,
+      B = 10,
+      seed = 3141
+    )
+  )
+})
+
+    
 test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
   
   # Helper: chechs if  statistic, p.value and f are equal to expected values
