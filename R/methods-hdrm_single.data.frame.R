@@ -18,9 +18,11 @@ hdrm_single.data.frame <- function(
   if(nrow(data) < 1){
     stop("'data' must not be empty.", call. = FALSE)
   }
-  if(any(is.na(data)) || any(!sapply(data, is.finite))){
-    stop("'data' must only contain finite, non-missing values.", call. = FALSE)
-  }
+  if(any(is.na(data)) ||
+   (is.numeric(data$subject) && any(!is.finite(data$subject))) ||
+   (is.numeric(data$dimension) && any(!is.finite(data$dimension)))){
+  stop("'data' must only contain finite, non-missing values.", call. = FALSE)
+}
   if(!is.numeric(data$value) || any(!is.finite(data$value))){
     stop("data$value must be numeric and finite", call. = FALSE)
   }
