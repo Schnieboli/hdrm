@@ -271,12 +271,36 @@ test_that("grouped numerical helper functions reject degenerate quantities",
 test_that("equal-covariance subsampling budget is allocated correctly", {
   # B is a base budget. With B = 1, a groups produce a total of a draws,
   # so every group receives one draw.
-  minimum_allocation <- hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 7L, 8L), B = 1L)
+  minimum_allocation <- hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 7L, 8L),
+                                                         B = 1L,
+                                                         m = 6)
 
   expect_identical(minimum_allocation, c(1L, 1L, 1L))
   expect_equal(sum(minimum_allocation), 3L)
   expect_true(all(minimum_allocation >= 1L))
 
+    # For m = 2, allocation is based on the available two-subject subsets.
+  allocation_m2 <- hdrm:::allocate_eqcov_subsamples(
+    group_sizes = c(6L, 7L, 8L),
+    B = 20L,
+    m = 2
+  )
+
+  expect_identical(allocation_m2, c(14L, 20L, 26L))
+  expect_equal(sum(allocation_m2), 60L)
+  expect_true(all(allocation_m2 >= 1L))
+
+
+  # For m = 4, allocation is based on the available four-subject subsets.
+  allocation_m4 <- hdrm:::allocate_eqcov_subsamples(
+    group_sizes = c(6L, 7L, 8L),
+    B = 20L,
+    m = 4
+  )
+
+  expect_identical(allocation_m4, c(8L, 18L, 34L))
+  expect_equal(sum(allocation_m4), 60L)
+  expect_true(all(allocation_m4 >= 1L))
 
   # Equal group sizes and base budget B = 8 give exactly 8 draws per group.
   balanced_allocation <- hdrm:::allocate_eqcov_subsamples(group_sizes = c(6L, 6L, 6L), B = 8L, m = 6)
