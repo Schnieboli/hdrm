@@ -77,10 +77,12 @@
 #'   available trace estimators are also replaced by their subsampling versions.
 #'
 #'   When `cov.equal = TRUE`, the method described in Sattler (2021) is used.
-#'   The pooled third-trace estimator uses an exact total of \eqn{aB}
-#'   six-subject draws across all groups. These draws are allocated
-#'   approximately proportionally to \eqn{\binom{n_i}{6}} using the
-#'   largest-remainder method, with every group receiving at least one draw.
+#'   For each subsampling-based trace estimator, an exact total of \eqn{aB}
+#'   draws is distributed across groups approximately proportionally to the
+#'   numbers of available \eqn{m}-subject subsets, \eqn{\binom{n_i}{m}},
+#'   with \eqn{m=2,4,6} for the first-, second-, and third-trace estimators,
+#'   respectively. The largest-remainder method is used, with every group
+#'   receiving at least one draw.
 #'
 #'   Even when `subsampling = FALSE`, `f`, `tau`, and `p.value` remain seed
 #'   dependent because a third-trace quantity is estimated by subsampling. With
