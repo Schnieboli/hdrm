@@ -113,6 +113,16 @@ test_that("non continuous levels in data work", {
 })
 
 
+test_that("character subject and dimension identifiers work", {
+  df <- EEG
+  df$subject <- as.character(df$subject)
+  df$dimension <- as.character(df$dimension)
+
+  expect_no_condition(
+    hdrm_single(df)
+  )
+})
+
 
 test_that("hdrm_single test statistics", {
   res_flat <- hdrm_single(EEG, hypothesis = "flat")
