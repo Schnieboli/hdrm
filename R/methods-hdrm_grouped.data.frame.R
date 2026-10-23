@@ -72,6 +72,9 @@ if(any(is.na(data)) ||
          call. = FALSE)
   
   data$group <- as.factor(group)
+  if (any(tapply(data$group, data$subject, function(x) length(unique(x))) != 1L)) {
+  stop("each subject must belong to exactly one group.", call. = FALSE)
+}
   data <- data[order(data$subject, data$dimension, data$group), ]
   ## reshape data to widetable format
   df_wide <- stats::reshape(
