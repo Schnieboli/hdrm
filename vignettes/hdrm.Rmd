@@ -1,7 +1,11 @@
 ---
 title: "Using hdrm for High-Dimensional Repeated-Measures Inference"
 author: "Paavo Sattler and Nils Hichert"
-output: rmarkdown::html_vignette
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    toc_depth: 2
+    number_sections: false
 bibliography: REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{Using hdrm for High-Dimensional Repeated-Measures Inference}
