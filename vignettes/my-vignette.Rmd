@@ -1,19 +1,497 @@
 ---
-title: "my-vignette"
+title: "Using hdrm for High-Dimensional Repeated-Measures Inference"
+author: "Paavo Sattler and Nils Hichert"
 output: rmarkdown::html_vignette
+bibliography: REFERENCES.bib
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{Using hdrm for High-Dimensional Repeated-Measures Inference}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
-
-```{r setup}
 library(hdrm)
 ```
+
+## Introduction
+
+The `hdrm` package provides tests for mean vectors in high-dimensional
+repeated-measures designs. It contains two main functions: `hdrm_single()` for
+the one-group setting [@pauly2015] and `hdrm_grouped()` for designs with
+multiple independent groups [@sattler2018; @sattler2021].
+
+High-dimensional repeated-measures settings arise when the dimension $d$ of
+the observation vectors is large relative to the available sample sizes.
+Classical multivariate procedures based on an inverse sample covariance matrix
+may then no longer be applicable. The procedures implemented in `hdrm` do not
+require a prespecified asymptotic relation between $d$ and the sample size.
+Some of the underlying frameworks also allow the number of groups to increase.
+
+The tests are based on standardized quadratic forms and a Pearson
+approximation. Multi-group analyses can be performed with heterogeneous
+covariance matrices or, under the corresponding additional assumption, with a
+common covariance matrix. The package also provides subsampling and compact
+representations of hypothesis matrices to reduce computation time.
+
+This vignette gives the statistical background needed to use the package and
+then illustrates the main workflow with the data sets included in `hdrm`.
+
+## Statistical background
+
+Let
+
+\[
+\boldsymbol X_{i,j}
+\sim
+N_d(\boldsymbol\mu_i,\boldsymbol\Sigma_i)
+\]
+
+denote the observation vector of subject $j$ in group $i$, with $n_i$ subjects
+in group $i$ and total sample size
+
+\[
+N=\sum_{i=1}^a n_i.
+\]
+
+For one group, $a=1$. In the multi-group setting, the mean vectors are stacked
+as
+
+\[
+\boldsymbol\mu
+=
+(\boldsymbol\mu_1^\top,\ldots,\boldsymbol\mu_a^\top)^\top.
+\]
+
+The hypotheses considered in `hdrm` can be written as
+
+\[
+H_0:\boldsymbol T\boldsymbol\mu=\boldsymbol 0,
+\]
+
+where $\boldsymbol T$ is a projection matrix. In the multi-group setting, the
+package uses hypotheses of the form
+
+\[
+\boldsymbol T
+=
+\boldsymbol T_W\otimes\boldsymbol T_S,
+\]
+
+where $\boldsymbol T_W\in\mathbb R^{a\times a}$ describes the group structure
+and $\boldsymbol T_S\in\mathbb R^{d\times d}$ the repeated-measurement
+structure.
+
+Writing
+
+\[
+\boldsymbol P_m
+=
+\boldsymbol I_m-\frac{1}{m}\boldsymbol J_m,
+\]
+
+where $\boldsymbol P_m$ denotes the $m\times m$ centering matrix, the predefined
+multi-group hypotheses are:
+
+| `hypothesis` | $\boldsymbol T_W$ | $\boldsymbol T_S$ | Interpretation |
+|:--|:--|:--|:--|
+| `"whole"` | $\boldsymbol P_a$ | $\boldsymbol J_d/d$ | no group main effect |
+| `"sub"` | $\boldsymbol J_a/a$ | $\boldsymbol P_d$ | no dimension main effect |
+| `"interaction"` | $\boldsymbol P_a$ | $\boldsymbol P_d$ | no group-by-dimension interaction |
+| `"identical"` | $\boldsymbol P_a$ | $\boldsymbol I_d$ | identical mean vectors |
+| `"flat"` | $\boldsymbol I_a$ | $\boldsymbol P_d$ | flat profile in every group |
+
+For one group, the only predefined hypothesis is `"flat"`,
+
+\[
+H_0:\boldsymbol P_d\boldsymbol\mu=\boldsymbol 0.
+\]
+
+Let
+
+\[
+\overline{\boldsymbol X}
+=
+(\overline{\boldsymbol X}_1^\top,\ldots,
+\overline{\boldsymbol X}_a^\top)^\top
+\]
+
+denote the vector obtained by stacking the group sample means. The procedures
+are based on the quadratic form
+
+\[
+Q_N
+=
+N\overline{\boldsymbol X}^{\top}
+\boldsymbol T
+\overline{\boldsymbol X}.
+\]
+
+In other contexts, this quadratic form is also referred to as an ANOVA-type
+statistic (ATS). For
+
+\[
+\boldsymbol\Sigma_N
+=
+\bigoplus_{i=1}^a
+\frac{N}{n_i}\boldsymbol\Sigma_i,
+\]
+
+its first two moments under the null hypothesis are
+
+\[
+E(Q_N)
+=
+\operatorname{tr}(\boldsymbol T\boldsymbol\Sigma_N)
+\]
+
+and
+
+\[
+\operatorname{Var}(Q_N)
+=
+2\operatorname{tr}\left((\boldsymbol T\boldsymbol\Sigma_N)^2\right).
+\]
+
+These quantities are used to construct the standardized statistic $W$. The
+Pearson approximation additionally requires the third-order trace
+
+\[
+\operatorname{tr}\left((\boldsymbol T\boldsymbol\Sigma_N)^3\right).
+\]
+
+Its parameter is
+
+\[
+f_P
+=
+\frac{
+\operatorname{tr}^3\left((\boldsymbol T\boldsymbol\Sigma_N)^2\right)
+}{
+\operatorname{tr}^2\left((\boldsymbol T\boldsymbol\Sigma_N)^3\right)
+},
+\]
+
+and the corresponding standardized chi-squared variable is
+
+\[
+K_{f_P}
+=
+\frac{\chi^2_{f_P}-f_P}{\sqrt{2f_P}}.
+\]
+
+The convergence parameter
+
+\[
+\tau_P=\frac{1}{f_P}
+\]
+
+is reported by the package. Values close to zero correspond to the normal
+limiting case, while values close to one correspond to the standardized
+$\chi^2_1$ limiting case.
+
+The trace estimators depend on the considered setting. With heterogeneous
+covariance matrices, mixed terms such as
+
+\[
+\operatorname{tr}
+(\boldsymbol T_S\boldsymbol\Sigma_i
+\boldsymbol T_S\boldsymbol\Sigma_r),
+\qquad i\neq r,
+\]
+
+have to be estimated. Under homogeneous covariance matrices,
+
+\[
+\boldsymbol\Sigma_1=\cdots=\boldsymbol\Sigma_a,
+\]
+
+the expressions simplify and information can be pooled across groups. This is
+why `hdrm_grouped()` contains separate procedures for the two covariance
+settings.
+
+## Data input and hypothesis specification
+
+Both main functions accept either an $N\times d$ matrix or a data frame in
+long format. With matrix input, subjects are stored in rows and
+repeated-measurement dimensions in columns.
+
+Long-format input requires the columns `value`, `subject`, and `dimension`,
+with one measurement per row. For `hdrm_grouped()`, the group allocation is
+supplied separately through `group`. With matrix input, `group` contains one
+entry per subject; with long-format input, it contains one entry per observation
+row.
+
+Regardless of the input format, the current implementation requires complete
+repeated-measurement vectors. Missing values therefore have to be handled
+before calling the functions. At least two repeated-measurement dimensions are
+required. In addition, `hdrm_single()` requires at least three subjects,
+whereas `hdrm_grouped()` requires at least two groups with at least six subjects
+in each group.
+
+Predefined hypotheses can be selected directly through `hypothesis`. Custom
+hypotheses have to be supplied through matrices.
+
+For `hdrm_single()`, a custom hypothesis is represented by one symmetric and
+idempotent matrix with positive rank. For `hdrm_grouped()`, it is supplied as a
+named list containing `TW` and `TS`. Both matrices have to be symmetric and
+idempotent and have positive rank.
+
+For custom hypotheses, the order of the matrices has to match the order used in
+the data. In particular, the rows and columns of `TS` correspond to the
+repeated-measurement dimensions, while those of `TW` correspond to the group
+levels.
+
+## One-group analysis with `hdrm_single()`
+
+We first use the EEG data included in the package. The data originate from the
+study of @EEG_dataset and are also used in the `HRM` package described by
+@HRM_RJournal. The 160 subjects belong to four diagnostic groups: subjective
+cognitive complaints (SCC+ and SCC-), mild cognitive impairment (MCI), and
+Alzheimer's disease (AD). For each subject, four EEG variables---activity,
+complexity, mobility, and brain rate---are measured at ten brain locations. The
+resulting observation vectors therefore have dimension $d=40$.
+
+As a one-group example, we consider the 30 female subjects diagnosed with mild
+cognitive impairment. We test whether the measurement location has an effect on
+at least one of the four variables. For each variable separately, this means
+testing whether its mean profile is constant across the ten locations.
+
+The corresponding projection matrix is
+
+\[
+\boldsymbol T
+=
+\boldsymbol I_4\otimes\boldsymbol P_{10}.
+\]
+
+This is different from the predefined `"flat"` hypothesis, which would impose
+one flat profile across all 40 dimensions. We therefore supply the projection
+matrix directly.
+
+```{r eeg-single}
+data("EEG", package = "hdrm")
+
+MCIFemale <- EEG[
+  EEG$sex == "W" & EEG$group == "MCI",
+]
+
+P10 <- diag(10) - matrix(1 / 10, 10, 10)
+T <- diag(4) %x% P10
+
+res_single <- hdrm_single(
+  data = MCIFemale,
+  hypothesis = T
+)
+
+res_single
+```
+
+The small p-value provides strong evidence against the null hypothesis. Thus,
+the measurement profile changes across locations for at least one of the four
+EEG variables.
+
+This example also shows how a custom projection matrix can be used when the
+hypothesis of interest is not covered by the predefined choices.
+
+## Multiple-group analysis with `hdrm_grouped()`
+
+The same EEG data can also be used to illustrate the multi-group procedures in
+`hdrm_grouped()`. Instead of selecting only the female MCI subjects, we now
+include all female subjects and use the diagnosis as the grouping variable.
+This gives four independent groups with unequal sample sizes and $d=40$
+repeated-measurement dimensions.
+
+We first test for a whole-plot effect. The corresponding null hypothesis states
+that the group means, averaged over the repeated-measurement dimensions, are
+equal. It is available through `hypothesis = "whole"`.
+
+By default, `hdrm_grouped()` allows the covariance matrices to differ between
+groups.
+
+```{r eeg-grouped-heterogeneous}
+EEGFemale <- EEG[EEG$sex == "W", ]
+
+res_group_het <- hdrm_grouped(
+  data = EEGFemale,
+  hypothesis = "whole",
+  group = EEGFemale$group,
+  subsampling = FALSE,
+  B = "1000*N",
+  seed = 3141
+)
+
+res_group_het
+```
+
+At the usual significance levels, the whole-plot hypothesis is not rejected.
+
+If homogeneous covariance matrices can reasonably be assumed, the corresponding
+procedure is selected with `cov.equal = TRUE`:
+
+```{r eeg-grouped-homogeneous}
+res_group_hom <- hdrm_grouped(
+  data = EEGFemale,
+  hypothesis = "whole",
+  group = EEGFemale$group,
+  subsampling = FALSE,
+  B = "1000*N",
+  cov.equal = TRUE,
+  seed = 3141
+)
+
+res_group_hom
+```
+
+The whole-plot hypothesis is again not rejected at the usual significance
+levels. The two calculations rely on different covariance assumptions.
+`cov.equal = TRUE` should therefore only be used when the assumption
+
+\[
+\boldsymbol\Sigma_1=\cdots=\boldsymbol\Sigma_a
+\]
+
+is appropriate for the application.
+
+### A second example: birth rates
+
+As a short second example, the `birthrates` data [@birthrates] illustrate
+matrix input and the predefined `"interaction"` hypothesis. The data contain
+annual birth rates, recorded here as total fertility rates (children per
+woman), for the 16 German federal states from 1990 to 2023. After transposing
+the original matrix, the federal states serve as the observational units and
+the years as the repeated-measurement dimensions.
+
+```{r birthrates-example}
+data("birthrates", package = "hdrm")
+
+birthrates_matrix <- t(as.matrix(birthrates))
+
+group <- factor(
+  c(1, 1, 2, 2, 1, 1, 1, 2, 1, 1, 1, 1, 2, 2, 1, 2),
+  labels = c("west", "east")
+)
+
+res_birthrates <- hdrm_grouped(
+  data = birthrates_matrix,
+  hypothesis = "interaction",
+  group = group,
+  B = "1000*N",
+  seed = 3141
+)
+
+res_birthrates
+```
+
+Here, `"interaction"` tests whether the temporal birth-rate profiles differ
+between the two groups. The output provides strong evidence against the null
+hypothesis. The example also shows the matrix input format directly:
+observational units are stored in rows, repeated-measurement dimensions in
+columns, and `group` contains one entry for each row.
+
+## Computational options
+
+High-dimensional repeated-measures procedures can become computationally
+demanding. `hdrm` provides two main ways to reduce the computational effort:
+companion matrices and subsampling.
+
+### Companion matrices
+
+With the default `AM = TRUE`, the package internally constructs companion
+matrices for the supplied hypothesis matrices. These matrices are specifically
+constructed to represent the same hypothesis while preserving the value of the
+test statistic. Their number of rows can be reduced to the rank of the original
+hypothesis matrix [@sattler2025]. This applies to both predefined and
+user-specified hypotheses.
+
+This can reduce the size of the quadratic-form calculations when the rank is
+much smaller than the original matrix dimension. For this reason, `AM = TRUE`
+can usually be kept as the default. With `AM = FALSE`, the original projection
+matrices are used instead.
+
+### Subsampling
+
+The required trace estimators can involve large numbers of combinations of
+subjects. `hdrm_grouped()` therefore provides subsampling versions of these
+estimators.
+
+With `subsampling = TRUE`, the available lower-order trace estimators are also
+calculated by subsampling. The third-order trace used for the Pearson
+approximation is always estimated by subsampling, independently of this option.
+
+The base subsampling budget is controlled by `B`. The default `B = "1000*N"`
+lets it increase with the total sample size $N$. Larger values reduce the
+additional Monte Carlo variability but require more computation time.
+
+For heterogeneous covariance matrices, group-specific and pairwise estimators
+use $B$ draws for the corresponding group or group pair, while the joint
+third-order estimator uses $aB$ draws. Under homogeneous covariance matrices,
+each subsampling-based trace estimator uses a total budget of $aB$, distributed
+across the groups according to the number of available index combinations.
+
+Since subsampling introduces randomness, `seed` can be supplied for
+reproducible calculations. This is relevant even when `subsampling = FALSE`,
+because the third-order trace estimator is still subsampling-based. Thus,
+$\widehat f_P$, $\widehat\tau_P$, and the p-value can depend on `B` and `seed`.
+If `subsampling = TRUE`, the test statistic can also vary between runs.
+
+## Output and interpretation
+
+Both functions return an object containing the test result and additional
+information about the analysis. The compact printed output focuses on the
+standardized test statistic $W$, the p-value, the estimated Pearson parameter
+$\widehat f_P$, the tested hypothesis, and the convergence parameter
+
+\[
+\widehat\tau_P=\frac{1}{\widehat f_P}.
+\]
+
+The reported `f` should not be interpreted as the usual degrees of freedom of a
+classical ANOVA. It determines the shape of the centered and standardized
+chi-squared distribution used for the Pearson approximation.
+
+The estimated $\widehat\tau_P$ indicates where the Pearson approximation lies
+between the two limiting cases described above. Intermediate values are
+discussed further below.
+
+Individual components can be accessed directly, for example:
+
+```{r output-components}
+res_group_het$statistic
+res_group_het$p.value
+res_group_het$f
+res_group_het$tau
+```
+
+The returned objects also contain the processed data, dimensions, hypothesis
+matrices, and the relevant computational settings, which can be useful for
+further processing or reporting.
+
+## Limitations and further information
+
+The procedures implemented in `hdrm` assume multivariate normally distributed
+observation vectors. This is a common assumption in multivariate
+repeated-measures inference, but it should still be considered when applying
+the methods to real data.
+
+The current implementation also requires complete repeated-measurement vectors.
+Missing values are not handled internally and have to be treated before calling
+`hdrm_single()` or `hdrm_grouped()`.
+
+A further theoretical point concerns the convergence parameter $\tau_P$. The
+available asymptotic results cover the two limiting regimes $\tau_P\to0$ and
+$\tau_P\to1$. An analogous general result for intermediate limiting values is
+currently not available. However, the simulation studies for the corresponding
+methods show good finite-sample behavior also in intermediate settings.
+Intermediate values of $\widehat\tau_P$ therefore do not by themselves
+invalidate an analysis, although results close to the chosen significance
+level should be interpreted with some additional caution.
+
+For the complete theoretical assumptions, asymptotic results, and simulation
+studies, see @pauly2015, @sattler2018, and @sattler2021. The construction of the
+companion matrices is described in @sattler2025.
+
+## References {-}
