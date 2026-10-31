@@ -21,8 +21,8 @@ library(hdrm)
 
 The `hdrm` package provides tests for mean vectors in high-dimensional
 repeated-measures designs. It contains two main functions: `hdrm_single()` for
-the one-group setting [@pauly2015] and `hdrm_grouped()` for designs with
-multiple independent groups [@sattler2018; @sattler2021].
+the one-group setting [@Pauly2015] and `hdrm_grouped()` for designs with
+multiple independent groups [@Sattler2018; @Sattler2021].
 
 High-dimensional repeated-measures settings arise when the dimension $d$ of
 the observation vectors is large relative to the available sample sizes.
@@ -404,7 +404,7 @@ With the default `AM = TRUE`, the package internally constructs companion
 matrices for the supplied hypothesis matrices. These matrices are specifically
 constructed to represent the same hypothesis while preserving the value of the
 test statistic. Their number of rows can be reduced to the rank of the original
-hypothesis matrix [@sattler2025]. This applies to both predefined and
+hypothesis matrix [@Sattler2025]. This applies to both predefined and
 user-specified hypotheses.
 
 This can reduce the size of the quadratic-form calculations when the rank is
@@ -491,7 +491,7 @@ invalidate an analysis, although results close to the chosen significance
 level should be interpreted with some additional caution.
 
 For the complete theoretical assumptions, asymptotic results, and simulation
-studies, see @pauly2015, @sattler2018, and @sattler2021. The construction of the
-companion matrices is described in @sattler2025.
+studies, see @Pauly2015, @Sattler2018, and @Sattler2021. The construction of the
+companion matrices is described in @Sattler2025.
 
 ## References {-}
