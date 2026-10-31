@@ -33,6 +33,7 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 Suggests: 
     knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Depends: R (>= 3.5.0)
@@ -41,3 +42,4 @@ Imports: Rcpp, stats, withr
 LinkingTo: Rcpp, RcppArmadillo
 Config/roxygen2/version: 8.1.0
 NeedsCompilation: yes
+VignetteBuilder: knitr
