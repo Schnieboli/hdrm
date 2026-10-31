@@ -1,7 +1,8 @@
 # hdrm (development version)
 
 * Add vignette
-* Update documentation
+* `hdrm_grouped()`: group affiliation can now be specified via character vector
+* Fix errors in documentation
 * Update README
 * Fix examples
 
