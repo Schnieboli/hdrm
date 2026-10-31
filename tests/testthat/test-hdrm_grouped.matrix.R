@@ -51,6 +51,22 @@ test_that("perfect input does not produce any conditions and results can be repr
                 )
               })
               expect_identical(initial, secondary)
+
+              if(AM){ ## for all legal inputs and AM=1: check if results are equal for AM=0
+                initial_with_AM_0 <- hdrm_grouped(
+                  Matrixbirthrates,
+                  hypothesis = hypothesis,
+                  group = group,
+                  subsampling = subsampling,
+                  AM = !AM,
+                  cov.equal = cov.equal,
+                  B = B,
+                  seed = 3141
+                )
+                expect_equal(initial$statistic, initial_with_AM_0$statistic, tolerance = 1e-8)
+                expect_equal(initial$p.value, initial_with_AM_0$p.value, tolerance = 1e-8)
+                expect_equal(initial$f, initial_with_AM_0$f, tolerance = 1e-8)
+              }
             }
   }
 })
@@ -271,28 +287,4 @@ test_that("hdrm_grouped statistics, p-values, and f-degrees of freedom", {
   #test_metrics(res_subsampling, 23.298551, 2.654115e-12, 3.244517)
   test_metrics(res_am0, 24.716159, 1.482681e-12, 2.335495)
   test_metrics(res_cov_equal, 11.078986, 2.155735e-07, 4.595081)
-})
-
-test_that("AM representations agree for the grouped method", {
-  result_am0 <- hdrm_grouped(
-    Matrixbirthrates,
-    hypothesis = "whole",
-    group = group_int,
-    subsampling = FALSE,
-    AM = 0,
-    B = "10*N",
-    seed = 3141
-  )
-  result_am1 <- hdrm_grouped(
-    Matrixbirthrates,
-    hypothesis = "whole",
-    group = group_int,
-    subsampling = FALSE,
-    AM = 1,
-    B = "10*N",
-    seed = 3141
-  )
-  expect_equal(result_am0$statistic, result_am1$statistic, tolerance = 1e-12)
-  expect_equal(result_am0$p.value, result_am1$p.value, tolerance = 1e-12)
-  expect_equal(result_am0$f, result_am1$f, tolerance = 1e-12)
 })
