@@ -27,8 +27,8 @@ A named list of class \code{"hdrm_single"} with components:
 the transformed output.}
 \item{dim}{A named numeric vector containing the repeated-measurement
 dimension \code{d} and the number of analyzed subjects \code{N}.}
-\item{H}{A named list with the hypothesis-matrix \code{T} used for the test and
-the hypothesis label \code{label}.}
+\item{H}{A named list containing the projection matrix \code{T} defining the
+tested hypothesis and the hypothesis label \code{label}.}
 \item{AM}{The input value for \code{AM}.}
 \item{f}{The estimated Pearson degrees of freedom.}
 \item{statistic}{The standardized test statistic \eqn{W}.}
@@ -41,8 +41,9 @@ the hypothesis label \code{label}.}
 Implements the one-group test described by Pauly et al. (2015).
 }
 \details{
-At least two repeated-measurement dimensions are required. Missing
-values in \code{data} are not allowed and will result in an error.
+At least two repeated-measurement dimensions and at least three
+subjects are required. Missing  values in \code{data} are not allowed and will
+result in an error.
 
 The predefined value \code{"flat"} tests \deqn{\bm P_d\bm\mu=\bm 0.}
 Alternatively, \code{hypothesis} may be a finite numeric \eqn{d\times d}
@@ -51,9 +52,10 @@ symmetric, idempotent, and have positive rank. Small numerical deviations
 within the implemented tolerance are accepted.
 
 For data.frame input, observations are sorted according to \code{subject} and
-\code{dimension} (in that order) and then converted to a matrix with
-the first subject in the first row. This should be taken into account, when
-passing a matrix to \code{hypothesis}.
+\code{dimension} (in that order) and then converted to a matrix with subjects
+in rows and repeated-measurement dimensions in columns. For a custom
+hypothesis matrix, its row and column order must correspond to the order
+of the repeated-measurement dimensions.
 
 Upper-tail probabilities are computed directly. Reported p-values are
 bounded below by \code{.Machine$double.eps}; a returned value at this boundary

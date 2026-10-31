@@ -26,20 +26,20 @@ data.frame input, data must contain columns \code{value}, \code{subject} and
 \code{TW} and \code{TS}; see Details.}
 
 \item{group}{A one-dimensional atomic vector or factor defining the group
-allocation. For matrix input it must contain one entry per row. For vector
-input it must contain one entry per measurement.}
+allocation. For matrix input it must contain one entry per row. For data.frame
+input it must contain one entry per row.}
 
 \item{cov.equal}{A single logical value specifying whether the group
 covariance matrices are assumed to be equal. The default is \code{FALSE}.}
 
 \item{subsampling}{A single logical value specifying whether the subsampling
-versions of all available trace estimators are used in the
-heterogeneous-covariance procedure; see Details.}
+versions of all available trace estimators are used; see Details.}
 
 \item{B}{A single numeric value or arithmetic character expression in \code{N}
 defining the subsampling budget. Character expressions may contain only
 numeric constants, \code{N}, parentheses, and the operators \code{+}, \code{-}, \code{*}, \code{/},
-and \code{^}. Its interpretation depends \code{subsampling}; see Details.}
+and \code{^}. Its interpretation depends on \code{cov.equal} and \code{subsampling}; see
+Details.}
 
 \item{AM}{A single logical value, specifying whether the compact
 representation of the hypothesis matrices described by Sattler and
@@ -54,12 +54,13 @@ the previous R random-number state is restored after the calculation.}
 A named list of class \code{"hdrm_grouped"} with components:
 \describe{
 \item{data}{The processed data matrix with subjects in rows,
-repeated-measurement dimensions in columns, and subjects ordered by group.}
+repeated-measurement dimensions in columns.}
 \item{dim}{A named vector containing the repeated-measurement dimension \code{d},
 the number of analyzed subjects \code{N} and the number of analyzed groups \code{a}.}
 \item{H}{A named list containing the projection matrices \code{TW} and \code{TS} used
 for the test and \code{label} with the hypothesis label.}
-\item{group}{The sorted input to \code{group}.}
+\item{group}{The group allocation corresponding to the rows of the
+returned data matrix.}
 \item{cov.equal}{The input value for \code{cov.equal}.}
 \item{subsampling}{The input value for \code{subsampling}.}
 \item{B}{The evaluated integer base budget \code{B}. The grouped
@@ -110,10 +111,10 @@ with positive rank. \code{TW} must have one row and column per analyzed group,
 and \code{TS} must have one row and column per repeated-measurement dimension.
 Small numerical deviations within the implemented tolerance are accepted.
 
-For data.frame input, observations are sorted according to \code{subject},
-\code{dimension} and \code{group} (in that order) and then converted to a matrix with
-the first subject in the first row. This should be taken into account, when
-passing a list with custom matrices to \code{hypothesis}.
+For data.frame input, observations are converted to a matrix with subjects
+in rows and repeated-measurement dimensions in columns. For custom
+hypotheses, the order of \code{TW} must correspond to the factor levels of
+\code{group}, and the order of \code{TS} to the factor levels of \code{dimension}.
 
 When \code{cov.equal = FALSE}, the method of Sattler and Pauly (2018) is used.
 The third-trace estimator entering \code{f} is always computed using
@@ -125,15 +126,16 @@ where each draw simultaneously samples six subjects from every group and
 available trace estimators are also replaced by their subsampling versions.
 
 When \code{cov.equal = TRUE}, the method described in Sattler (2021) is used.
-The pooled third-trace estimator uses an exact total of \eqn{aB}
-six-subject draws across all groups. These draws are allocated
-approximately proportionally to \eqn{\binom{n_i}{6}} using the
-largest-remainder method, with every group receiving at least one draw.
+For each subsampling-based trace estimator, an exact total of \eqn{aB}
+draws is distributed across groups approximately proportionally to the
+numbers of available \eqn{m}-subject subsets, \eqn{\binom{n_i}{m}},
+with \eqn{m=2,4,6} for the first-, second-, and third-trace estimators,
+respectively. The largest-remainder method is used, with every group
+receiving at least one draw.
 
 Even when \code{subsampling = FALSE}, \code{f}, \code{tau}, and \code{p.value} remain seed
-dependent because a third-trace quantity is estimated by subsampling. For
-heterogeneous covariance matrices with \code{subsampling = TRUE}, \code{statistic} is
-seed dependent as well.
+dependent because a third-trace quantity is estimated by subsampling. With
+\code{subsampling = TRUE}, \code{statistic} is seed dependent as well.
 
 \code{B} may be numeric or an arithmetic character expression involving \code{N},
 such as \code{"1000*N"} or \code{"10*(N + 1)"}. The result is rounded up to the next
@@ -210,8 +212,8 @@ hdrm_grouped(
   seed = 3141
 )
 
-# Under equal covariance matrices, B is the total pooled subsampling budget
-# across groups and the value of subsampling is ignored.
+# Under equal covariance matrices, B is the base subsampling budget and a * B
+# draws are distributed across groups for each subsampling-based trace estimator.
 hdrm_grouped(
   data = birthrates_matrix,
   hypothesis = "whole",
